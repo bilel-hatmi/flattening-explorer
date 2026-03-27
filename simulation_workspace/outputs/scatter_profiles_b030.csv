@@ -1,0 +1,33 @@
+profile_id,scenario,p99_theta,output_mean,mean_loss,tail_ratio,scaffold_benefit,premium_pct,city,sector,counterproductive
+P1,baseline,924.01,1398.8422,601.1577,1.5371,-0.026389,0.0,Frankfurt,Finance/Audit,True
+P1,G0,2123.75,1783.8525,572.918,2.9655,-0.026389,129.8406,Frankfurt,Finance/Audit,True
+P1,G1,1857.6,1688.9613,592.5322,2.6125,-0.026389,101.0368,Frankfurt,Finance/Audit,True
+P1,G2,1458.3072,1581.699,587.7687,2.2153,-0.026389,57.8237,Frankfurt,Finance/Audit,True
+P2,baseline,635.01,1599.088,400.912,1.5839,1.461685,0.0,London,Investment banking,False
+P2,G0,1667.525,1865.7019,507.4385,2.6289,1.461685,162.5982,London,Investment banking,False
+P2,G1,1330.86,1807.2096,493.992,2.2451,1.461685,109.581,London,Investment banking,False
+P2,G2,1034.919,1826.3459,452.2493,1.9393,1.461685,62.9768,London,Investment banking,False
+P3,baseline,686.03,1597.7125,402.2875,1.7053,0.767954,0.0,Paris,Strategy consulting,False
+P3,G0,2041.275,1899.0038,480.797,3.3965,0.767954,197.5489,Paris,Strategy consulting,False
+P3,G1,1648.836,1820.6427,482.7978,2.846,0.767954,140.3446,Paris,Strategy consulting,False
+P3,G2,1302.7318,1832.8205,446.7622,2.4711,0.767954,89.8943,Paris,Strategy consulting,False
+P4,baseline,1121.0,1198.12,801.88,1.398,-0.074642,0.0,Brussels,Corporate legal,True
+P4,G0,2253.775,1753.5172,597.1862,3.0192,-0.074642,101.0504,Brussels,Corporate legal,True
+P4,G1,2008.8,1638.9042,634.2465,2.6394,-0.074642,79.1971,Brussels,Corporate legal,True
+P4,G2,1610.433,1456.6128,675.8065,2.1663,-0.074642,43.6604,Brussels,Corporate legal,True
+P5,baseline,958.01,1346.5285,653.4715,1.466,-0.362002,0.0,San Francisco,Tech startup,True
+P5,G0,2153.7625,1915.3791,467.6968,3.684,-0.362002,124.8163,San Francisco,Tech startup,True
+P5,G1,1988.424,1805.3553,495.5372,3.3439,-0.362002,107.5577,San Francisco,Tech startup,True
+P5,G2,1667.5416,1624.539,495.7973,3.1142,-0.362002,74.0631,San Francisco,Tech startup,True
+P6,baseline,1084.0,1197.9053,802.0947,1.3515,0.395948,0.0,Singapore,Creative agency,False
+P6,G0,1845.0125,1949.5922,440.3263,3.3521,0.395948,70.2041,Singapore,Creative agency,False
+P6,G1,1660.86,1797.5019,502.0817,2.7566,0.395948,53.2159,Singapore,Creative agency,False
+P6,G2,1339.833,1556.6711,584.8445,2.0827,0.395948,23.6008,Singapore,Creative agency,False
+P7,baseline,1407.0,897.7845,1102.2155,1.2765,-0.264468,0.0,Bangalore,Back-office,True
+P7,G0,2310.0,1862.8109,509.7513,3.6253,-0.264468,64.1791,Bangalore,Back-office,True
+P7,G1,2164.824,1720.5804,566.183,3.1863,-0.264468,53.861,Bangalore,Back-office,True
+P7,G2,1809.71,1461.124,581.433,3.0218,-0.264468,28.6219,Bangalore,Back-office,True
+P8,baseline,1203.02,1148.5348,851.4652,1.4129,-0.063554,0.0,Seoul,Central admin,True
+P8,G0,2317.5,1900.2409,479.8073,3.8641,-0.063554,92.6402,Seoul,Central admin,True
+P8,G1,2084.4,1750.1565,541.5362,3.2075,-0.063554,73.264,Seoul,Central admin,True
+P8,G2,1700.633,1519.446,618.6855,2.4989,-0.063554,41.3637,Seoul,Central admin,True

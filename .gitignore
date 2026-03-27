@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+.claude/
+
+# Dev/reference files (not part of the web app)
+Figures/
+articles/
+prototypes/
+specs/
+latex-document-skill/
+CV_*.pdf
