@@ -38,20 +38,20 @@ function pickHotCols(seed) {
   return new Set(cols.slice(0, N_HOT));
 }
 
-// Good quarter: ~25% random errors, no column structure → speckled pattern
+// Normal quarter: π≈0.75, low error rate (~8%), no column structure → mostly green
 function generateLeftGrid(seed) {
   const rng = makePRNG(seed);
   return Array.from({ length: N_AGENTS }, () =>
-    Array.from({ length: N_DECISIONS }, () => (rng() < 0.25 ? 1 : 0))
+    Array.from({ length: N_DECISIONS }, () => (rng() < 0.08 ? 1 : 0))
   );
 }
 
-// Crisis quarter: hot cols ~85% error, inside cols ~10% error → clear red column stripes
+// Crisis quarter: hot cols ~85% error, inside cols ~5% error → clear red column stripes
 function generateRightGrid(seed, hotCols) {
   const rng = makePRNG(seed + 1);
   return Array.from({ length: N_AGENTS }, () =>
     Array.from({ length: N_DECISIONS }, (_, d) =>
-      hotCols.has(d) ? (rng() < 0.85 ? 1 : 0) : (rng() < 0.10 ? 1 : 0)
+      hotCols.has(d) ? (rng() < 0.85 ? 1 : 0) : (rng() < 0.05 ? 1 : 0)
     )
   );
 }
