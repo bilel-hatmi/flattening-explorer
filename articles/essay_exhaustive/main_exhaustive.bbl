@@ -1,0 +1,470 @@
+\begin{thebibliography}{10}
+
+\bibitem{fuller_hbs_2021}
+J.~B. Fuller, M.~Raman, E.~Sage-Gavin, and K.~Hines, ``Hidden workers: Untapped
+  talent,'' tech. rep., Harvard Business School and Accenture, 2021.
+
+\bibitem{an_pnasnexus_2025}
+J.~An, D.~Huang, C.~Lin, and M.~Tai, ``Measuring gender and racial biases in
+  large language models: Intersectional evidence from automated resume
+  evaluation,'' {\em PNAS Nexus}, vol.~4, no.~3, p.~pgaf089, 2025.
+
+\bibitem{wilson_aies_2024}
+K.~Wilson and A.~Caliskan, ``Gender, race, and intersectional bias in resume
+  screening via language model retrieval,'' in {\em Proceedings of the AAAI/ACM
+  Conference on AI, Ethics, and Society (AIES)}, 2024.
+
+\bibitem{shaw_psyarxiv_2026}
+S.~D. Shaw and G.~Nave, ``Thinking---fast, slow, and artificial: How {AI} is
+  reshaping human reasoning and the rise of cognitive surrender,'' 2026.
+\newblock PsyArXiv preprint.
+
+\bibitem{dellacqua_orgscience_2026}
+F.~Dell'Acqua, E.~McFowland, III, E.~R. Mollick, H.~Lifshitz-Assaf, K.~Kellogg,
+  S.~Rajendran, L.~Krayer, F.~Candelon, and K.~R. Lakhani, ``Navigating the
+  jagged technological frontier: Field experimental evidence of the effects of
+  {AI} on knowledge worker productivity and quality,'' {\em Organization
+  Science}, 2026.
+\newblock Articles in Advance.
+
+\bibitem{keck_psychsci_2020}
+S.~Keck and W.~Tang, ``Enhancing the wisdom of the crowd with cognitive-process
+  diversity: The benefits of aggregating intuitive and analytical judgments,''
+  {\em Psychological Science}, vol.~31, no.~10, pp.~1272--1282, 2020.
+
+\bibitem{meincke_nhb_2025}
+L.~Meincke, G.~Nave, and C.~Terwiesch, ``{ChatGPT} decreases idea diversity in
+  brainstorming,'' {\em Nature Human Behaviour}, vol.~9, no.~6, pp.~1107--1109,
+  2025.
+
+\bibitem{page_princeton_2007}
+S.~E. Page, {\em The Difference: How the Power of Diversity Creates Better
+  Groups, Firms, Schools, and Societies}.
+\newblock Princeton University Press, 2007.
+
+\bibitem{krogh_nips_1995}
+A.~Krogh and J.~Vedelsby, ``Neural network ensembles, cross validation, and
+  active learning,'' in {\em Advances in Neural Information Processing
+  Systems}, vol.~7, pp.~231--238, 1995.
+
+\bibitem{wood_jmlr_2023}
+D.~J. Wood, T.~Mu, A.~M. Webb, H.~W.~J. Reeve, M.~Luj\'{a}n, and G.~Brown, ``A
+  unified theory of diversity in ensemble learning,'' {\em Journal of Machine
+  Learning Research}, vol.~24, pp.~1--49, 2023.
+\newblock arXiv:2301.03962.
+
+\bibitem{carlson_prl_2000}
+J.~M. Carlson and J.~Doyle, ``Highly optimized tolerance: Robustness and design
+  in complex systems,'' {\em Physical Review Letters}, vol.~84, no.~11,
+  pp.~2529--2532, 2000.
+
+\bibitem{holzner_arxiv_2025}
+N.~Holzner, S.~Maier, and S.~Feuerriegel, ``Generative {AI} and creativity: A
+  systematic literature review and meta-analysis,'' 2025.
+\newblock Preprint, arXiv:2505.17241.
+
+\bibitem{hong_pnas_2004}
+L.~Hong and S.~E. Page, ``Groups of diverse problem solvers can outperform
+  groups of high-ability problem solvers,'' {\em Proceedings of the National
+  Academy of Sciences}, vol.~101, no.~46, pp.~16385--16389, 2004.
+
+\bibitem{artzner_mf_1999}
+P.~Artzner, F.~Delbaen, J.-M. Eber, and D.~Heath, ``Coherent measures of
+  risk,'' {\em Mathematical Finance}, vol.~9, no.~3, pp.~203--228, 1999.
+
+\bibitem{jin_icml_2025}
+Y.~Jin {\em et~al.}, ``{AI} safety must embrace an antifragile perspective,''
+  in {\em Proceedings of the International Conference on Machine Learning},
+  PMLR 267, 2025.
+\newblock Theorem 3.3: black swan gap.
+
+\bibitem{vasicek_risk_2002}
+O.~A. Va\v{s}\'{i}\v{c}ek, ``Loan portfolio value,'' {\em Risk}, vol.~15,
+  no.~12, pp.~160--162, 2002.
+\newblock Original theory in KMV Corporation working paper, 1987.
+
+\bibitem{taleb_qf_2013}
+N.~N. Taleb and R.~Douady, ``Mathematical definition, mapping, and detection of
+  (anti)fragility,'' {\em Quantitative Finance}, vol.~13, no.~11,
+  pp.~1677--1689, 2013.
+
+\bibitem{kim_icml_2025}
+E.~M. Kim, A.~Garg, K.~Peng, and N.~Garg, ``Correlated errors in large language
+  models,'' in {\em Proceedings of the 42nd International Conference on Machine
+  Learning}, PMLR 267, pp.~30038--30066, 2025.
+\newblock arXiv:2506.07962.
+
+\bibitem{rivera_asr_2012}
+L.~A. Rivera, ``Hiring as cultural matching: The case of elite professional
+  service firms,'' {\em American Sociological Review}, vol.~77, no.~6,
+  pp.~999--1022, 2012.
+
+\bibitem{schneider_pp_1987}
+B.~Schneider, ``The people make the place,'' {\em Personnel Psychology},
+  vol.~40, no.~3, pp.~437--453, 1987.
+
+\bibitem{glazko_facct_2024}
+K.~Glazko, Y.~Mohammed, B.~Kosa, V.~Potluri, and J.~Mankoff, ``Identifying and
+  improving disability bias in {GPT}-based resume screening,'' in {\em
+  Proceedings of the ACM Conference on Fairness, Accountability, and
+  Transparency (FAccT)}, 2024.
+
+\bibitem{jorion_efm_2000}
+P.~Jorion, ``Risk management lessons from {Long-Term Capital Management},''
+  {\em European Financial Management}, vol.~6, no.~3, pp.~277--300, 2000.
+
+\bibitem{mackenzie_econsoc_2003}
+D.~MacKenzie, ``Long-term capital management and the sociology of arbitrage,''
+  {\em Economy and Society}, vol.~32, no.~3, pp.~349--380, 2003.
+
+\bibitem{lowenstein_book_2000}
+R.~Lowenstein, {\em When Genius Failed: The Rise and Fall of Long-Term Capital
+  Management}.
+\newblock Random House, 2000.
+
+\bibitem{haldane_nature_2011}
+A.~G. Haldane and R.~M. May, ``Systemic risk in banking ecosystems,'' {\em
+  Nature}, vol.~469, no.~7330, pp.~351--355, 2011.
+
+\bibitem{persaud_jrf_2000}
+A.~Persaud, ``Sending the herd off the cliff edge: The disturbing interaction
+  between herding and market-sensitive risk management practices,'' {\em
+  Journal of Risk Finance}, vol.~2, no.~1, pp.~59--65, 2000.
+
+\bibitem{beunza_econsoc_2012}
+D.~Beunza and D.~Stark, ``From dissonance to resonance: Cognitive
+  interdependence in quantitative finance,'' {\em Economy and Society},
+  vol.~41, no.~3, pp.~383--417, 2012.
+
+\bibitem{parametrix_crowdstrike_2024}
+{Parametrix Solutions}, ``{CrowdStrike's} impact on the {Fortune} 500,'' 2024.
+
+\bibitem{geer_ccia_2003}
+D.~E. Geer, R.~Bace, P.~Gutmann, P.~Metzger, C.~P. Pfleeger, J.~S. Quarterman,
+  and B.~Schneier, ``{CyberInsecurity}: The cost of monopoly,'' tech. rep.,
+  Computer \& Communications Industry Association, 2003.
+
+\bibitem{renard_nature_2019}
+D.~Renard and D.~Tilman, ``National food production stabilized by crop
+  diversity,'' {\em Nature}, vol.~571, no.~7764, pp.~257--260, 2019.
+
+\bibitem{anderson_cc24}
+B.~R. Anderson {\em et~al.}, ``Homogenization effects of large language models
+  on human creative ideation,'' in {\em Proceedings of ACM Creativity and
+  Cognition (C\&C 2024)}, pp.~413--425, 2024.
+
+\bibitem{doshi_sciadv_2024}
+A.~R. Doshi and O.~P. Hauser, ``Generative {AI} enhances individual creativity
+  but reduces the collective diversity of novel content,'' {\em Science
+  Advances}, vol.~10, no.~28, p.~eadn5290, 2024.
+
+\bibitem{moon_chbai_2025}
+K.~Moon {\em et~al.}, ``Homogenizing effect of large language models on
+  creative diversity,'' {\em Computers in Human Behavior: Artificial
+  Intelligence}, vol.~6, p.~100207, 2025.
+
+\bibitem{sourati_tics_2026}
+Z.~Sourati {\em et~al.}, ``The homogenizing effect of large language models on
+  human expression and thought,'' {\em Trends in Cognitive Sciences}, 2026.
+
+\bibitem{shumailov_nature_2024}
+I.~Shumailov {\em et~al.}, ``{AI} models collapse when trained on recursively
+  generated data,'' {\em Nature}, 2024.
+
+\bibitem{kleinberg_pnas_2021}
+J.~Kleinberg and M.~Raghavan, ``Algorithmic monoculture and social welfare,''
+  {\em Proceedings of the National Academy of Sciences}, vol.~118, no.~22,
+  2021.
+
+\bibitem{parasuraman_humafact_2010}
+R.~Parasuraman and D.~H. Manzey, ``Complacency and bias in human use of
+  automation: An attentional integration,'' {\em Human Factors}, vol.~52,
+  no.~3, pp.~381--410, 2010.
+
+\bibitem{jabbour_jama_2023}
+S.~Jabbour, D.~Fouhey, S.~Shepard, T.~S. Valley, E.~A. Kazerooni, N.~Banovic,
+  J.~Wiens, and M.~W. Sjoding, ``Measuring the impact of {AI} in the diagnosis
+  of hospitalized patients: A randomized clinical vignette survey study,'' {\em
+  JAMA}, vol.~330, no.~23, pp.~2275--2284, 2023.
+
+\bibitem{gaube_npjdm_2021}
+S.~Gaube {\em et~al.}, ``Do as {AI} say: Susceptibility in deployment of
+  clinical decision-aids,'' {\em npj Digital Medicine}, vol.~4, no.~1, p.~31,
+  2021.
+
+\bibitem{tschandl_natmed_2020}
+P.~Tschandl {\em et~al.}, ``Human--computer collaboration for skin cancer
+  recognition,'' {\em Nature Medicine}, vol.~26, no.~8, pp.~1229--1234, 2020.
+
+\bibitem{vonzahn_isr_2025}
+M.~von Zahn, L.~Liebich, E.~Jussupow, O.~Hinz, and K.~Bauer, ``Knowing (not) to
+  know: Explainable artificial intelligence and human metacognition,'' {\em
+  Information Systems Research}, 2025.
+
+\bibitem{randazzo_hbs_2025}
+S.~Randazzo, A.~Joshi, K.~Kellogg, H.~Lifshitz-Assaf, F.~Dell'Acqua, and K.~R.
+  Lakhani, ``{GenAI} as a power persuader: How professionals get persuasion
+  bombed when they attempt to validate {LLMs},'' Tech. Rep. Working Paper
+  26-021, Harvard Business School, 2025.
+
+\bibitem{budzyn_lancetgh_2025}
+M.~Budzy\'{n}, M.~Roma\'{n}czyk, D.~Kitala, P.~Ko{\l}odziej, M.~Bugajski, H.-O.
+  Adami, J.~Blom, M.~Buszkiewicz, N.~Halvorsen, C.~Hassan, T.~Roma\'{n}czyk,
+  {\O}.~Holme, K.~Jarus, S.~Fielding, M.~Kunar, M.~Pellise, N.~Pilonis, M.~F.
+  Kami\'{n}ski, M.~Kalager, M.~Bretthauer, and Y.~Mori, ``Endoscopist
+  deskilling risk after exposure to artificial intelligence in colonoscopy: A
+  multicentre, observational study,'' {\em The Lancet Gastroenterology \&
+  Hepatology}, vol.~10, no.~10, pp.~896--903, 2025.
+
+\bibitem{fan_bjet_2025}
+Y.~Fan {\em et~al.}, ``Beware of metacognitive laziness: Effects of generative
+  artificial intelligence on learning motivation, processes, and performance,''
+  {\em British Journal of Educational Technology}, vol.~56, no.~2,
+  pp.~489--530, 2025.
+
+\bibitem{bjork_jarmac_2020}
+R.~A. Bjork and E.~L. Bjork, ``Desirable difficulties in theory and practice,''
+  {\em Journal of Applied Research in Memory and Cognition}, vol.~9, no.~4,
+  pp.~475--479, 2020.
+
+\bibitem{natali_lancet_2025}
+A.~Natali {\em et~al.}, ``Impact of artificial intelligence on clinical skill
+  development: A systematic review,'' {\em The Lancet Digital Health}, 2025.
+
+\bibitem{dahmani_scirep_2020}
+L.~Dahmani and V.~D. Bohbot, ``Habitual use of {GPS} negatively impacts spatial
+  memory during self-guided navigation,'' {\em Scientific Reports}, vol.~10,
+  2020.
+
+\bibitem{gerlich_societies_2025}
+M.~Gerlich, ``{AI} tools in society: Impacts on cognitive offloading and the
+  future of critical thinking,'' {\em Societies}, vol.~15, no.~9, p.~252, 2025.
+
+\bibitem{ong_npjdm_2026}
+M.~E.~H. Ong {\em et~al.}, ``Flight rules for clinical {AI},'' {\em npj Digital
+  Medicine}, vol.~9, p.~201, 2026.
+
+\bibitem{casner_humafact_2014}
+S.~M. Casner, R.~W. Geven, M.~P. Recker, and J.~W. Schooler, ``The retention of
+  manual flying skills in the automated cockpit,'' {\em Human Factors},
+  vol.~56, no.~8, pp.~1506--1516, 2014.
+
+\bibitem{asch_guetzkow_1951}
+S.~E. Asch, ``Effects of group pressure upon the modification and distortion of
+  judgments,'' in {\em Groups, Leadership, and Men: Research in Human
+  Relations} (H.~Guetzkow, ed.), pp.~177--190, Pittsburgh, PA: Carnegie Press,
+  1951.
+
+\bibitem{lorenz_pnas_2011}
+J.~Lorenz, H.~Rauhut, F.~Schweitzer, and D.~Helbing, ``How social influence can
+  undermine the wisdom of crowd effect,'' {\em Proceedings of the National
+  Academy of Sciences}, vol.~108, no.~22, pp.~9020--9025, 2011.
+
+\bibitem{becker_pnas_2017}
+J.~Becker, D.~Brackbill, and D.~Centola, ``Network dynamics of social influence
+  in the wisdom of crowds,'' {\em Proceedings of the National Academy of
+  Sciences}, vol.~114, no.~26, pp.~E5070--E5076, 2017.
+
+\bibitem{secondtalent_2025}
+{SecondTalent}, ``Top 100+ {AI} in recruitment statistics,'' 2025.
+\newblock Industry report.
+  \url{https://www.secondtalent.com/resources/ai-in-recruitment-statistics/}.
+
+\bibitem{bls_jolts_2025}
+{U.S. Bureau of Labor Statistics}, ``Job openings and labor turnover survey
+  ({JOLTS}),'' tech. rep., U.S. Department of Labor, 2025.
+\newblock Annual separations rate approx.\ 3.3\%--3.5\% (2024--2025).
+  \url{https://www.bls.gov/jlt/}.
+
+\bibitem{workinstitute_2020}
+{Work Institute}, ``2020 retention report: Trends, reasons, costs and
+  recommendations,'' tech. rep., Work Institute, 2020.
+
+\bibitem{wright_facct_2024}
+L.~Wright, R.~Muenster, B.~Vecchione, T.~Qu, S.~Cai, J.~Metcalf, and J.~N.
+  Matias, ``Null compliance: {NYC} local law 144 and the challenges of
+  algorithm accountability,'' in {\em Proceedings of the ACM Conference on
+  Fairness, Accountability, and Transparency (FAccT)}, 2024.
+
+\bibitem{mann_pnas_2017}
+R.~P. Mann and D.~Helbing, ``Optimal incentives for collective intelligence,''
+  {\em Proceedings of the National Academy of Sciences}, vol.~114, no.~20,
+  pp.~5077--5082, 2017.
+
+\bibitem{bridgers_arxiv_2024}
+R.~Jain, S.~Bridgers, L.~Janzer, R.~Greig, T.~H. Teh, and V.~Mikulik,
+  ``Human-{AI} complementarity: A goal for amplified oversight,'' 2024.
+\newblock arXiv:2510.26518.
+
+\bibitem{bryant_aci_2014}
+A.~D. Bryant, G.~S. Fletcher, and T.~H. Payne, ``Drug interaction alert
+  override rates in the meaningful use era: No evidence of progress,'' {\em
+  Applied Clinical Informatics}, vol.~5, no.~3, pp.~802--813, 2014.
+
+\bibitem{bucinca_chi_2021}
+Z.~Bu\c{c}inca, M.~B. Malaya, and K.~Z. Gajos, ``To trust or to think:
+  Cognitive forcing functions can reduce overreliance on {AI} in {AI}-assisted
+  decision-making,'' in {\em Proceedings of the ACM on Human-Computer
+  Interaction (CSCW)}, vol.~5, 2021.
+
+\bibitem{frey_mnsc_2021}
+V.~Frey and A.~van~de Rijt, ``Social influence undermines the wisdom of the
+  crowd in sequential decision making,'' {\em Management Science}, vol.~67,
+  no.~7, pp.~4303--4316, 2021.
+
+\bibitem{arthur_hp_1998}
+W.~Arthur, W.~Bennett, P.~L. Stanush, and T.~L. McNelly, ``Factors that
+  influence skill decay and retention: A quantitative review and analysis,''
+  {\em Human Performance}, vol.~11, no.~1, pp.~57--101, 1998.
+
+\bibitem{flyvbjerg_jmis_2022}
+B.~Flyvbjerg, A.~Budzier, J.~K. Lee, M.~Krawczyk, G.~Vecci, and S.~Clegg, ``Why
+  your {IT} project may be riskier than you think,'' {\em Journal of Management
+  Information Systems}, vol.~39, no.~3, 2022.
+
+\bibitem{flyvbjerg_pmj_2025}
+B.~Flyvbjerg, A.~Budzier, J.~Aaen, M.~Keil, and M.~Zottoli, ``The uniqueness of
+  {IT} cost risk: A cross-group comparison of 23 project types,'' {\em Project
+  Management Journal}, 2025.
+
+\bibitem{bainbridge_automatica_1983}
+L.~Bainbridge, ``Ironies of automation,'' {\em Automatica}, vol.~19, no.~6,
+  pp.~775--779, 1983.
+
+\bibitem{kahneman_book_2021}
+D.~Kahneman, O.~Sibony, and C.~R. Sunstein, {\em Noise: A Flaw in Human
+  Judgment}.
+\newblock Little, Brown, 2021.
+
+\bibitem{vaccaro_nhb_2024}
+M.~Vaccaro, A.~Almaatouq, and T.~W. Malone, ``When combinations of humans and
+  {AI} are useful: A systematic review and meta-analysis,'' {\em Nature Human
+  Behaviour}, vol.~8, no.~12, pp.~2410--2425, 2024.
+
+\bibitem{peng_neurips_2024}
+K.~Peng and N.~Garg, ``Monoculture in matching markets,'' in {\em Advances in
+  Neural Information Processing Systems (NeurIPS)}, 2024.
+\newblock Paper \#14427.
+
+\bibitem{menlo_2025}
+{Menlo Ventures}, ``2025: The state of generative {AI} in the enterprise,''
+  tech. rep., Menlo Ventures, Dec. 2025.
+
+\bibitem{danielsson_endogenous_2012}
+J.~Danielsson and H.~S. Shin, ``Procyclical leverage and endogenous risk,'' in
+  {\em Handbook on Systemic Risk} (J.-P. Fouque and J.~A. Langsam, eds.),
+  Cambridge University Press, 2012.
+
+\bibitem{danielsson_jfs_2025}
+J.~Danielsson and A.~Uthemann, ``Artificial intelligence and financial
+  crises,'' {\em Journal of Financial Stability}, vol.~80, p.~101453, 2025.
+
+\bibitem{bernile_jfe_2018}
+G.~Bernile, V.~Bhagwat, and S.~Yonker, ``Board diversity, firm risk, and
+  corporate policies,'' {\em Journal of Financial Economics}, vol.~127, no.~3,
+  pp.~588--612, 2018.
+
+\bibitem{citron_wlr_2014}
+D.~K. Citron and F.~Pasquale, ``The scored society: Due process for automated
+  predictions,'' {\em Washington Law Review}, vol.~89, no.~1, pp.~1--34, 2014.
+
+\bibitem{hardin_science_1968}
+G.~Hardin, ``The tragedy of the commons,'' {\em Science}, vol.~162, no.~3859,
+  pp.~1243--1248, 1968.
+
+\bibitem{aggarwal_frontpsych_2019}
+I.~Aggarwal {\em et~al.}, ``The impact of cognitive style diversity on implicit
+  learning in teams,'' {\em Frontiers in Psychology}, vol.~10, p.~112, 2019.
+
+\bibitem{rivera_book_2015}
+L.~A. Rivera, {\em Pedigree: How Elite Students Get Elite Jobs}.
+\newblock Princeton University Press, 2015.
+
+\bibitem{brynjolfsson_stanford_2025}
+E.~Brynjolfsson {\em et~al.}, ``Canaries in the coal mine? {AI} and the
+  displacement of entry-level knowledge work,'' tech. rep., Stanford Digital
+  Economy Lab, 2025.
+\newblock Preprint.
+
+\bibitem{galesic_pnas_2018}
+M.~Galesic, D.~Barkoczi, and K.~Katsikopoulos, ``Smaller crowds outperform
+  larger crowds and individuals in realistic task conditions,'' {\em Decision},
+  vol.~5, no.~1, pp.~1--15, 2018.
+\newblock The PNAS 2018 paper (DOI: 10.1073/pnas.1717632115) by de Oliveira and
+  Nisbett is a distinct publication.
+
+\bibitem{deoliveira_pnas_2018}
+S.~de~Oliveira and R.~E. Nisbett, ``Demographically diverse crowds are
+  typically not much wiser than homogeneous crowds,'' {\em Proceedings of the
+  National Academy of Sciences}, vol.~115, no.~9, pp.~2066--2071, 2018.
+
+\bibitem{vallor_philtech_2015}
+S.~Vallor, ``Moral deskilling and upskilling in a new machine age,'' {\em
+  Philosophy \& Technology}, vol.~28, no.~1, pp.~107--124, 2015.
+
+\bibitem{kirton_routledge_2003}
+M.~J. Kirton, {\em Adaption-Innovation: In the Context of Diversity and
+  Change}.
+\newblock London: Routledge, 2003.
+
+\bibitem{magesh_jels_2025}
+V.~Magesh {\em et~al.}, ``Hallucination-free? assessing the reliability of
+  leading {AI} legal research tools,'' {\em Journal of Empirical Legal
+  Studies}, vol.~22, no.~2, 2025.
+
+\bibitem{wu_arxiv_2024}
+F.~Wu, E.~Black, and V.~Chandrasekaran, ``Generative monoculture in large
+  language models,'' 2024.
+\newblock arXiv:2407.02209.
+
+\bibitem{dratsch_radiol_2023}
+T.~Dratsch {\em et~al.}, ``Automation bias in mammography: The impact of
+  artificial intelligence on radiologists,'' {\em Radiology}, 2023.
+
+\bibitem{bonneau_ipp_2021}
+C.~Bonneau {\em et~al.}, ``Les \'{e}tudiants des grandes \'{e}coles: profil
+  social et trajectoires,'' Tech. Rep. IPP Report No.~30, Institut des
+  Politiques Publiques, 2021.
+
+\bibitem{bourdieu_noblesse_1989}
+P.~Bourdieu, {\em La Noblesse d'{\'E}tat: Grandes \'Ecoles et Esprit de Corps}.
+\newblock Paris: Les \'Editions de Minuit, 1989.
+
+\bibitem{dahl_jla_2024}
+M.~Dahl {\em et~al.}, ``Large legal fictions: Profiling legal hallucinations in
+  large language models,'' {\em Journal of Legal Analysis}, vol.~16, no.~1,
+  2024.
+
+\bibitem{oh_jorgbeh_2018}
+I.-S. Oh {\em et~al.}, ``A longitudinal study of the
+  attraction--selection--attrition model,'' {\em Journal of Organizational
+  Behavior}, vol.~39, no.~4, 2018.
+
+\bibitem{damato_emr_2021}
+A.~D'Amato and C.~J. Rees, ``Testing the homogeneity hypothesis of personality:
+  Replication and extension across {European} countries, industry sectors and
+  organizations,'' {\em European Management Review}, vol.~18, no.~3,
+  pp.~201--216, 2021.
+
+\bibitem{schneider_jap_1998}
+B.~Schneider, D.~B. Smith, S.~Taylor, and J.~W. Fleenor, ``Personality and
+  organizations: A test of the homogeneity of personality hypothesis,'' {\em
+  Journal of Applied Psychology}, vol.~83, no.~3, pp.~462--470, 1998.
+
+\bibitem{kahol_jse_2010}
+K.~Kahol, R.~M. Satava, J.~J. Ferrara, and M.~L. Smith, ``Quantitative
+  evaluation of retention of surgical skills learned in simulation,'' {\em
+  Journal of Surgical Education}, vol.~67, no.~6, pp.~421--426, 2010.
+
+\bibitem{logg_obhdp_2019}
+J.~M. Logg, J.~A. Minson, and D.~A. Moore, ``Algorithm appreciation: People
+  prefer algorithmic to human judgment,'' {\em Organizational Behavior and
+  Human Decision Processes}, vol.~151, pp.~90--103, 2019.
+
+\bibitem{kosmyna_mit_2025}
+N.~Kosmyna, E.~Hauptmann, X.-H. Liao, and P.~Maes, ``Your brain on {ChatGPT}:
+  Accumulation of cognitive debt when using an {AI} assistant for essay
+  writing,'' 2025.
+\newblock arXiv:2506.08872. MIT Media Lab preprint.
+
+\end{thebibliography}

@@ -1,0 +1,79 @@
+\contentsline {section}{\numberline {1}Introduction}{4}{section.1}%
+\contentsline {section}{\numberline {2}Theoretical foundations}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The diversity-prediction trade-off}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}The tail-to-mean ratio and its size independence}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Robust-yet-fragile systems}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}The single-factor correlation structure}{7}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}What the four results establish together}{7}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Algorithmic screening and the erosion of cognitive error diversity}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Three historical layers}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Convergence in AI-assisted cognition}{9}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Structural result and its limits}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}The bridge to error decorrelation}{9}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Cognitive surrender and deskilling}{10}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The surrender documented}{10}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The deskilling that follows}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Two feedback loops the model omits}{11}{subsection.4.3}%
+\contentsline {section}{\numberline {5}The D--H bridge: the central inference}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Two dynamics, two timescales}{12}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}The conformism mechanism}{14}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}What is established and what is inferred}{14}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}The inter-channel coupling and its robustness}{15}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Model specification and calibration}{15}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Architecture}{15}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The D-channel: cognitive diversity under screening}{15}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}The H-channel: surrender, conformism, and deskilling}{16}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Vasicek structure, crisis regime, and the two correlation levels}{16}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}The productivity multiplier and the masking mechanism}{17}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Summary of critical parameters}{17}{subsection.6.6}%
+\contentsline {section}{\numberline {7}Main results and model properties}{18}{section.7}%
+\contentsline {subsection}{\numberline {7.1}The bimodal loss distribution}{18}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}The mean-tail paradox}{19}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}The masking mechanism and the top-tier twist}{20}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Why markets cannot self-correct}{22}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Two correlation channels, one regulatory implication}{22}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}The externalisation structure and the Nash equilibrium}{22}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}The financial precedent and its limits}{22}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}The Tragedy of the Cognitive Commons}{23}{subsection.8.4}%
+\contentsline {section}{\numberline {9}Limitations and empirical agenda}{23}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Three structural limitations}{24}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Two model omissions that underestimate the risk}{24}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Empirical agenda in four levels}{24}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Independent corroboration and scope}{25}{subsection.9.4}%
+\contentsline {section}{Appendices}{26}{section*.7}%
+\contentsline {section}{\numberline {A}Model specification}{26}{appendix.1.A}%
+\contentsline {subsection}{\numberline {A.1}Overview}{26}{subsection.1.A.1}%
+\contentsline {subsection}{\numberline {A.2}Agent initialisation}{26}{subsection.1.A.2}%
+\contentsline {subsection}{\numberline {A.3}Temporal structure}{26}{subsection.1.A.3}%
+\contentsline {subsection}{\numberline {A.4}The D-channel: screening and cognitive diversity}{26}{subsection.1.A.4}%
+\contentsline {subsection}{\numberline {A.5}Environmental regime and Vasicek coupling (v5)}{27}{subsection.1.A.5}%
+\contentsline {subsection}{\numberline {A.6}Decision process and error structure}{27}{subsection.1.A.6}%
+\contentsline {subsection}{\numberline {A.7}Deskilling}{28}{subsection.1.A.7}%
+\contentsline {subsection}{\numberline {A.8}Output metrics}{28}{subsection.1.A.8}%
+\contentsline {subsection}{\numberline {A.9}Analytical reference check}{29}{subsection.1.A.9}%
+\contentsline {section}{\numberline {B}Calibration tables}{30}{appendix.1.B}%
+\contentsline {subsection}{\numberline {B.1}Main parameter table}{31}{subsection.1.B.1}%
+\contentsline {subsection}{\numberline {B.2}Profile-specific overrides (P1--P8)}{35}{subsection.1.B.2}%
+\contentsline {subsection}{\numberline {B.3}Five fragile parameters}{35}{subsection.1.B.3}%
+\contentsline {section}{\numberline {C}Sensitivity analysis}{35}{appendix.1.C}%
+\contentsline {subsection}{\numberline {C.1}Sensitivity summary}{36}{subsection.1.C.1}%
+\contentsline {subsection}{\numberline {C.2}Robustness of the mean-tail paradox}{36}{subsection.1.C.2}%
+\contentsline {subsection}{\numberline {C.3}Parameter-level discussion}{37}{subsection.1.C.3}%
+\contentsline {subsection}{\numberline {C.4}Exploratory extension: $\omega $}{37}{subsection.1.C.4}%
+\contentsline {subsection}{\numberline {C.5}Note on parameter interactions}{37}{subsection.1.C.5}%
+\contentsline {section}{\numberline {D}Ablation study}{39}{appendix.1.D}%
+\contentsline {subsection}{\numberline {D.1}Main ablation table}{39}{subsection.1.D.1}%
+\contentsline {subsection}{\numberline {D.2}Key contrasts}{39}{subsection.1.D.2}%
+\contentsline {subsection}{\numberline {D.3}The scaffold benefit metric}{40}{subsection.1.D.3}%
+\contentsline {subsection}{\numberline {D.4}Contextual anchors}{41}{subsection.1.D.4}%
+\contentsline {section}{\numberline {E}Bibliographic notes}{42}{appendix.1.E}%
+\contentsline {subsection}{\numberline {E.1}Theoretical core}{42}{subsection.1.E.1}%
+\contentsline {subsection}{\numberline {E.2}Key empirical anchors}{43}{subsection.1.E.2}%
+\contentsline {subsection}{\numberline {E.3}Preprints requiring explicit status}{44}{subsection.1.E.3}%
+\contentsline {subsection}{\numberline {E.4}Methodological and conceptual sources}{45}{subsection.1.E.4}%
+\contentsline {section}{\numberline {F}Reproducibility note}{46}{appendix.1.F}%
+\contentsline {subsection}{\numberline {F.1}Code repository}{46}{subsection.1.F.1}%
+\contentsline {subsection}{\numberline {F.2}Seeds and replication protocol}{46}{subsection.1.F.2}%
+\contentsline {subsection}{\numberline {F.3}Two-implementation convergence check}{47}{subsection.1.F.3}%
+\contentsline {subsection}{\numberline {F.4}Model version history}{47}{subsection.1.F.4}%
+\contentsline {subsection}{\numberline {F.5}Analytical reference check}{48}{subsection.1.F.5}%
