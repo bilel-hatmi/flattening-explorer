@@ -97,18 +97,31 @@ function countSystemic(grid, threshold) {
 }
 
 function computeCorrelation(grid) {
-  if (!grid || grid.length === 0) return 0;
+  // Mean pairwise error correlation across agents (the actual model quantity)
+  if (!grid || grid.length < 2) return 0;
   const nAgents = grid.length;
-  const colSums = [];
-  for (let d = 0; d < N_DECISIONS; d++) {
-    let s = 0;
-    for (let a = 0; a < nAgents; a++) s += grid[a][d];
-    colSums.push(s);
+  const K = grid[0].length;
+  // Each agent's error rate
+  const rates = grid.map(row => row.reduce((s, v) => s + v, 0) / K);
+  const meanRate = rates.reduce((s, r) => s + r, 0) / nAgents;
+  if (meanRate < 0.001 || meanRate > 0.999) return 0;
+  // Sample pairwise correlations (sample 200 pairs for speed)
+  let sumCorr = 0, nPairs = 0;
+  const step = Math.max(1, Math.floor(nAgents / 15));
+  for (let i = 0; i < nAgents; i += step) {
+    for (let j = i + 1; j < nAgents; j += step) {
+      // Pearson correlation between agent i and agent j error vectors
+      const mi = rates[i], mj = rates[j];
+      let cov = 0, vi = 0, vj = 0;
+      for (let k = 0; k < K; k++) {
+        const di = grid[i][k] - mi, dj = grid[j][k] - mj;
+        cov += di * dj; vi += di * di; vj += dj * dj;
+      }
+      const denom = Math.sqrt(vi * vj);
+      if (denom > 0) { sumCorr += cov / denom; nPairs++; }
+    }
   }
-  const meanCol = colSums.reduce((a, b) => a + b, 0) / N_DECISIONS;
-  const variance = colSums.reduce((a, b) => a + (b - meanCol) ** 2, 0) / N_DECISIONS;
-  const maxVar = (nAgents * 0.5) ** 2;
-  return maxVar > 0 ? variance / maxVar : 0;
+  return nPairs > 0 ? Math.max(0, sumCorr / nPairs) : 0;
 }
 
 /* -- Canvas drawing ------------------------------------------------------- */
