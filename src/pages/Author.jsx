@@ -1,6 +1,6 @@
 // ── Document links ───────────────────────────────────────────────────────────
 const LINKS = {
-  github:     'https://github.com/Hatimsel/flattening-explorer',
+  github:     'https://github.com/bilel-hatmi/flattening-explorer',
   cv:         '/docs/cv.pdf',
   cartesia:   '/docs/cartesia.pdf',
   essayShort: '/docs/essay_prize.pdf',
