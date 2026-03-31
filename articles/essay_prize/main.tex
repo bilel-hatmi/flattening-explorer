@@ -78,13 +78,13 @@
 % PAGE DE GARDE (page 1 — pas de header running)
 % ============================================================
 \thispagestyle{plain}
-\vspace*{\fill}
+\vspace*{0.5cm}
 
 \begin{center}
 \begin{tabular*}{\textwidth}{@{}c@{\extracolsep{\fill}}c@{\extracolsep{\fill}}c@{}}
-$\vcenter{\hbox{\includegraphics[height=1.3cm]{../logo/ucam-logo-colour-preferred.png}}}$ &
-$\vcenter{\hbox{\includegraphics[height=1.4cm]{"../logo/CentraleSup Logo H_RVB.png"}}}$ &
-$\vcenter{\hbox{\includegraphics[height=1.3cm]{../logo/01_Horizontal.png}}}$
+$\vcenter{\hbox{\includegraphics[height=1cm]{../logo/ucam-logo-colour-preferred.png}}}$ &
+$\vcenter{\hbox{\includegraphics[height=2.7cm]{"../logo/CentraleSup Logo H_RVB.png"}}}$ &
+$\vcenter{\hbox{\includegraphics[height=1.5cm]{../logo/01_Horizontal.png}}}$
 \end{tabular*}
 \end{center}
 
@@ -102,35 +102,43 @@ University of Cambridge\\[2pt]
 
 \vspace{0.5cm}
 \noindent\rule{\textwidth}{0.5pt}
-\vspace{0.3cm}
 
 \begin{abstract}
-Generative AI improves average decision quality in organisations. It also
-amplifies their worst-case exposure, through a mechanism that current
-productivity metrics cannot capture.
-Two channels produce this outcome. Algorithmic screening homogenises cognitive
-profiles at entry. Cognitive surrender erodes independent judgment from within.
-Both raise the error correlation across decision-makers, which is what drives
-tail losses.
-A Monte Carlo stress test of 200 agents over 20 quarters quantifies the gap:
+Generative AI improves average decision quality in organisations while
+simultaneously amplifying their exposure to rare, extreme losses, through
+a mechanism that standard productivity metrics cannot detect.
+
+The underlying driver is error correlation, raised through two independent
+channels. AI-powered hiring converges on increasingly similar cognitive
+profiles, narrowing the pool of judgment that would otherwise disperse
+collective errors. Inside the organisation, employees defer to AI outputs
+even when the AI is wrong, synchronising mistakes that heterogeneous
+judgment would catch. In a bad quarter, both channels operate
+simultaneously: errors align and compound rather than cancel.
+
+A stress-test simulation quantifies the paradox: under unmanaged adoption,
 average errors fall by 38\% while worst-case quarterly losses rise by 56\%,
-masked by a 54\% productivity gain. The model was validated by two independent
-implementations converging within 2\%.
-The most actionable single intervention is AI provider diversification, which
-cuts the tail risk premium by approximately 15\%. It is a procurement decision,
-implementable in weeks. Yet without regulation, the Nash equilibrium is
-unmanaged adoption for all firms: individually rational, collectively
-catastrophic. The diversity of independent judgment that makes organisational
-governance possible is being depleted faster than any single firm has
-incentive to preserve it.
+masked by a 54\% productivity gain.
+
+Three interventions act at different timescales. Distributing AI systems
+across vendors and organisational layers, a procurement decision
+implementable in weeks, cuts worst-case exposure by approximately 15\%.
+Requiring employees to form an independent judgment before consulting AI
+achieves larger reductions, at the cost of months of workflow redesign.
+Annual audits of AI hiring systems address the entry channel directly.
+Yet without regulation, no firm has incentive to adopt any of them: the
+short-term productivity advantage makes inaction individually rational and
+collectively catastrophic. The diversity of judgment that makes governance
+possible is being depleted faster than any single firm has reason to
+preserve it.
 \end{abstract}
 
+\bigskip
+\noindent\textit{An interactive companion application is deployed at}
+\url{https://flattening-app.vercel.app}.
+\textit{The full simulation code and source are available at}
+\url{https://github.com/bilel-hatmi/flattening-explorer}.
 
-
-\vspace{0.5cm}
-\noindent\rule{\textwidth}{0.5pt}
-
-\vspace*{\fill}
 \clearpage
 
 % ============================================================
@@ -145,289 +153,368 @@ distinct~\cite{meincke_nhb_2025}.
 Each individual output improved.
 The collective output collapsed.
 
-This is not a quirk of one experiment.
+The pattern extends beyond this single experiment.
 The Diversity Prediction Theorem decomposes collective error into two terms:
-average individual error, and the diversity of individual
-errors~\cite{page_princeton_2007,krogh_nips_1995}.
+average individual error, and the diversity of those errors across
+decision-makers~\cite{page_princeton_2007,krogh_nips_1995}.
 When AI reduces the first term but collapses the second, collective error rises
 mechanically.
-The variance of aggregate losses follows:
+The aggregate loss variance formalises the point:
 \[
   \text{Var}(L) = NK\,\bar{p}(1-\bar{p})\bigl(1 + (NK-1)\bar{\rho}\bigr)
 \]
-\noindent Even a modest rise in $\bar{\rho}$, the mean pairwise error correlation
-across employees, drives the tail~\cite{wood_jmlr_2023}.
-A preprint meta-analysis of 379 experimental conditions quantifies the trade-off:
-AI raises individual creative performance by $g = +0.27$ but collapses collective
-diversity by $g = -0.86$~\cite{holzner_arxiv_2025}.
-The loss of diversity is three times the gain in performance.
-Carlson and Doyle call such systems robust-yet-fragile~\cite{carlson_prl_2000}:
-optimised for the frequent case, exposed to the rare one.
-In most quarters, errors stay scattered and small.
-In crisis quarters, they correlate and aggregate.
-The loss distribution splits into two regimes, and the mean falls in a gap between
-them where almost no actual quarter lies.
+\noindent The key parameter is $\bar{\rho}$, the mean pairwise error correlation
+across employees~\cite{wood_jmlr_2023}.
+Its rise is the mechanism behind the paradox.
+Under AI adoption, each employee becomes more accurate on average; that part is
+real and measurable.
+But the accuracy comes from deferring to the same model.
+The errors that remain are no longer scattered independently across the
+organisation: they are shared.
+When the model is right, everyone is right together.
+When it is wrong, everyone is wrong together, simultaneously, for the same reason.
 
-The paradox has a second property that matters more for risk managers: it is
+A preprint meta-analysis of 379 experimental conditions puts numbers on the
+asymmetry: AI raises individual creative performance by $g = +0.27$ while
+collapsing collective diversity by $g = -0.86$, a ratio of three to
+one~\cite{holzner_arxiv_2025,doshi_sciadv_2024}.
+Carlson and Doyle call such systems robust-yet-fragile~\cite{carlson_prl_2000}:
+tuned for the frequent case, catastrophically exposed to the rare one.
+In normal quarters, correlated accuracy keeps losses low; in a crisis, correlated
+errors drive them high simultaneously, with no independent judgment to interrupt
+the cascade.
+The loss distribution splits accordingly; the mean falls in the gap between the
+two modes where almost no actual quarter lies.
+
+The paradox has also a second property that matters more for risk managers: it is
 concealed by the same productivity metrics that appear to confirm performance.
 
 This essay addresses the CRO who sees a 54\% productivity gain on the dashboard
-but cannot yet see the 94\% rise in risk-adjusted worst-case losses behind it.
+but cannot yet see what lies behind it.
 The argument applies to any AI system that standardises the inputs to
-organisational decisions, from legacy algorithmic screening tools to generative
-models deployed in knowledge work.
+organisational decisions, from legacy screening tools to generative models in
+knowledge work.
 Under unmanaged adoption, average decision errors fall by 38\% while worst-case
-quarterly losses rise by 56\%.
-The productivity shock that improves the mean simultaneously expands the volume of
-decisions exposed to correlated failure.
-The risk-adjusted $P_{99}$ rises by 94\%.
-The dashboard records the gain; the tail accumulates off-screen.
-For elite firms, those whose employees outperform AI outside its competence
-frontier, the masking is more extreme: a 192\% rise in risk-adjusted tail exposure
-against 18\% apparent productivity growth.
-The dashboard cannot distinguish speed from accuracy.
+quarterly losses rise by 56\%; the risk-adjusted 99th-percentile loss rises
+by 94\%.
+For elite firms, those whose employees outperform AI on tasks outside its
+competence, the masking is more extreme: a 192\% rise in tail exposure against
+18\% apparent productivity growth.
+Where the gain looks safest, the hidden cost is largest.
 
-This exposure is not distributed randomly.
-It is structurally determined, and for the roughly 100{,}000 mid-market
+The exposure is structurally determined, and for the roughly 100{,}000 mid-market
 organisations in the US and the EU most at risk, it is approaching without
 a governance framework to navigate it.
 
-This essay does three things for decision-makers.
-First, it identifies the two mechanisms that produce the trap.
-Second, it maps exposure across organisational profiles, showing that the perceived
-worst-case risk is nearly half the actual exposure, and that tail risk varies
-structurally across firms in the same sector with the same talent.
-Third, it distributes three governance levers across three distinct actors, one
-of which is a procurement decision actionable in weeks.
+For decision-makers, the argument develops in three steps: what produces the trap,
+where each type of organisation sits on the risk map, and the governance levers
+available to actors at every level, starting with a procurement decision requiring
+no regulatory change.
 
 \bridgeskip
-\noindent\emph{Two channels produce this outcome. One operates at the point of entry. The other
-operates from within. Both converge on the same structural target: the correlation
-of errors across decision-makers.}
+\noindent\emph{Both channels converge on a single structural target: the
+correlation of errors across decision-makers.}
 
 % ============================================================
-\section{Two channels, one target}
+\section{Screening and surrender: two paths to correlated failure}
 
-Human hiring was a porous filter. Interviewers disagreed, biases cancelled
-partially, and non-linear profiles slipped through. AI screening is not a better
-version of this process. It is a different kind of process: systematic, coherent,
-and closed.
-Fuller et al.\ document 27 million Americans excluded from consideration by
-automated tracking systems, including caregivers, veterans, and career-changers
-screened out by rigid keyword matching~\cite{fuller_hbs_2021}.
-The bias is not confined to one model or one protected category.
-Five major LLMs evaluating 361{,}000 r\'{e}sum\'{e}s exhibit strikingly similar
-bias patterns~\cite{an_pnasnexus_2025,glazko_facct_2024,wilson_aies_2024}: the
-filter industrialises what each training corpus encodes.
-These models learn from the same corpora that reflect decades of cultural matching
-in elite professional hiring~\cite{rivera_asr_2012}.
-Schneider's attraction-selection-attrition model~\cite{schneider_pp_1987} predicts
-the outcome: organisations converge toward cognitive homogeneity.
-AI accelerates the convergence.
+When individual errors stop compensating and start aggregating, the result is
+correlated failure. It does not appear on standard dashboards. The mechanism is
+not new; it has produced catastrophic outcomes before, in financial models,
+arbitrage strategies, and software infrastructure. In each case the proximate
+cause was the same: a monoculture had formed. AI adoption reproduces this dynamic
+through two reinforcing channels, both documented in the empirical literature:
+systematic screening of diversity at the point of hiring, and progressive
+surrender of independent judgment from within.
 
-This convergence does not merely narrow representation. It correlates errors.
-Across major language models, 60\% of mistakes are already
-shared~\cite{kim_icml_2025}. Even before human homogenisation, the tools themselves
-fail together.
-Add cognitively convergent workforces recruited through the same filter, and the
-errors of persons and the errors of tools superimpose in the same direction at the
-same moment.
+The failure mode recurs whenever diversity collapses,
+whether in human judgment, mathematical models, or software
+infrastructure. In 1998, Long-Term Capital Management lost \$4.6 billion
+in four months: the fund's Nobel laureates and PhD physicists had
+converged on identical arbitrage strategies, not for want of
+intelligence, but for want of cognitive
+diversity~\cite{jorion_efm_2000,mackenzie_econsoc_2003}. A decade later,
+banks across the financial system had converged on the same risk models,
+the same Value-at-Risk parameters, the same copula assumptions; when
+those models failed, they failed everywhere at
+once~\cite{haldane_nature_2011}. In July 2024, a single CrowdStrike
+update crashed 8.5 million Windows machines in 78 minutes, costing
+Fortune~500 firms an estimated
+\$5.4~billion~\cite{microsoft_crowdstrike_2024,parametrix_crowdstrike_2024}:
+this time the monoculture was in software infrastructure, but the
+mechanism was identical to what Geer et al.~\cite{geer_ccia_2003} had
+documented twenty-one years earlier. Cognitive monoculture, model
+monoculture, software monoculture: in each case, losses stopped
+compensating and started aggregating. Kleinberg and Raghavan formalise
+the general point~\cite{kleinberg_pnas_2021}: even when an algorithm is
+individually superior, convergence on the same algorithm degrades
+collective welfare.
 
-The pattern is not new. In 1998, Long-Term Capital Management lost \$4.6 billion
-in four months. The fund employed Nobel laureates and PhD physicists who had
-converged on identical arbitrage
-strategies~\cite{jorion_efm_2000,mackenzie_econsoc_2003}. The problem was not
-a lack of intelligence. It was a lack of diversity. In 2008, banks used the
-same risk models, the same Value-at-Risk parameters, the same copula assumptions.
-Homogeneity bred fragility~\cite{haldane_nature_2011}. In July 2024, a single
-CrowdStrike update crashed 8.5 million Windows machines in
-78 minutes~\cite{microsoft_crowdstrike_2024}, costing Fortune~500 firms an
-estimated \$5.4~billion~\cite{parametrix_crowdstrike_2024}.
-Geer et al.~\cite{geer_ccia_2003} had predicted software monoculture risk
-twenty-one years earlier.
-The mechanism is the same across all three episodes: when diversity collapses,
-losses stop compensating and start aggregating. Kleinberg and Raghavan formalise
-the point: even when an algorithm is individually superior, convergence on the
-same algorithm degrades collective welfare~\cite{kleinberg_pnas_2021}.
+AI adoption reproduces this dynamic at two organisational levels, and
+the two reinforce each other.
 
-This is the entry channel. A second channel operates on those already inside.
+The first operates before an employee makes a single decision.
+AI-powered hiring tools are trained on historical data encoding decades
+of cultural matching in elite professional
+hiring~\cite{rivera_asr_2012}, applying the same criteria consistently
+across every firm that deploys them. Fuller et al.\ document 27 million
+Americans excluded from consideration by automated tracking systems,
+including caregivers, veterans, and career-changers screened out by
+rigid keyword matching~\cite{fuller_hbs_2021}. Five major LLMs
+evaluating 361{,}000 r\'{e}sum\'{e}s exhibit strikingly similar bias
+patterns for the same
+reason~\cite{an_pnasnexus_2025,glazko_facct_2024,wilson_aies_2024}:
+they encode identical historical norms. Schneider's
+attraction-selection-attrition model~\cite{schneider_pp_1987} predicts
+the endpoint: when every organisation uses the same filter trained on
+the same data, they converge toward the same cognitive profile.
 
-The employees who pass the filter progressively surrender the independence they
-retain. Shaw and Nave document the phenomenon in a preprint study of 1{,}372
-participants across 9{,}593 trials~\cite{shaw_psyarxiv_2026}.
-When the AI errs, 79.8\% of participants follow its recommendation anyway.
-The asymmetry is stark: correct AI advice raises accuracy by 25.2 percentage
-points, but incorrect AI advice reduces it by only 14.3 points, a Cohen's
-$h$ of~0.81.
-Confidence rises by 11.7 points even when AI accuracy is 50\%, and does not decay
-with experience ($p = 0.202$).
-What makes this dangerous is not the surrender itself but the fact that confidence
-rises alongside it.
-Dell'Acqua et al.\ replicate the pattern among 758 consultants in a field
-experiment~\cite{dellacqua_orgscience_2026}: inside the AI's competence frontier,
-quality improves by 40\%. Outside it, accuracy drops 19 percentage points. The
-most AI-skilled consultants perform worst, because competence in using the tool
-compounds the surrender.
-Professionals are not immune. In a randomised trial, radiologists exposed to biased
-AI recommendations degraded their diagnostic accuracy by 11.3 percentage
-points~\cite{jabbour_jama_2023}.
-Passive scaffolding changes nothing: 93\% of clinical decision-support alerts are
-overridden without review~\cite{bryant_aci_2014}. Bainbridge identified this as
-the central irony of automation four decades ago~\cite{bainbridge_automatica_1983}:
-removing humans from the control loop degrades the competence required to reenter it.
+The second channel is less visible, because it operates inside the
+organisation rather than at its gate. Once hired, employees
+progressively defer to AI outputs even when the AI is wrong, and they
+do so without noticing. In a preprint study of 1{,}372 participants,
+79.8\% follow AI recommendations even when the AI
+errs~\cite{shaw_psyarxiv_2026}: correct advice raises accuracy by 25
+percentage points, incorrect advice reduces it by 14, yet confidence
+rises in either case and does not diminish with experience.
+Dell'Acqua et al.\ replicate the pattern among 758 BCG
+consultants~\cite{dellacqua_orgscience_2026}: quality improves by 40\%
+inside the range of tasks where AI reliably outperforms humans, but
+falls 19 percentage points outside it. The most AI-skilled consultants
+perform worst, because familiarity with the tool deepens the surrender.
+Over time, repeated surrender does more than correlate present errors:
+it erodes the capacity for independent judgment that would correct them.
+Bainbridge identified this irony four decades
+ago~\cite{bainbridge_automatica_1983}: removing humans from the control
+loop degrades the very competence required to reenter it.
 
-Keck and Tang provide the experimental link between both
-channels~\cite{keck_psychsci_2020}: groups combining diverse cognitive processes
-exhibit near-zero inter-judge error correlations, while homogeneous groups produce
-strongly correlated errors.
-Screening eliminates the structural source of that decorrelation.
-Surrender erodes the behavioural independence that remains.
-The Diversity Prediction Theorem delivers the consequence: as the diversity term
-vanishes, collective error rises even as individual error falls.
-The property is symmetric. When AI is right, correlated followers cluster at the
-same correct answer. When AI errs, they cluster at the same wrong
-answer, simultaneously, at scale.
-This is what produces the bimodal distribution introduced in Section~1: in normal
-quarters, correlated successes hold losses low; in crisis quarters, correlated
-errors drive them high. The mean falls in a gap between two regimes that rarely
-overlap.
-One caveat: this link assumes that cognitive-profile diversity proxies for
-cognitive-process diversity in real organisations, an inference that is plausible
-but untested.
+Both channels converge on the same structural outcome: the correlation
+of errors across decision-makers. Keck and Tang provide the
+experimental foundation~\cite{keck_psychsci_2020}: groups combining
+diverse cognitive processes exhibit near-zero inter-judge error
+correlations; homogeneous groups produce strongly correlated errors.
+Together, the two channels dismantle cognitive diversity at entry, from
+within, and over time. The Diversity Prediction Theorem delivers the
+formal consequence: as the diversity term vanishes, collective error
+rises even as individual error falls. When a crisis arrives, all three
+layers align simultaneously, with no independent judgment to interrupt
+the cascade.
+
+The two channels do not simply add their effects: one creates the
+conditions under which the other becomes near-total. In a cognitively
+diverse team, at least some employees resist the AI; in a homogeneous
+one, those dissenters have already been filtered out before the second
+channel begins. Screening removes the structural resistance that would
+otherwise limit surrender. The organisation that has spent several
+years under unmanaged adoption arrives at each quarter with a workforce
+more homogeneous, more deferential, and progressively less aware that
+both are happening.
 
 \bridgeskip
-\noindent\emph{The mechanism is identified, and both channels are empirically grounded.
-What remains is the magnitude. A Monte Carlo stress test answers that question
-next.}
+\noindent\emph{Both channels are documented; the simulation that
+follows measures the gap they produce.}
 
 % ============================================================
-\section{Quantifying the hidden exposure}
+\section{The paradox, measured}
 
-We simulate an organisation of 200 employees, each characterised by a cognitive
-type $\tau_i \sim \mathrm{Beta}(2,2)$ on $[0,1]$ and a skill level
-$h_i(t) \sim U(0.4, 0.8)$.
-Each quarter, the organisation faces ten decisions in a stochastic environment
-where the fraction of tasks inside the AI's competence frontier follows a
-two-regime mixture: a normal regime in 92\% of quarters and a crisis regime in
-8\%, in which the frontier shift and the systemic error shock are coupled. This
-is the conditional stress logic of Basel~II applied to cognitive errors rather
-than credit defaults.
-Inter-decision error correlation follows the Vasicek single-factor
-structure~\cite{vasicek_risk_2002}, the standard Basel~II/III framework for
-modelling correlated failures.
+A productivity gain that conceals a simultaneous expansion of tail risk
+cannot be detected from the dashboard it improves. Separating what the mean
+captures from what the tail contains requires stress-testing the full loss
+distribution across plausible organisational parameters.
 
-Four governance scenarios are compared.
-G0 adopts AI without governance: employees consult freely, no independent judgment
-required.
-G1 introduces passive scaffolding: alert flags signal low-confidence outputs, with
-no compliance requirement.
-G2 implements active scaffolding: employees record an independent judgment before
-consulting the AI.
+We simulate a neutral central case: an organisation of 200 employees with
+cognitive profiles distributed broadly across the full spectrum and skill
+levels spanning the practical range of professional knowledge
+work.\footnote{Formally, $\tau_i \sim \mathrm{Beta}(2,2)$ on $[0,1]$ and
+$h_i(t) \sim U(0.4, 0.8)$. These parameters define a deliberately neutral
+benchmark: neither an unusually homogeneous workforce nor an unrealistically
+diverse one.}
+
+Two structural features drive the result.
+Most quarters, the AI's competence frontier is broad and conditions are
+stable: the normal regime.
+Occasionally, the frontier contracts and a systemic shock strikes at the
+same moment. The key word is \emph{at the same moment}: the two events are
+coupled, not independent. This is the conditional stress logic of Basel~II
+applied to cognitive errors rather than credit defaults: the quarters when
+the AI is least reliable are also the quarters when conditions most demand
+sound judgment. The crisis frequency of 8\% is calibrated to catastrophic
+IT-project failure rates across large cross-industry
+datasets~\cite{flyvbjerg_jmis_2022,flyvbjerg_pmj_2025}; normal quarters
+represent 92\% of observations.
+
+The two channels from Section~2 both raise inter-agent error correlation.
+Screening homogenises the cognitive profile of the workforce, so agents
+who share a cognitive type make similar errors even when thinking
+independently. Surrender increases the follow rate, so the more employees
+defer to the AI, the more their errors are driven by the same shared
+signal. The inter-decision error structure follows the Vasicek single-factor
+model~\cite{vasicek_risk_2002}, the standard Basel~II/III framework for
+correlated defaults: replace ``loan portfolio'' with ``decision portfolio''
+and the mathematics is unchanged.
+
+Four governance scenarios are compared: G0 (unmanaged adoption), G1
+(passive scaffolding: alert flags, no compliance requirement), and G2
+(active scaffolding: independent judgment recorded before AI consultation).
 The model runs several hundred independent replications, validated by two
 implementations converging within 2\%.
-It is a stress test, not a forecast. It demonstrates that the mechanism \emph{can}
-produce the paradox under plausible parameters, not that it does so in every
-organisation.
+A stress test, not a forecast.
 
-Consider what a manager actually observes.
-Quarterly performance follows the left mode in 92\% of quarters.
-The manager's empirical estimate of tail risk, the worst quarter they have ever
-seen, is built from these observations alone.
-The perceived $P_{99}$, calculated on normal-regime quarters only, stands near
-877.9.
-The actual $P_{99}$ under unmanaged adoption is 1{,}714: a factor of nearly two
-($\times$1.95). Figure~\ref{fig:bimodal} shows the full distribution.
+The resulting loss distribution is shown in Figure~\ref{fig:bimodal}.
+A manager in G0 sees the left mode: quarter after quarter, losses low,
+dashboards green. Both quantities are now in view. Unmanaged adoption
+compresses average errors and expands tail risk simultaneously: average errors
+fall by 38\%, worst-case quarterly losses rise by 56\%, and the 54\%
+productivity gain that masks the difference is paid in a currency the dashboard
+never shows.
 
 \begin{figure}[H]
-\begin{mdframed}[linewidth=0.5pt, linecolor=black!30, innertopmargin=6pt, innerbottommargin=2pt]
+\begin{mdframed}[linewidth=0.5pt, linecolor=black!30, innertopmargin=6pt,
+  innerbottommargin=2pt]
   \centering
   \includegraphics[width=0.85\textwidth]{../figures/exhibit1_essay.png}
 \end{mdframed}
-  \caption{Bimodal distribution of quarterly losses under unmanaged AI adoption
-  (G0). Normal quarters cluster below 600 (grey); crisis quarters cluster above
-  1{,}100 (red). Dashed line: mean loss ($\mathbb{E}[L] = 500$). Solid red line:
-  99th-percentile loss ($P_{99} = 1{,}714$). The mean falls in a gap where almost
-  no actual quarter lies. Crisis regime couples the task-frontier shift
-  ($\pi_t$) with the systemic shock ($\xi_t$), following the conditional stress
+  \caption{Bimodal distribution of quarterly losses under unmanaged AI
+  adoption (G0). Normal quarters cluster below 600 (grey); crisis quarters
+  cluster above 1{,}100 (red). Dashed line: mean loss
+  ($\mathbb{E}[L] = 500$). Solid red line: 99th-percentile loss
+  ($P_{99} = 1{,}714$). The mean falls in a gap where almost no actual
+  quarter lies. Crisis regime couples the task-frontier shift ($\pi_t$)
+  with the systemic shock ($\xi_t$), following the conditional stress
   logic of Basel~II.}
   \label{fig:bimodal}
 \end{figure}
 
-Under unmanaged adoption against the no-AI baseline: average decision errors fall
-by 38\%, worst-case quarterly losses rise by 56\%, and the risk-adjusted $P_{99}$
-rises by 94\%.
-The dashboard records a 54\% productivity gain.
-The first three figures accumulate off-screen.
+\begin{mdframed}[
+  backgroundcolor=gray!5,
+  linewidth=0.8pt,
+  linecolor=black!25,
+  frametitle={\small\bfseries Key insights},
+  frametitlebackgroundcolor=gray!15,
+  frametitleaboveskip=3pt,
+  frametitlebelowskip=6pt,
+  frametitlerule=true,
+  frametitlerulecolor=black!15,
+  frametitlerulewidth=0.5pt,
+  innertopmargin=8pt,
+  innerbottommargin=10pt,
+  innerleftmargin=14pt,
+  innerrightmargin=14pt
+]
+\small
 
-The three channels compound over twenty quarters.
-Screening compresses $\text{Var}(\tau)$ by 30\%, shrinking the pool of dissenters
-who buffer uncritical AI adoption and concentrating the workforce on profiles that
-find AI outputs intuitively plausible; effective follow rate rises from 69\% to 80\%.
-Deskilling erodes the independent judgment that remains, as mean skill $\bar{h}$
-falls from 0.591 to 0.490.
-By quarter 20, the organisation has more followers, but it also has followers for
-whom surrender is structurally easier, embedded in a group where resistance is
-socially costly.
+\noindent\textbf{1.\enspace The right mode has not yet arrived.}\enspace
+Crisis quarters require AI adoption to have compounded far enough across
+the workforce to drive correlated failure. At current adoption rates,
+that threshold has not been crossed. The manager's record is clean and
+accurate. It is not representative of where G0 leads.
 
-Each quarter without governance makes the transition to G2 more expensive than the
-one before.
+\medskip
+\noindent\textbf{2.\enspace The mean has genuinely improved.}\enspace
+Against the no-AI baseline, average errors fall substantially: adoption
+delivers a real gain in normal quarters. But strip out the crisis mode
+and the measured improvement barely changes. The mean captures
+normal-quarter performance faithfully. It cannot account for the cost
+that crisis quarters carry.
 
-The masking is most severe for elite firms.
-Where employee accuracy outside the frontier ($h \approx 0.80$) exceeds AI accuracy
-($q_{\text{out}} = 0.55$), unmanaged adoption raises average errors by 23\% and
-risk-adjusted worst-case losses by 192\%, yet produces only 18\% apparent
-productivity growth.
-The reason is not that skilled employees perform worse when thinking independently.
-Most of them simply do not think independently: surrender is driven by cognitive
-proximity to the modal type, not by skill level.
-An employee with $h = 0.80$ surrenders at the same rate as one with $h = 0.45$,
-provided they share the same cognitive type.
-Surrendering when $h > q_{\text{out}}$ is a regression, and in the model, most
-agents do it anyway.
-Where masking is worst, the gap between perceived and actual risk is widest.
+\medskip
+\noindent\textbf{3.\enspace Including crisis quarters, tail risk rises
+by 94\%.}\enspace
+The risk-adjusted $P_{99}$ rises by 94\% against the no-AI baseline once
+the full distribution is considered. The same adoption that compresses
+average errors concentrates extreme losses into the right mode, invisible
+to any monitoring built from the left alone.
+\end{mdframed}
+
+The gap, moreover, widens over time. Screening concentrates the workforce on profiles
+that find AI outputs intuitively plausible, eroding the pool of dissenters
+who would otherwise buffer uncritical adoption.\footnote{Effective follow
+rate rises from 69\% to 80\% over twenty quarters as $\text{Var}(\tau)$
+falls by 30\%.} Deskilling erodes whatever independent judgment
+remains.\footnote{Mean skill $\bar{h}$ falls from 0.591 to 0.490 by
+quarter~20.} By quarter 20, the organisation has more followers and
+followers for whom surrender comes easier, embedded in a group where
+resistance is socially costly.
+
+Nor is this exposure uniform across skill profiles: masking is most severe
+for elite firms. Where employee accuracy
+outside the frontier ($h \approx 0.80$) exceeds AI accuracy
+($q_{\text{out}} = 0.55$), unmanaged adoption raises average errors by
+23\% and risk-adjusted worst-case losses by 192\%, yet produces only 18\%
+apparent productivity growth. The reason is not that skilled employees
+think worse when thinking independently. Most of them simply do not think
+independently. Surrender is driven by cognitive proximity to the modal
+type, not by skill level: when the majority follows, the social cost of
+dissent rises whether or not the dissenter is right. Randazzo et al.\
+document the escalation directly: AI systems intensify their persuasive
+framing under pushback, what they term persuasion
+bombing~\cite{randazzo_hbs_2025}, making individual resistance costly even
+for those whose independent judgment is most accurate. Where masking is
+worst, the gap is widest.
+
+Each quarter without governance makes the transition to G2 more expensive
+than the one before.
 
 \bridgeskip
 \noindent\emph{This exposure is not uniformly distributed. Five structural
-characteristics determine where an organisation sits on the map, and how wide the
-gap between perceived and actual risk is for each.}
+characteristics determine where an organisation sits on the map, and how
+wide the gap between perceived and actual risk is for each.}
 
 % ============================================================
-\section{Where your organisation sits}
+\section{Where your organisation sits on the risk map}
 
-Five structural characteristics determine tail risk exposure, ranked by their
-contribution to $P_{99}$ variance in the ablation analysis.
+Five structural characteristics determine tail risk exposure under unmanaged AI
+adoption, and together they locate most organisations on the risk map the title
+names. They are ranked below by their contribution to $P_{99}$ variance in the
+ablation analysis (Table~\ref{tab:characteristics}); taken together, they offer
+a near-exhaustive account of where an organisation sits and how far it is from
+the tail.
 
-Two of these factors, stack concentration and cognitive homogeneity, are structural
-rather than manageable through internal governance alone~\cite{aggarwal_frontpsych_2019}.
-Their combined effect is visible in the contrast that matters most.
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{9pt}
+\renewcommand{\arraystretch}{1.2}
+\arrayrulecolor{gray!55}
+\caption{Structural determinants of tail risk, ranked by $P_{99}$ sensitivity
+  (range across full parameter sweep, G0 scenario).}
+\begin{tabularx}{\linewidth}{@{}lXcc@{}}
+\toprule
+\rowcolor{gray!14}
+\textbf{Characteristic} & \textbf{Mechanism} & \textbf{Param.} & \textbf{$P_{99}$ range} \\
+\midrule
+Stack concentration
+  & How correlated errors are across decisions in one quarter:
+    one bad signal hits everything at once
+  & $\alpha$ & 13.7\% \\[2pt]
+Cognitive homogeneity
+  & How similarly employees think; drives group pressure
+    to follow the AI consensus
+  & $\beta$ & 9.7\% \\[2pt]
+Talent quality
+  & Whether human judgment beats AI when it overrides;
+    determines if overriding helps or backfires
+  & $h,\,p_0$ & 7.3\% \\[2pt]
+Deskilling rate
+  & How fast AI reliance erodes the capacity to override it
+  & $\eta$ & ${\approx}3\%$ \\[2pt]
+Domain exposure
+  & Share of decisions beyond AI's competence;
+    negligible when employees follow AI regardless
+  & $E[\pi]$ & ${\approx}3\%$ \\
+\arrayrulecolor{black}
+\bottomrule
+\end{tabularx}
+\label{tab:characteristics}
+\end{table}
 
-The investment bank in London recruits from a globally open labour market, more
-than twenty nationalities, a cognitively flat distribution.
-The strategy consultancy in Paris recruits through competitive national examinations
-that select a narrow cognitive profile by
-construction~\cite{rivera_asr_2012,schneider_pp_1987}.
-Both firms operate in identical domains with identically skilled staff.
-Same sector. Same talent. From the dashboard, Paris appears 18\% more exposed than London.
-The actual gap under unmanaged AI adoption is more than three times larger.
+Three characteristics drive exposure materially: the first three rows of
+Table~\ref{tab:characteristics}.
+They interact, each amplifying the others.
 
-In the model, two amplifiers act on distinct dimensions.
-Stack concentration drives error correlation across decisions: with
-$\alpha = 0.90$, 90\% of AI error variance in a given quarter derives from the
-common factor $\xi_t$. When the environment shifts, the AI's mistakes cluster
-across all ten decisions simultaneously.
-Cognitive homogeneity drives surrender through two separate paths: social conformism
-raises the effective follow rate as dissenters disappear, and the concentration of
-cognitively central profiles increases individual surrender propensity.
-The two mechanisms do not compensate for each other. They compound.
-Domain exposure amplifies both: a centralised stack in a high-outside-frontier
-function correlates failures precisely where they are most frequent.
-
-At the extreme, Seoul's central administration (nationally procured AI,
-civil-service examination pipeline, maximum stack centralisation) faces 1.26 times
-the tail risk premium of Singapore's creative agency.
-Figure~\ref{fig:profiles} plots six profiles on the Output $\times$ risk-adjusted
-$P_{99}$ plane. The arrow from London to Paris carries one annotation: same sector,
-same talent, Paris $+18\%$ higher tail risk on the perceived dashboard.
+Figure~\ref{fig:profiles} plots six profiles on the output $\times$ risk-adjusted
+$P_{99}$ plane. Open circles show the dashboard position; filled circles show
+actual exposure under unmanaged adoption.
 
 \begin{figure}[H]
 \begin{mdframed}[linewidth=0.5pt, linecolor=black!30, innertopmargin=6pt, innerbottommargin=2pt]
@@ -436,95 +523,113 @@ same talent, Paris $+18\%$ higher tail risk on the perceived dashboard.
 \end{mdframed}
   \caption{Organisational profiles under G0.
   Output versus risk-adjusted $P_{99} \times \theta$.
-  Six labelled profiles: Investment bank, London (${\approx}1{,}495$);
+  Six labelled profiles: Investment bank, London (${\approx}1{,}668$);
   Strategy consulting, Paris (${\approx}2{,}041$);
-  Tech startup, San Francisco (${\approx}1{,}950$);
-  Creative agency, Singapore (${\approx}1{,}710$);
-  Shared services, Bangalore (${\approx}2{,}140$);
+  Tech startup, San Francisco (${\approx}2{,}154$);
+  Creative agency, Singapore (${\approx}1{,}845$);
+  Shared services, Bangalore (${\approx}2{,}310$);
   Central administration, Seoul (${\approx}2{,}318$).
-  Arrow between London and Paris annotated ``Same sector. Same talent.
-  Paris $+18\%$ higher risk-adjusted worst-case loss (perceived dashboard).''
+  Dashed arrows: gap between perceived (open circle) and actual G0 exposure
+  (filled circle).
+  Solid arrows: reduction under active governance (G2, small circle).
+  Double-headed arrow between London and Paris: ``Same sector. Same talent.
+  Paris $+22\%$ actual worst-case loss.''
   }
   \label{fig:profiles}
 \end{figure}
 
-Active scaffolding (G2) reduces exposure, but inversely to need.
-Relative to unmanaged adoption, London gains a 146\% reduction in tail risk
-premium, Paris 77\%, Singapore 40\%, Seoul near zero.
-For the AI-native startup in San Francisco, G2 is counterproductive: $-36\%$.
-The organisations most exposed are those for which scaffolding works least.
+\begin{mdframed}[
+  backgroundcolor=gray!5,
+  linewidth=0.8pt,
+  linecolor=black!25,
+  frametitle={\small\bfseries Key insights},
+  frametitlebackgroundcolor=gray!15,
+  frametitleaboveskip=3pt,
+  frametitlebelowskip=6pt,
+  frametitlerule=true,
+  frametitlerulecolor=black!15,
+  frametitlerulewidth=0.5pt,
+  innertopmargin=8pt,
+  innerbottommargin=10pt,
+  innerleftmargin=14pt,
+  innerrightmargin=14pt
+]
+\begin{itemize}\setlength\itemsep{6pt}
+  \item \textbf{The hidden gap is universal and systematic.}
+  For every profile, the filled circle sits to the right of the open circle.
+  London and Paris make the cause visible: the investment bank recruits across
+  more than twenty nationalities (low $\alpha$, low $\beta$); the strategy
+  consultancy recruits through competitive national examinations, selecting a
+  narrow cognitive profile by construction~\cite{rivera_asr_2012,
+  schneider_pp_1987} (high $\alpha$, high $\beta$).
+  Same sector, same talent quality: Paris nonetheless sits 22\% further right
+  on the risk axis (${\approx}2{,}041$ versus ${\approx}1{,}668$).
+  The dashed arrow from open to filled circle is also long for each: actual
+  tail risk is $\times 1.50$ what London's dashboard shows, $\times 1.57$
+  for Paris.
 
-The regressivity has two roots.
-First, in cognitively homogeneous organisations, the Asch
-effect~\cite{asch_guetzkow_1951} operates downstream of the scaffold. An employee
-who forms an independent judgment is still socially pressured to align with the
-AI-following majority. The scaffold imposes the judgment; it does not insulate the
-employee from conformity pressure afterwards.
-Second, for low-skill operations where $h \approx 0.45$, independent judgment is
-worse than AI even outside the frontier. The scaffold forces a downgrade.
-The startup in San Francisco loses not only throughput ($\theta$ falls from 1.25
-to 1.10) but accuracy.
+  \item \textbf{Governance reduces risk, but least where it is most needed.}
+  The solid arrows (filled to governance circle) show the largest proportional
+  reduction for the profiles already least exposed: 38\% for London, 36\% for
+  Paris, against 22\% for Bangalore and 27\% for Seoul.
+  The arrows are longest for the profiles that needed governance least.
+\end{itemize}
+\end{mdframed}
 
-A startup that rejects governance under these conditions is not being
-irresponsible. It is responding to its local incentive structure, which is the
-foundation of the Nash argument in Section~5.
+The regressivity has two causes.
+In cognitively homogeneous organisations, the Asch
+effect~\cite{asch_guetzkow_1951} operates downstream of the scaffold: forming
+an independent judgment does not protect against subsequent pressure to conform
+with the AI-following majority.
+Low-skill profiles face a second problem: for them ($h \approx 0.45$),
+independent judgment is worse than the AI even outside its competence frontier,
+so the scaffold forces a downgrade rather than a correction.
+San Francisco loses throughput ($\theta$: 1.25 $\to$ 1.10) and accuracy, for a
+net governance efficiency of $36\%$.
 
-Active scaffolding multiplies existing diversity but cannot substitute for it.
+A startup rejecting governance here responds rationally to its local incentives.
+Section~5 builds the Nash argument from that observation.
 
 \bridgeskip
-\noindent\emph{Scaffolding works least where it is needed most, which is a
-structural constraint, not a design failure. Three interventions exist for three
-different decision-makers. The first is a procurement decision.}
+\noindent\emph{Scaffolding works least where it is needed most. The cause is
+structural, not a flaw in implementation. Three interventions address it from
+different positions. The first is a procurement decision.}
 % ============================================================
-\section{Three levers, three actors}
+\section{Three levers, four actors}
 
-The most impactful single-parameter intervention is AI provider diversification.
+Three parameters in the model are actionable: stack concentration, independent
+judgment, and cognitive hiring each drive a distinct component of tail risk.
+This section describes the lever for each, who must pull it, and why the
+unregulated equilibrium delivers none of them at scale.
+
+The fastest is AI provider diversification.
 Reducing stack concentration from monoculture ($\alpha = 0.90$) to distributed
 ($\alpha = 0.30$) cuts the tail risk premium by approximately 15\%.
-This is a procurement decision, one architectural policy, measurable in weeks.
-The diversification must be structural, not merely contractual: different models at
-different organisational layers (strategic decision, operational processing, quality
-review).
+The diversification must be structural, not merely contractual: different models
+at different organisational layers (strategic decision, operational processing,
+quality review).
 Contracting with multiple vendors for the same centralised pipeline leaves the
-Vasicek factor unchanged.
-Three providers currently capture 88\% of enterprise AI
-spend~\cite{menlo_2025}.
+common error factor unchanged.
+Three providers currently capture 88\% of enterprise AI spend~\cite{menlo_2025}, and 60\% of errors across leading models are already shared~\cite{kim_icml_2025}.
 When roughly 100{,}000 organisations depend on the same trio, a single systemic
-failure propagates correlated losses across the economy. That is the
-concentration-of-credit argument, and it will attract the same regulatory response.
+failure propagates correlated losses across the economy: the
+concentration-of-credit argument, which will attract the same regulatory response.
 
-A second lever acts on a different parameter: the capacity of employees to form
-judgments that diverge from the AI. Stack diversification reduces error correlation
-across decisions. Active scaffolding restores error independence across
-decision-makers.
-
-Passive scaffolding (G1) fails systematically.
-Ninety-three percent of clinical decision-support alerts are overridden without
-review~\cite{bryant_aci_2014}.
-When employees do push back, AI escalates its persuasive framing, what Randazzo et
-al.\ term persuasion bombing~\cite{randazzo_hbs_2025}.
-Active scaffolding (G2) achieves a 19.2\% reduction in tail risk as a bundle,
-larger than stack alone ($-13.5\%$), but requires coordinated changes across
-workflow design, training, and hiring over months.
-It works under one condition: explanations must reveal that the AI's reasoning
-diverges from the employee's own~\cite{vonzahn_isr_2025}.
-Frey and van de Rijt~\cite{frey_mnsc_2021} establish the sequencing principle:
-independent signal first, AI second.
-The idea is old. Surgical safety checklists cost two minutes and reduce mortality by
-47\%~\cite{haynes_nejm_2009}. Aviation CRM costs roughly \$150 per pilot per year.
-Active scaffolding belongs to that family of light interventions with large
-structural effects.
-
-The velocity cost is real. $\theta$ falls from 1.25 to 1.10, and the organisation
-gives up 12 percentage points of throughput, cutting the risk-adjusted tail premium
-from 94\% to 39\%.
-Figure~\ref{fig:frontier} makes this trade-off legible: G2 sits at the inflection
-point of the concave risk-return frontier. The governance efficiency of the
-G1$\to$G2 step is 1.7$\times$ that of the G0$\to$G1 step: active governance buys
-disproportionately more risk reduction per unit of throughput cost than passive
-governance does.
-The first gains from baseline to G2 are cheap in risk; the next gains from G2 to G0
-are expensive.
+The second lever acts on independent judgment.
+Even passive scaffolding (G1) removes more tail risk than stack diversification
+alone (19.2\% versus 13.5\%), yet most implementations stall here: 93\% of
+clinical decision-support alerts are overridden without
+review~\cite{bryant_aci_2014}, and when employees push back, AI escalates its
+persuasive framing, what Randazzo et al.\ term persuasion
+bombing~\cite{randazzo_hbs_2025}.
+Active scaffolding (G2) nearly doubles this reduction to 36\%, cutting the
+risk-adjusted tail premium from 94\% to 39\% at a throughput cost of 12 points
+($\theta$: 1.25$\to$1.10); Figure~\ref{fig:frontier} plots both the efficiency
+and the cost across governance regimes.
+It requires workflow redesign, training, and hiring changes over months, and
+works under one condition: explanations must reveal that the AI's reasoning
+diverges from the employee's own~\cite{vonzahn_isr_2025}, with the independent
+signal formed before AI consultation~\cite{frey_mnsc_2021,bucinca_chi_2021}.
 
 \begin{figure}[H]
 \begin{mdframed}[linewidth=0.5pt, linecolor=black!30, innertopmargin=6pt, innerbottommargin=2pt]
@@ -533,81 +638,77 @@ are expensive.
 \end{mdframed}
   \caption{Risk-return frontier across governance regimes.
   Output versus risk-adjusted $P_{99} \times \theta$.
-  G2 at the elbow: best risk-adjusted return.
-  The first gains (Baseline $\to$ G2) are cheap in risk;
-  the next gains (G2 $\to$ G0) are expensive.}
+  G2 at the elbow: the output gains from unmanaged adoption to active governance
+  come at relatively low risk cost; gains beyond G2 toward the frontier's
+  high-output extreme trade more throughput for diminishing risk benefit.
+  The G1$\to$G2 step achieves 1.7$\times$ the risk reduction of G0$\to$G1
+  (388 versus 230 units on the axis).}
   \label{fig:frontier}
 \end{figure}
 
-Active scaffolding protects the cognitive diversity that exists. It cannot restore
-what biased screening has already eliminated. An annual audit of ATS outputs for
-cognitive homogenisation is the only intervention that acts on the source. Under the
-one jurisdiction that requires such audits, 4.6\% of organisations
-comply~\cite{wright_facct_2024}. Without both levers, the scaffold depletes the
-resource the hiring audit is meant to preserve.
+The third lever is hiring governance.
+Active scaffolding protects the cognitive diversity that exists; it cannot restore
+what biased hiring has already removed.
+An annual audit of ATS outputs for cognitive homogenisation bias is the only
+intervention that acts upstream.
+Under the one jurisdiction that currently requires it, 4.6\% of organisations
+comply~\cite{wright_facct_2024}.
+Without this lever, the scaffold gradually depletes the very resource it depends on.
 
-Neither lever will be voluntarily adopted at scale. The reason is the arithmetic of
-who absorbs the risk.
-
-Tail risk in the model does not depend on firm size. The fraction absorbed does.
+The obstacle to voluntary adoption is structural: the model's tail risk does not
+scale with firm size, but the fraction each type of firm must absorb does
+(Table~\ref{tab:absorbed}). A startup that fails externalises its losses to clients and investors.
+With a five-year survival probability near 10\%, the expected cost of tail risk
+is negligible against the output advantage of unmanaged adoption.
+The startup rationally chooses G0; incumbents face pressure to match.
+The Nash equilibrium without regulation is unmanaged adoption across all firms:
+individually rational, collectively catastrophic.
+The direction follows from the model's output differentials.
 
 \begin{table}[h!]
-  \centering
-  \footnotesize
-  \setlength{\tabcolsep}{10pt}
-  \renewcommand{\arraystretch}{1.25}
-  \arrayrulecolor{gray!55}
-  \begin{tabular}{@{}lrr@{}}
-    \toprule
-    \rowcolor{gray!14}
-    \textbf{Firm type} & \textbf{Absorbed risk} & \textbf{Perceived $P_{99}$} \\
-    \midrule
-    AI-native startup  & ${\sim}10\%$  & ${\sim}171$       \\
-    \midrule
-    Mid-market firm    & ${\sim}60\%$  & ${\sim}1{,}029$   \\
-    \midrule
-    Corporation        & ${\sim}100\%$ & ${\sim}1{,}714$   \\
-    \arrayrulecolor{black}
-    \bottomrule
-  \end{tabular}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{9pt}
+\renewcommand{\arraystretch}{1.35}
+\arrayrulecolor{gray!55}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\rowcolor{gray!14}
+\textbf{Firm type} & \textbf{Absorbed risk} & \textbf{Perceived $P_{99}$} \\
+\midrule
+AI-native startup  & ${\sim}10\%$  & ${\sim}171$       \\
+\midrule
+Mid-market firm    & ${\sim}60\%$  & ${\sim}1{,}029$   \\
+\midrule
+Corporation        & ${\sim}100\%$ & ${\sim}1{,}714$   \\
+\arrayrulecolor{black}
+\bottomrule
+\end{tabular}
+\caption{Tail risk absorption by firm type under unmanaged AI adoption (G0).}
+\label{tab:absorbed}
 \end{table}
 
-A startup that fails externalises its losses to clients and investors.
-With a five-year survival probability near 10\%, the expected cost of tail risk is
-negligible against the 54\% productivity advantage of unmanaged adoption.
-The startup rationally chooses G0.
-Incumbents face pressure to match or concede market share.
-The Nash equilibrium without regulation is unmanaged adoption for all
-firms, individually rational, collectively catastrophic.
-This is a structural argument, not a formally calibrated game; the direction follows
-from the model's output differentials.
 
-In finance, this diagnosis was made after 2008 and acted upon.
-The ESRB now identifies model uniformity and provider concentration as systemic
-vulnerabilities~\cite{esrb_asc_2025}. The FSB warns on third-party dependencies
-and service-provider concentration~\cite{fsb_2025}. The BIS documents the
-narrowing of the provider base~\cite{bisfsi_2025}.
-The diagnosis is converging. The structural response has not yet arrived outside
-finance.
-Under the only jurisdiction requiring AI hiring audits, compliance stands at
-4.6\%~\cite{wright_facct_2024}.
-The EU AI Act enters force in August 2026 without provider concentration limits.
-Its human-oversight requirements address individual decisions; they do not address
-the portfolio-level correlation that emerges when thousands of organisations use the
-same model simultaneously.
+That structural diagnosis is already converging in financial regulation: the ESRB identifies
+model uniformity and provider concentration as systemic vulnerabilities, the FSB
+warns on third-party dependencies, and the BIS documents the narrowing of the
+provider base~\cite{esrb_asc_2025, fsb_2025, bisfsi_2025, danielsson_jfs_2025}.
+The structural response has not yet arrived outside finance.
+The EU AI Act, entering force in August 2026, addresses human oversight of
+individual decisions; it does not address the portfolio-level correlation that
+emerges when thousands of organisations rely on the same model simultaneously.
+Capital requirements exist because the unregulated equilibrium is collective
+overleveraging, not because individual banks are irrational.
+The same structure applies here: provider concentration limits, minimum
+decision-audit standards, and liability frameworks that internalise tail risk
+across firm sizes.
+Concentration limits on AI providers follow the same logic as Basel limits on
+credit exposures; the scaffold, by contrast, touches internal processes that
+regulators cannot easily mandate or verify.
 
-The regulatory logic is identical to Basel capital requirements.
-Banks hold capital not because they are individually irrational but because the
-unregulated equilibrium is collective overleveraging.
-AI governance requires the same structure: mandatory provider diversification
-limits, minimum decision-audit standards, and liability frameworks that
-internalise tail risk for firms of all sizes.
-The stack is the natural regulatory target. A regulator can impose concentration
-limits on AI providers exactly as Basel imposes concentration limits on credit
-exposures. The scaffold touches internal processes that regulators cannot easily
-mandate or verify.
-
-Three actors can act without waiting for regulation. One requires it.
+Table~\ref{tab:levers} identifies the internal actor responsible for each lever
+and the action required: three can start with an internal decision alone;
+provider concentration limits require a regulatory mandate.
 
 \vspace{6pt}
 \begin{table}[h!]
@@ -616,91 +717,85 @@ Three actors can act without waiting for regulation. One requires it.
 \setlength{\tabcolsep}{9pt}
 \renewcommand{\arraystretch}{1.35}
 \arrayrulecolor{gray!55}
-\begin{tabularx}{\linewidth}{@{}p{2.5cm}p{3.3cm}X@{}}
+\begin{tabularx}{\linewidth}{@{}p{3.2cm}p{3cm}X@{}}
 \toprule
 \rowcolor{gray!14}
-\textbf{Actor} & \textbf{Lever} & \textbf{Action} \\
+\textbf{Lever} & \textbf{Internal actor} & \textbf{Role} \\
 \midrule
-\textbf{CRO / board} & Monitoring & Error-correlation KRI; concentration-adjusted tail exposure \\
+Stack diversification & Procurement lead & Mandates provider diversity at each organisational layer \\
 \midrule
-\textbf{Procurement lead} & Stack architecture & Architectural diversification by layer, actionable in weeks \\
+Active scaffolding & COO / BU leaders & Redesigns workflows to enforce pre-commitment protocols \\
 \midrule
-\textbf{COO / BU leaders} & Process design & Active scaffold: independent judgment before AI consultation \\
+Hiring governance & CHRO & Audits ATS outputs for cognitive homogenisation bias \\
 \midrule
-\textbf{CHRO} & Hiring governance & Annual ATS audit for cognitive homogenisation bias \\
-\midrule
-\textbf{Regulator} & Structural framework & Provider concentration limits (Basel model); minimum audit standards \\
+Risk monitoring & CRO / board & Tracks and reports correlated tail exposure \\
 \arrayrulecolor{black}
 \bottomrule
 \end{tabularx}
+\caption{Levers, internal actors, and their roles.}
+\label{tab:levers}
 \end{table}
+\smallskip
+\noindent{\footnotesize\textit{CRO: Chief Risk Officer. COO: Chief Operating
+Officer. BU: Business Unit. CHRO: Chief Human Resources Officer.}}
 \vspace{4pt}
 
 \bridgeskip
-\noindent\emph{The case for acting now is not only the magnitude of the current exposure. It
-is that the same channels creating the risk also make governance progressively
-more expensive. The next section explains why.}
+\noindent\emph{Delay has a compounding cost: the same channels creating the risk
+today also raise the price of governing it tomorrow.}
 % ============================================================
 \section{Why waiting makes governance harder}
 
-Three constraints bound the model's scope.
-The link between cognitive-profile diversity and error decorrelation is an
-inference. Keck and Tang measure cognitive processes in controlled experiments, not
-recruitment pipelines in operating
-organisations~\cite{keck_psychsci_2020}.
-The simulation is a stress test, not a forecast: it demonstrates that the mechanism
-can produce the paradox under plausible parameters, not that it does so in every
-organisation.
-Social influence is not uniformly harmful. Becker, Brackbill and Centola show that
-decentralised information exchange improves collective
-accuracy~\cite{becker_pnas_2017}. AI reverses the conditions under which influence
-is beneficial by centralising the signal and eliminating independence.
+Delayed governance carries a compounding cost. Every quarter at G0 depletes the
+cognitive diversity that makes active governance effective and raises the cost of
+transition for the next.
 
-These limitations all point in the same direction: the model understates the risk
-it documents. What it omits (the feedback loop from deskilling to surrender,
-inter-firm labour market contagion, internal promotion effects that compound
-homogeneity over time, the scaling of G0-native startups into larger structures)
-operates through the same mechanism, at the scale of the whole economy.
+Hiring screens out the cognitively diverse profiles that scaffolding depends on,
+while deskilling simultaneously degrades the independent competence that remains.
+A firm that governs gives up throughput that ungoverned competitors keep; as those
+competitors define the performance standard, governance registers as competitive
+underperformance rather than risk management. Beyond individual organisations, a
+second channel operates: AI-native startups that scale, or are acquired, carry
+unmanaged practices into larger structures; the organisations hardest to govern
+are also the fastest-growing.
 
-The most consequential omission is the depletion of a collective resource that no
-single organisation has incentive to preserve.
+The degradation also undermines the capacity to reverse itself. Endoscopists given AI diagnostic support showed skill loss that did not
+recover when the tool was removed~\cite{budzyn_lancetgh_2025}, and AI use
+simultaneously degrades the metacognitive capacity to recognise that anything has
+been lost~\cite{fan_bjet_2025}. Employees who have not exercised independent
+judgment for five years cannot simply resume it: the competence required to revert
+is the same competence the degradation erodes.
 
-Each firm that maximises its AI productivity depletes what we term the cognitive
-commons: the diversity of approaches, judgments, and error patterns that protects
-against systemic failure.
-The structural conditions of Hardin's tragedy~\cite{hardin_science_1968} are
-satisfied. There is a non-rival, non-excludable public good, a negative
-externality, and no individual incentive to preserve the resource.
-The analogy is not exact, but the arithmetic is suggestive.
-In monoculture farming, catastrophic crop failure strikes every eight years on
-average, against once per century in
-polyculture~\cite{renard_nature_2019}.
-The degradation is invisible, masked by the productivity gain that accumulates
-alongside it.
-And it is irreversible in a way that Hardin's pasture is not. Deskilling destroys
-the option to reverse course: endoscopists exposed to AI for diagnostic support
-showed measurable skill degradation that did not recover when the AI was
-removed~\cite{budzyn_lancetgh_2025}; AI use simultaneously degrades the
-metacognitive capacity to recognise that degradation~\cite{fan_bjet_2025}.
-Employees who have not exercised independent judgment for five years cannot resume
-it on demand. The competence required to revert is the same competence the
-degradation erodes.
+At the economy level, the dynamic reproduces Hardin's tragedy of the
+commons~\cite{hardin_science_1968}: a shared resource degrades because each
+actor has individual incentive to exploit it and none to preserve it. Here the
+shared resource is what we term the cognitive commons: the diversity of
+approaches, judgments, and error patterns that protects against correlated
+systemic failure. Each firm that maximises AI productivity depletes this shared resource, imposing
+a cost on the whole economy that no individual balance sheet records. No firm
+bears the externality it creates. As an illustration from a different domain: in
+monoculture farming, catastrophic crop failure strikes on average every eight
+years; polyculture reduces this to once per century~\cite{renard_nature_2019}.
+The cognitive commons degrades on the same logic, with one distinguishing
+feature: the degradation is invisible, masked by the productivity gains
+accumulating alongside it.
 
-Each quarter of G0 depletes the diversity that makes G2 effective and raises the
-cost of transition for the next quarter.
-
-The Nash equilibrium hardens because all three channels simultaneously erode the
-resource and the capacity to restore it.
-Screening eliminates the cognitively diverse profiles that would make scaffolding
-effective. Deskilling degrades the independent competence that scaffolding
-requires. Market competition punishes firms that govern while rewarding those that
-do not.
-Beyond individual organisations, a composition effect operates at the economy
-level. AI-native startups that scale, or are acquired, carry their unmanaged
-practices into larger structures, gradually displacing the baseline of the whole
-economy toward G0.
-The organisations hardest to govern are also the fastest-growing, and their
-practices do not stay contained.
+Three acknowledged limits bound the simulation, and all three point in the same
+direction. First, the link between cognitive diversity and error decorrelation is
+an inference: Keck and Tang measure cognitive processes in controlled experiments,
+not recruitment pipelines in operating organisations~\cite{keck_psychsci_2020}.
+Second, the simulation is a stress test rather than a forecast: it shows that the
+mechanism can produce the paradox under plausible parameters, not that it does so
+in every organisation. Third, the model treats AI-induced conformism as uniformly
+harmful to collective accuracy; Becker, Brackbill and Centola show that
+decentralised social influence can in fact improve it~\cite{becker_pnas_2017}.
+The model's assumption holds because a shared AI provider centralises the signal
+and eliminates the independence that makes decentralised influence beneficial,
+but this is an assumption, not a direct measurement. What the model omits (the
+feedback loop from deskilling to surrender, inter-firm labour market contagion,
+promotion effects that compound homogeneity, and the scaling of G0-native
+startups) operates through the same mechanisms, at the scale of the whole
+economy. The model understates the risk it documents.
 
 Whether organisations will need critical human judgment in ten years is not in
 doubt. Whether the workforce will still be able to exercise it is.
