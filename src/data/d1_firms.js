@@ -42,9 +42,9 @@ export const FIRMS = [
 ];
 
 export const PROVIDERS = {
-  A: { label: 'Provider A \u2014 dominant',   share: '50%, 15 firms', color: '#22375A' },
-  B: { label: 'Provider B \u2014 challenger', share: '33%, 10 firms', color: '#4A7C59' },
-  C: { label: 'Provider C \u2014 niche',      share: '17%, 5 firms',  color: '#C49A3C' },
+  A: { label: 'Provider A: dominant',   share: '50%, 15 firms', color: '#22375A' },
+  B: { label: 'Provider B: challenger', share: '33%, 10 firms', color: '#4A7C59' },
+  C: { label: 'Provider C: niche',      share: '17%, 5 firms',  color: '#C49A3C' },
 };
 
 export const CRISIS_THRESHOLD = 150;

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import GraphCard from '../ui/GraphCard';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const THRESHOLD = 0.46;
@@ -115,6 +116,7 @@ function computeP99(pi) {
 
 // ── COMPONENT ────────────────────────────────────────────────────────────────
 export default function B3_PiFrontier() {
+  const isMobile = useIsMobile();
   const [piInt, setPiInt] = useState(75);
   const pi = piInt / 100;
 
@@ -224,10 +226,10 @@ export default function B3_PiFrontier() {
     const ctx = canvas.getContext('2d');
     const W = parentW;
     const H = HIST_HEIGHT;
-    const PL = 38;
+    const PL = isMobile ? 42 : 38;
     const PR = 10;
     const PT = 14;
-    const PB = 18;
+    const PB = isMobile ? 22 : 18;
     const cW = W - PL - PR;
     const cH = H - PT - PB;
 
@@ -306,16 +308,18 @@ export default function B3_PiFrontier() {
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = 'rgba(181,64,63,0.75)';
-      ctx.font = '600 9px "Plus Jakarta Sans", sans-serif';
+      ctx.font = isMobile ? '600 11px "Plus Jakarta Sans", sans-serif' : '600 9px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('P99: ' + p99val.toLocaleString(), xp99, PT - 2);
+      ctx.fillText('P99: ' + p99val.toLocaleString('en-GB'), xp99, PT - 2);
     }
 
     // X axis labels
     ctx.fillStyle = COLORS.muted;
-    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
-    X_TICKS.forEach((v) => {
+    // On mobile, thin out ticks (every other) to avoid crowding at full width
+    const ticksToDraw = isMobile ? X_TICKS.filter((_, i) => i % 2 === 0) : X_TICKS;
+    ticksToDraw.forEach((v) => {
       if (v >= X_MIN && v <= X_MAX) {
         const xp = xPx(v);
         // Tick
@@ -336,7 +340,7 @@ export default function B3_PiFrontier() {
     // Y axis label
     ctx.save();
     ctx.fillStyle = COLORS.muted;
-    ctx.font = '9px "Plus Jakarta Sans", sans-serif';
+    ctx.font = isMobile ? '11px "Plus Jakarta Sans", sans-serif' : '9px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'center';
     ctx.translate(10, PT + cH / 2);
     ctx.rotate(-Math.PI / 2);
@@ -344,7 +348,7 @@ export default function B3_PiFrontier() {
     ctx.restore();
 
     ctx.restore();
-  }, []);
+  }, [isMobile]);
 
   // ── Layout / resize ────────────────────────────────────────────────────────
   const layout = useCallback(() => {
@@ -391,6 +395,15 @@ export default function B3_PiFrontier() {
     return COLORS.success;
   }
 
+  // ── Mobile-bumped legibility variants (desktop branch untouched) ────────────
+  const mPiStatus       = isMobile ? { ...styles.piStatus, fontSize: 11, lineHeight: 1.3 } : styles.piStatus;
+  const mSliderEnds     = isMobile ? { ...styles.sliderEnds, fontSize: 11, marginTop: 8 } : styles.sliderEnds;
+  const mFrontierLabels = isMobile ? { ...styles.frontierBarLabels, fontSize: 11 } : styles.frontierBarLabels;
+  const mMetricSublabel = isMobile ? { ...styles.metricSublabel, fontSize: 11 } : styles.metricSublabel;
+  const mMetricFootnote = isMobile ? { ...styles.metricFootnote, fontSize: 11 } : styles.metricFootnote;
+  const mHistLabel      = isMobile ? { ...styles.histLabel, fontSize: 11.5 } : styles.histLabel;
+  const mHistSublabel   = isMobile ? { ...styles.histSublabel, fontSize: 11 } : styles.histSublabel;
+
   // ── RENDER ─────────────────────────────────────────────────────────────────
   return (
     <GraphCard
@@ -398,9 +411,9 @@ export default function B3_PiFrontier() {
       title="How the catastrophe threshold works"
       subtitle={
         'π is the fraction of decisions where AI operates inside its training data this quarter. ' +
-        'Drag the slider. Below the threshold at π = 0.46, the AI is wrong on most decisions — ' +
-        'and because all agents share the same model, errors become perfectly correlated. ' +
-        'Worst-case losses spike.'
+        'Drag the slider. Below the threshold at π = 0.46, enough decisions fall outside the training data that the AI’s out-of-distribution errors hit every agent at once, ' +
+        'and because all agents share the same model, errors become perfectly correlated, ' +
+        'so worst-case losses rise sharply.'
       }
       footnote={'Parametric Gaussian mixture calibrated on v5 Monte Carlo outputs. Distribution shape varies with \u03c0.'}
     >
@@ -422,7 +435,7 @@ export default function B3_PiFrontier() {
             </div>
             <div
               style={{
-                ...styles.piStatus,
+                ...mPiStatus,
                 color: pi < THRESHOLD ? COLORS.danger : COLORS.muted,
                 fontWeight: pi < THRESHOLD ? 600 : 400,
                 transition: 'color 0.25s',
@@ -457,22 +470,22 @@ export default function B3_PiFrontier() {
             onInput={handleSliderInput}
             onChange={handleSliderInput}
             className="b3-pi-slider"
-            style={styles.rangeInput}
+            style={{ ...styles.rangeInput, ...(isMobile ? { height: 28, marginTop: 1 } : {}) }}
           />
         </div>
-        <div style={styles.sliderEnds}>
+        <div style={mSliderEnds}>
           <span>0.30</span>
           <span>0.85</span>
         </div>
 
         {/* ── Frontier bar ──────────────────────────────────────── */}
         <div style={styles.frontierSection}>
-          <div style={styles.frontierBarLabels}>
-            <span style={{ color: COLORS.success, fontWeight: 600, fontSize: 9 }}>
-              Inside frontier — AI performs well
+          <div style={{ ...mFrontierLabels, ...(isMobile ? { flexDirection: 'column', gap: 2 } : {}) }}>
+            <span style={{ color: COLORS.success, fontWeight: 600, fontSize: isMobile ? 11 : 9 }}>
+              Inside frontier: AI performs well
             </span>
-            <span style={{ color: COLORS.danger, fontWeight: 600, fontSize: 9 }}>
-              Outside frontier — AI accuracy drops to ~55%
+            <span style={{ color: COLORS.danger, fontWeight: 600, fontSize: isMobile ? 11 : 9 }}>
+              Outside frontier: AI accuracy drops to ~55%
             </span>
           </div>
           <div style={styles.frontierBar}>
@@ -498,11 +511,11 @@ export default function B3_PiFrontier() {
         </div>
 
         {/* ── Metric cards ──────────────────────────────────────── */}
-        <div style={styles.metrics}>
+        <div style={{ ...styles.metrics, ...(isMobile ? { gridTemplateColumns: '1fr', gap: 10 } : {}) }}>
           {/* Card 1 — Expected loss */}
           <div style={styles.metricCard}>
             <div style={styles.metricLabel}>Expected loss this quarter</div>
-            <div style={styles.metricSublabel}>
+            <div style={mMetricSublabel}>
               Average errors across all agents
             </div>
             <div
@@ -512,14 +525,14 @@ export default function B3_PiFrontier() {
                 transition: 'color 0.3s',
               }}
             >
-              {d.eL.toLocaleString()}
+              {d.eL.toLocaleString('en-GB')}
             </div>
           </div>
 
           {/* Card 2 — Dynamic P99 */}
           <div style={styles.metricCard}>
             <div style={styles.metricLabel}>Worst-case loss (P99)</div>
-            <div style={styles.metricSublabel}>
+            <div style={mMetricSublabel}>
               99th percentile of loss distribution at this π value
             </div>
             <div
@@ -529,10 +542,10 @@ export default function B3_PiFrontier() {
                 transition: 'color 0.3s',
               }}
             >
-              {currentP99.toLocaleString()}
+              {currentP99.toLocaleString('en-GB')}
             </div>
             {d.pCat > 0 && (
-              <div style={styles.metricFootnote}>
+              <div style={mMetricFootnote}>
                 P(catastrophic quarter) = {(d.pCat * 100).toFixed(0)}% at this π.
                 In practice, only ~8% of quarters reach exposures this low.
               </div>
@@ -542,7 +555,7 @@ export default function B3_PiFrontier() {
           {/* Card 3 — Correlated failure columns */}
           <div style={styles.metricCard}>
             <div style={styles.metricLabel}>Correlated failure columns</div>
-            <div style={styles.metricSublabel}>
+            <div style={mMetricSublabel}>
               Decision types where all agents fail together
             </div>
             <div
@@ -561,11 +574,11 @@ export default function B3_PiFrontier() {
 
         {/* ── Histogram ─────────────────────────────────────────── */}
         <div>
-          <div style={styles.histLabel}>
+          <div style={mHistLabel}>
             Loss distribution at this π value
           </div>
-          <div style={styles.histSublabel}>
-            How often each loss level occurs — drag the slider to see the shape
+          <div style={mHistSublabel}>
+            How often each loss level occurs: drag the slider to see the shape
             change
           </div>
           <canvas
@@ -795,5 +808,17 @@ const rangeCSS = `
   }
   .b3-pi-slider:focus {
     outline: none;
+  }
+  @media (max-width: 768px) {
+    .b3-pi-slider::-webkit-slider-thumb {
+      width: 26px;
+      height: 26px;
+      border-width: 4px;
+    }
+    .b3-pi-slider::-moz-range-thumb {
+      width: 26px;
+      height: 26px;
+      border-width: 4px;
+    }
   }
 `;

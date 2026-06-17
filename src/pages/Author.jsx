@@ -9,7 +9,7 @@ const LINKS = {
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 const S = {
-  page: { maxWidth: 1080, margin: '0 auto', padding: '80px 24px 96px' },
+  page: { maxWidth: 720, margin: '0 auto', padding: '80px 24px 96px' },
   // Hero
   heroSection: {
     textAlign: 'center', marginBottom: 48, paddingBottom: 40,
@@ -35,6 +35,10 @@ const S = {
   p: {
     fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14,
     color: '#22375A', lineHeight: 1.7, marginBottom: 16,
+  },
+  bio: {
+    background: 'rgba(97,158,168,0.06)', border: '0.5px solid rgba(97,158,168,0.20)',
+    borderRadius: 10, padding: '16px 20px', marginTop: 8,
   },
   // CartesIA block
   cartesiaBlock: {
@@ -100,8 +104,8 @@ function DocCard({ href, icon, title, desc, badge, full }) {
       target="_blank"
       rel="noopener noreferrer"
       style={{ ...S.docCard, ...(full ? S.docCardFull : {}) }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(97,158,168,0.40)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'none'; }}
+      onMouseEnter={e => { e.currentTarget.style.border = '0.5px solid rgba(97,158,168,0.40)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.border = '0.5px solid rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'none'; }}
     >
       <div style={S.docIcon}>{icon}</div>
       <div style={S.docTitle}>{title}</div>
@@ -176,7 +180,7 @@ export default function Author() {
           href={LINKS.essayShort}
           icon={'\ud83d\udcdd'}
           title="Prize essay"
-          desc="The Flattening: Invisible Tail Risk in AI-Adopting Organisations. Short submission for the Cambridge McKinsey Risk Prize 2026."
+          desc="The Flattening: Invisible Tail Risk in AI-Adopting Organisations. Short submission for the Cambridge–McKinsey Risk Prize 2026."
           badge="PDF"
         />
         <DocCard
@@ -238,7 +242,7 @@ export default function Author() {
       </div>
 
       <div style={S.footer}>
-        The Flattening Explorer {'\u2014'} Cambridge{'\u2013'}McKinsey Risk Prize 2026
+        The Flattening Explorer, Cambridge{'\u2013'}McKinsey Risk Prize 2026
       </div>
     </div>
   );

@@ -6,12 +6,14 @@ import C4_Scatter from '../components/graphs/C4_Scatter';
 import C5_Slope from '../components/graphs/C5_Slope';
 import C6_Comparator from '../components/graphs/C6_Comparator';
 import CWI_Ablation from '../components/graphs/CWI_Ablation';
+import useIsMobile from '../hooks/useIsMobile';
 
 export default function ActC() {
+  const isMobile = useIsMobile();
   return (
     <section style={{ padding: '12px 0' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: 14, fontSize: 28, fontFamily: "'Instrument Serif', serif", color: '#22375A' }}>
-        Acte III &mdash; The levers
+      <h2 style={{ textAlign: 'center', marginBottom: 14, fontSize: isMobile ? 24 : 28, fontFamily: "'Instrument Serif', serif", color: '#22375A' }}>
+        Act III: The levers
       </h2>
       <C1_Heatmap />
       <C2_P99Alpha />

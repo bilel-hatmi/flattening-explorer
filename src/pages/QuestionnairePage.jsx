@@ -128,10 +128,10 @@ export default function QuestionnairePage() {
             <div style={{ fontSize: 11, opacity: 0.6, marginBottom: 4 }}>Your matched profile</div>
             <div style={{ fontSize: 16, fontWeight: 600 }}>
               <span style={{ color: matchedProfile.color }}>{matchedProfile.name}</span>
-              {' \u2014 '}{matchedProfile.city}
+              {', '}{matchedProfile.city}
          </div>
             <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4, fontFamily: "'JetBrains Mono', monospace" }}>
-              {'P99\u00d7\u03b8'} = {matchedProfile.p99G0.toLocaleString()} | Scaffold: {matchedProfile.scaffold > 0 ? '+' : ''}{Math.round(matchedProfile.scaffold * 100)}%
+              {'P99\u00d7\u03b8'} = {matchedProfile.p99G0.toLocaleString('en-GB')} | Scaffold: {matchedProfile.scaffold > 0 ? '+' : ''}{Math.round(matchedProfile.scaffold * 100)}%
             </div>
           </div>
         )}

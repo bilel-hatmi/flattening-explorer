@@ -4,6 +4,7 @@ import Toggle from '../ui/Toggle';
 import { usePyodide } from '../../hooks/usePyodide';
 import { useCSV } from '../../hooks/useCSV';
 import { useProfile } from '../../context/ProfileContext';
+import useIsMobile from '../../hooks/useIsMobile';
 import { PROFILES } from '../../data/v5_reference';
 import { PROFILE_IDS, getProfileLabel } from '../../data/profiles';
 
@@ -220,11 +221,40 @@ const styles = {
   },
 };
 
+// ── MOBILE STYLE OVERRIDES ─────────────────────────────────────────────────────
+// Only the deltas applied on top of the matching `styles` entry on phones.
+// Desktop appearance is untouched.
+const mobileStyles = {
+  counterRow: {
+    gridTemplateColumns: 'repeat(2, 1fr)', // 2-across keeps each card wide enough to read
+    gap: 8,
+  },
+  counterLabel: { fontSize: 11 },
+  thresholdLegend: { gap: 10 },
+  tlItem: { fontSize: 11 },
+  piCell: { fontSize: 8 },
+  xAxisLabel: { fontSize: 11, marginBottom: 16 },
+  controls: { gap: 8 },
+  btn: { padding: '11px 18px', minHeight: 44, flex: '1 1 auto' },
+  speedLabel: { fontSize: 11 },
+  speedSelect: { fontSize: 11, padding: '6px 8px', minHeight: 36 },
+  selectorRow: { gap: 10, marginBottom: 14 },
+  selectLabel: { fontSize: 11 },
+  profileSelect: { fontSize: 12, padding: '8px 10px', minHeight: 40 },
+  engineBadge: { fontSize: 11, marginLeft: 0, flexBasis: '100%' },
+};
+
 // ── COMPONENT ────────────────────────────────────────────────────────────────
 
 export default function ALIVE_Simulation() {
   const { ready: pyodideReady, simulate_one_quarter } = usePyodide();
   const { profileId: contextProfileId } = useProfile();
+  const isMobile = useIsMobile();
+
+  // Merge a base style with its mobile override (only on phones).
+  const s = (key) => (isMobile && mobileStyles[key]
+    ? { ...styles[key], ...mobileStyles[key] }
+    : styles[key]);
 
   // CSV fallback data for P3/G0
   const { data: csvData, loading: csvLoading } = useCSV('/data/ten_replications_P3_G0.csv');
@@ -326,7 +356,7 @@ export default function ALIVE_Simulation() {
       setToast({
         visible: true,
         type: 'shock',
-        text: `Quarter ${last.q}: shock. Loss = ${last.loss.toLocaleString()}.`,
+        text: `Quarter ${last.q}: shock. Loss = ${last.loss.toLocaleString('en-GB')}.`,
       });
       toastTimerRef.current = setTimeout(() => {
         setToast(prev => ({ ...prev, visible: false }));
@@ -386,7 +416,7 @@ export default function ALIVE_Simulation() {
       ctx.lineTo(W - PAD_R, y);
       ctx.stroke();
       ctx.fillStyle = '#A0A09A';
-      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
       ctx.textAlign = 'right';
       ctx.fillText(v === 0 ? '0' : (v / 1000).toFixed(1) + 'k', PAD_L - 4, y + 3);
     });
@@ -404,14 +434,14 @@ export default function ALIVE_Simulation() {
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = 'rgba(34,55,90,0.55)';
-    ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+    ctx.font = isMobile ? '500 11px "Plus Jakarta Sans", sans-serif' : '500 9px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('P99', W - PAD_R - 2, yP99 - 4);
     ctx.restore();
 
     // X tick labels
     ctx.fillStyle = '#A0A09A';
-    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     [1, 5, 10, 15, 20].forEach(q => {
       const x = PAD_L + (q - 0.5) * barW;
@@ -500,7 +530,7 @@ export default function ALIVE_Simulation() {
         ctx.fillText(`Quarter ${d.q}`, tx + 10, ty + 16);
         ctx.fillStyle = color;
         ctx.font = '500 12px "JetBrains Mono", monospace';
-        ctx.fillText(`Loss: ${d.loss.toLocaleString()}`, tx + 10, ty + 31);
+        ctx.fillText(`Loss: ${d.loss.toLocaleString('en-GB')}`, tx + 10, ty + 31);
         ctx.fillStyle = '#A0A09A';
         ctx.font = '9px "JetBrains Mono", monospace';
         ctx.fillText(`\π = ${d.pi.toFixed(2)}  \· ${d.status}`, tx + 10, ty + 44);
@@ -513,7 +543,7 @@ export default function ALIVE_Simulation() {
     if (anim.animating) {
       requestAnimationFrame(ts => draw(ts));
     }
-  }, [hoveredBar]);
+  }, [hoveredBar, isMobile]);
 
   // ── Canvas resize ──────────────────────────────────────────────────────────
   const resizeCanvas = useCallback(() => {
@@ -729,14 +759,14 @@ export default function ALIVE_Simulation() {
 
   // ── Profile description for subtitle ───────────────────────────────────────
   const profile = PROFILES[profileId];
-  const scenarioLabel = scenario === 'G0' ? 'No AI governance'
-    : scenario === 'G1' ? 'Passive guardrails'
+  const scenarioLabel = scenario === 'G0' ? 'Unmanaged AI'
+    : scenario === 'G1' ? 'Passive scaffold'
     : 'Active governance';
 
   const subtitle = (
     <span>
       One run. {profile ? `${profile.name}, ${profile.city}` : profileId}. {scenarioLabel}.{' '}
-      Most quarters look safe — then the tail arrives.
+      Most quarters look safe; the tail arrives without warning in the rest.
     </span>
   );
 
@@ -772,11 +802,11 @@ export default function ALIVE_Simulation() {
       footnote={footnote}
     >
       {/* Profile / Scenario selectors */}
-      <div style={styles.selectorRow}>
+      <div style={s('selectorRow')}>
         <div style={styles.selectWrapper}>
-          <span style={styles.selectLabel}>Profile:</span>
+          <span style={s('selectLabel')}>Profile:</span>
           <select
-            style={styles.profileSelect}
+            style={s('profileSelect')}
             value={profileId}
             onChange={(e) => setProfileId(e.target.value)}
           >
@@ -786,7 +816,7 @@ export default function ALIVE_Simulation() {
           </select>
         </div>
         <div style={styles.selectWrapper}>
-          <span style={styles.selectLabel}>Scenario:</span>
+          <span style={s('selectLabel')}>Scenario:</span>
           <Toggle
             options={[
               { value: 'G0', label: 'G0' },
@@ -797,32 +827,32 @@ export default function ALIVE_Simulation() {
             onChange={setScenario}
           />
         </div>
-        <span style={styles.engineBadge}>
+        <span style={s('engineBadge')}>
           {pyodideReady
             ? '\✓ Engine ready'
             : canUseCSV
-              ? '\⏳ Engine loading \— CSV fallback active'
+              ? '\⏳ Engine loading · CSV fallback active'
               : 'Preparing simulation engine...'}
         </span>
       </div>
 
       {/* Metric counters */}
-      <div style={styles.counterRow}>
+      <div style={s('counterRow')}>
         <div style={styles.counterCard}>
-          <div style={styles.counterLabel}>Quarter</div>
+          <div style={s('counterLabel')}>Quarter</div>
           <div style={styles.counterValue}>{revealed} / 20</div>
         </div>
         <div style={styles.counterCard}>
-          <div style={styles.counterLabel}>This quarter's loss</div>
+          <div style={s('counterLabel')}>This quarter's loss</div>
           <div style={{
             ...styles.counterValue,
             color: lastQ ? barColor(lastQ.status) : '#22375A',
           }}>
-            {lastQ ? lastQ.loss.toLocaleString() : '\—'}
+            {lastQ ? lastQ.loss.toLocaleString('en-GB') : '·'}
           </div>
         </div>
         <div style={styles.counterCard}>
-          <div style={styles.counterLabel}>Shocks (loss above P99)</div>
+          <div style={s('counterLabel')}>Shocks (above baseline P99)</div>
           <div style={{
             ...styles.counterValue,
             color: shockCount > 0 ? '#B5403F' : '#22375A',
@@ -831,14 +861,14 @@ export default function ALIVE_Simulation() {
           </div>
         </div>
         <div style={styles.counterCard}>
-          <div style={styles.counterLabel}>Worst quarter recorded</div>
+          <div style={s('counterLabel')}>Worst quarter recorded</div>
           <div style={{
             ...styles.counterValue,
             color: worstLoss != null
               ? (worstLoss > P99 ? '#B5403F' : worstLoss > 600 ? '#C49A3C' : '#4A7C59')
               : '#22375A',
           }}>
-            {worstLoss != null ? worstLoss.toLocaleString() : '\—'}
+            {worstLoss != null ? worstLoss.toLocaleString('en-GB') : '·'}
           </div>
         </div>
       </div>
@@ -860,26 +890,26 @@ export default function ALIVE_Simulation() {
       </div>
 
       {/* Threshold legend */}
-      <div style={styles.thresholdLegend}>
-        <div style={styles.tlItem}>
+      <div style={s('thresholdLegend')}>
+        <div style={s('tlItem')}>
           <div style={{ ...styles.tlSwatch, background: '#4A7C59' }} />
-          Normal (loss &lt; P99)
+          Normal (loss &lt; baseline P99)
         </div>
-        <div style={styles.tlItem}>
+        <div style={s('tlItem')}>
           <div style={{ ...styles.tlSwatch, background: '#C49A3C' }} />
           Elevated (600–1,097)
         </div>
-        <div style={styles.tlItem}>
+        <div style={s('tlItem')}>
           <div style={{ ...styles.tlSwatch, background: '#B5403F' }} />
-          Shock (loss &gt; P99 = 1,097)
+          Shock (loss &gt; baseline P99 = 1,097)
         </div>
-        <div style={{ ...styles.tlItem, marginLeft: 'auto' }}>
+        <div style={{ ...s('tlItem'), marginLeft: isMobile ? 0 : 'auto' }}>
           <div style={{
             width: 24,
             height: 1,
             borderTop: '1.5px dashed rgba(34,55,90,0.35)',
           }} />
-          <span style={{ marginLeft: 6 }}>P99 threshold (1,097)</span>
+          <span style={{ marginLeft: 6 }}>Baseline P99 (1,097, pre-AI)</span>
         </div>
       </div>
 
@@ -897,22 +927,23 @@ export default function ALIVE_Simulation() {
       <div style={styles.piStrip}>
         {Array.from({ length: N }, (_, i) => {
           const d = i < revealed ? quarters[i] : null;
+          const base = piCellStyle(d);
           return (
-            <div key={i} style={piCellStyle(d)}>
+            <div key={i} style={isMobile ? { ...base, ...mobileStyles.piCell } : base}>
               {d ? d.pi.toFixed(2) : ''}
             </div>
           );
         })}
       </div>
-      <div style={styles.xAxisLabel}>
-        Quarter (hover to inspect) — domain exposure {'\π'} shown below
+      <div style={s('xAxisLabel')}>
+        Quarter (hover to inspect): domain exposure {'\π'} shown below
       </div>
 
       {/* Controls */}
-      <div style={styles.controls}>
+      <div style={s('controls')}>
         <button
           style={{
-            ...styles.btn,
+            ...s('btn'),
             background: nextDisabled ? '#C0BFB9' : '#22375A',
             color: '#fff',
             cursor: nextDisabled ? 'default' : 'pointer',
@@ -925,7 +956,7 @@ export default function ALIVE_Simulation() {
 
         <button
           style={{
-            ...styles.btn,
+            ...s('btn'),
             background: playing ? 'rgba(181,64,63,0.08)' : 'transparent',
             color: playing ? '#B5403F' : '#22375A',
             border: playing
@@ -939,10 +970,10 @@ export default function ALIVE_Simulation() {
           {playing ? '\■ Stop' : '\▶ Auto-play'}
         </button>
 
-        <span style={styles.speedLabel}>
+        <span style={s('speedLabel')}>
           Speed:
           <select
-            style={styles.speedSelect}
+            style={s('speedSelect')}
             value={speed}
             onChange={handleSpeedChange}
           >
@@ -954,11 +985,11 @@ export default function ALIVE_Simulation() {
 
         <button
           style={{
-            ...styles.btn,
+            ...s('btn'),
             background: 'transparent',
             color: '#A0A09A',
             border: '0.5px solid rgba(0,0,0,0.12)',
-            marginLeft: 'auto',
+            marginLeft: isMobile ? 0 : 'auto',
           }}
           onClick={handleReset}
         >

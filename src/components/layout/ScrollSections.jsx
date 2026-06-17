@@ -5,6 +5,7 @@ import ActB from '../../sections/ActB';
 import ActC from '../../sections/ActC';
 import ActD from '../../sections/ActD';
 import Lab from '../../pages/Lab';
+import useIsMobile from '../../hooks/useIsMobile';
 
 const SECTIONS = [
   { id: 0, num: 'I',   label: 'The paradox',          Component: ActA },
@@ -54,8 +55,31 @@ function ProfileBadge() {
         background: 'rgba(255,255,255,0.06)', fontFamily: "'JetBrains Mono', monospace",
         fontSize: 10, color: 'rgba(255,255,255,0.65)', fontWeight: 500,
       }}>
-        P99{'\u00d7'}{'\u03b8'} {p.p99G0.toLocaleString()}
+        P99{'\u00d7'}{'\u03b8'} {p.p99G0.toLocaleString('en-GB')}
       </div>
+    </div>
+  );
+}
+
+// Compact one-line profile indicator for the mobile shell (light strip under the act bar)
+function MobileProfileStrip() {
+  const { profileId } = useProfile();
+  if (!profileId) return null;
+  const p = PROFILES[profileId];
+  if (!p) return null;
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap',
+      padding: '8px 14px', background: '#FFFFFF',
+      borderBottom: '0.5px solid rgba(0,0,0,0.06)',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    }}>
+      <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#A0A09A' }}>Your profile</span>
+      <span style={{ fontSize: 13, fontWeight: 700, color: p.color }}>{p.name}</span>
+      <span style={{ fontSize: 11, color: '#73726C' }}>{p.city}</span>
+      <span style={{ marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#73726C' }}>
+        P99{'\u00d7'}{'\u03b8'} {p.p99G0.toLocaleString('en-GB')}
+      </span>
     </div>
   );
 }
@@ -68,6 +92,67 @@ export default function ScrollSections({ currentAct, setCurrentAct }) {
     setCurrentAct(idx);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const isMobile = useIsMobile();
+
+  // ── Mobile shell: sticky horizontal act bar + full-width content ──────────
+  if (isMobile) {
+    return (
+      <div style={{ background: '#F5F4EF', minHeight: 'calc(100vh - 44px)' }}>
+        <div style={{
+          position: 'sticky', top: 44, zIndex: 900,
+          display: 'flex', overflowX: 'auto', background: '#1B2D4A',
+          borderBottom: '0.5px solid rgba(255,255,255,0.10)',
+          WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none',
+        }}>
+          {SECTIONS.map(s => {
+            const active = s.id === currentAct;
+            return (
+              <button key={s.id} onClick={() => goTo(s.id)} style={{
+                flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 7,
+                padding: '12px 15px', border: 'none', background: 'transparent',
+                borderBottom: `2.5px solid ${active ? '#619EA8' : 'transparent'}`,
+                color: active ? '#FFFFFF' : 'rgba(255,255,255,0.55)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 600,
+                whiteSpace: 'nowrap', cursor: 'pointer',
+              }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5, fontWeight: 700, color: active ? '#619EA8' : 'rgba(255,255,255,0.40)' }}>
+                  {s.isLab ? 'LAB' : s.num}
+                </span>
+                {s.isLab ? 'Lab' : `Act ${s.num}`}
+              </button>
+            );
+          })}
+        </div>
+
+        <MobileProfileStrip />
+
+        <main style={{ padding: Section.isLab ? '0' : '12px 14px 16px', background: '#F5F4EF', minWidth: 0 }}>
+          <Component key={currentAct} />
+        </main>
+
+        {!Section.isLab && (
+          <div style={{ display: 'flex', gap: 10, padding: '4px 14px 36px' }}>
+            {currentAct > 0 && (
+              <button onClick={() => goTo(currentAct - 1)} style={{
+                flex: 1, padding: '12px 0', borderRadius: 8,
+                border: '0.5px solid rgba(34,55,90,0.20)', background: '#FFFFFF',
+                fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, fontWeight: 600,
+                color: '#22375A', cursor: 'pointer',
+              }}>{'←'} Prev</button>
+            )}
+            {currentAct < SECTIONS.length - 1 && (
+              <button onClick={() => goTo(currentAct + 1)} style={{
+                flex: 1, padding: '12px 0', borderRadius: 8, border: 'none',
+                background: '#619EA8', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, color: '#FFFFFF', cursor: 'pointer',
+              }}>Next {'→'}</button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: 'calc(100vh - 44px)' }}>
@@ -85,7 +170,7 @@ export default function ScrollSections({ currentAct, setCurrentAct }) {
           <ProfileBadge />
         </div>
 
-        {/* Actes */}
+        {/* Acts */}
         {SECTIONS.filter(s => !s.isLab).map(s => {
           const active = s.id === currentAct;
           return (
@@ -95,7 +180,7 @@ export default function ScrollSections({ currentAct, setCurrentAct }) {
               padding: '12px 16px', border: 'none', cursor: 'pointer',
               background: active ? 'rgba(255,255,255,0.08)' : 'transparent',
               borderLeft: `3px solid ${active ? '#619EA8' : 'transparent'}`,
-              transition: 'all 0.12s',
+              transition: 'all 0.12s', fontFamily: 'inherit',
             }}
               onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
               onMouseLeave={e => { if (!active) e.currentTarget.style.background = active ? 'rgba(255,255,255,0.08)' : 'transparent'; }}
@@ -103,7 +188,7 @@ export default function ScrollSections({ currentAct, setCurrentAct }) {
               <NumCircle num={s.num} active={active} />
               <div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: active ? '#FFFFFF' : 'rgba(255,255,255,0.55)', lineHeight: 1.2 }}>
-                  Acte {s.num}
+                  Act {s.num}
                 </div>
                 <div style={{ fontSize: 11, color: active ? '#619EA8' : 'rgba(255,255,255,0.28)', marginTop: 2 }}>
                   {s.label}
@@ -127,7 +212,7 @@ export default function ScrollSections({ currentAct, setCurrentAct }) {
               padding: '12px 16px', border: 'none', cursor: 'pointer',
               background: active ? 'rgba(97,158,168,0.12)' : 'transparent',
               borderLeft: `3px solid ${active ? '#619EA8' : 'transparent'}`,
-              transition: 'all 0.12s',
+              transition: 'all 0.12s', fontFamily: 'inherit',
             }}
               onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
               onMouseLeave={e => { if (!active) e.currentTarget.style.background = active ? 'rgba(97,158,168,0.12)' : 'transparent'; }}

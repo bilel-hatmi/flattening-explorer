@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useCSV } from '../../hooks/useCSV';
 import { useProfile } from '../../context/ProfileContext';
+import useIsMobile from '../../hooks/useIsMobile';
 import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 
@@ -11,7 +12,7 @@ const SCENARIOS = ['baseline', 'G0', 'G1', 'G2'];
 const SC_META = {
   baseline: { label: 'No AI',             color: '#888780' },
   G0:       { label: 'Unmanaged AI',      color: '#B5403F' },
-  G1:       { label: 'Passive guardrails', color: '#C49A3C' },
+  G1:       { label: 'Passive scaffold', color: '#C49A3C' },
   G2:       { label: 'Active governance',  color: '#4A7C59' },
 };
 
@@ -22,9 +23,9 @@ const PANELS = [
     subtitle: 'What dashboards report',
     yMin: 350,
     yMax: 900,
-    yFmt: (v) => Math.round(v).toLocaleString(),
-    badgeG0: { text: '\u2193 Looks like improvement', cls: 'good' },
-    badgeOff: 'Average loss \u2014 stable without AI',
+    yFmt: (v) => Math.round(v).toLocaleString('en-GB'),
+    badgeG0: { text: 'Looks contained on the dashboard', cls: 'good' },
+    badgeOff: 'Average loss: stable without AI',
   },
   {
     key: 'p99_brut',
@@ -32,9 +33,9 @@ const PANELS = [
     subtitle: 'One-in-a-hundred quarter loss',
     yMin: 500,
     yMax: 1900,
-    yFmt: (v) => Math.round(v).toLocaleString(),
-    badgeG0: { text: '\u2191 Tail risk builds silently', cls: 'bad' },
-    badgeOff: 'P99 loss \u2014 stable without AI',
+    yFmt: (v) => Math.round(v).toLocaleString('en-GB'),
+    badgeG0: { text: '\u2191 Tail risk the average hides', cls: 'bad' },
+    badgeOff: 'P99 loss: stable without AI',
   },
   {
     key: 'tail_ratio',
@@ -43,21 +44,21 @@ const PANELS = [
     yMin: 1.0,
     yMax: 3.6,
     yFmt: (v) => v.toFixed(1) + '\u00d7',
-    badgeG0: { text: '\u2191 Tail risk remains structurally elevated', cls: 'alert' },
-    badgeOff: 'Tail ratio \u2014 stable without AI',
+    badgeG0: { text: '\u2191 Tail risk stays elevated relative to the average', cls: 'alert' },
+    badgeOff: 'Tail ratio: stable without AI',
   },
 ];
 
 // ── Canvas draw for a single panel ───────────────────────────────────────────
 
-function drawPanel(ctx, W, H, panel, seriesMap, activeSet, hoveredQ) {
+function drawPanel(ctx, W, H, panel, seriesMap, activeSet, hoveredQ, isMobile = false) {
   const dpr = window.devicePixelRatio || 1;
   ctx.canvas.width = W * dpr;
   ctx.canvas.height = H * dpr;
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
-  const PAD = { l: 42, r: 10, t: 8, b: 22 };
+  const PAD = { l: isMobile ? 46 : 42, r: 10, t: 8, b: isMobile ? 24 : 22 };
   const cW = W - PAD.l - PAD.r;
   const cH = H - PAD.t - PAD.b;
 
@@ -69,7 +70,7 @@ function drawPanel(ctx, W, H, panel, seriesMap, activeSet, hoveredQ) {
 
   // Grid lines (horizontal)
   const yTicks = computeTicks(yMin, yMax, 4);
-  ctx.font = '9px "JetBrains Mono", monospace';
+  ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   yTicks.forEach((v) => {
@@ -85,8 +86,8 @@ function drawPanel(ctx, W, H, panel, seriesMap, activeSet, hoveredQ) {
     ctx.fillText(yFmt(v), PAD.l - 6, y);
   });
 
-  // X ticks — max 6
-  const xTicks = [1, 4, 8, 12, 16, 20];
+  // X ticks — max 6 (fewer on mobile so labels stay clear on a full-width panel)
+  const xTicks = isMobile ? [1, 5, 10, 15, 20] : [1, 4, 8, 12, 16, 20];
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   xTicks.forEach((t) => {
@@ -101,7 +102,7 @@ function drawPanel(ctx, W, H, panel, seriesMap, activeSet, hoveredQ) {
     ctx.stroke();
     // Label
     ctx.fillStyle = '#A0A09A';
-    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
     ctx.fillText(String(t), x, PAD.t + cH + 4);
   });
 
@@ -180,7 +181,7 @@ function computeTicks(min, max, count) {
 
 // ── Tooltip component ────────────────────────────────────────────────────────
 
-function PanelTooltip({ panel, seriesMap, activeSet, hoveredQ, canvasRef }) {
+function PanelTooltip({ panel, seriesMap, activeSet, hoveredQ, canvasRef, isMobile }) {
   if (hoveredQ === null || !canvasRef.current) return null;
 
   // Gather values for the hovered quarter
@@ -200,7 +201,7 @@ function PanelTooltip({ panel, seriesMap, activeSet, hoveredQ, canvasRef }) {
   const canvas = canvasRef.current;
   const rect = canvas.getBoundingClientRect();
   const cW = rect.width;
-  const PAD_L = 42;
+  const PAD_L = isMobile ? 46 : 42;
   const PAD_R = 10;
   const chartW = cW - PAD_L - PAD_R;
   const xFrac = (hoveredQ - 1) / 19;
@@ -225,16 +226,16 @@ function PanelTooltip({ panel, seriesMap, activeSet, hoveredQ, canvasRef }) {
         boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       }}
     >
-      <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 500, color: '#1A1A1A', marginBottom: 5 }}>
+      <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: isMobile ? 12 : 11, fontWeight: 500, color: '#1A1A1A', marginBottom: 5 }}>
         Quarter {hoveredQ}
       </div>
       {entries.map((e) => (
         <div key={e.sc} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
           <span style={{ width: 8, height: 8, borderRadius: 2, background: e.color, flexShrink: 0 }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#73726C' }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 11 : 10, color: '#73726C' }}>
             {panel.yFmt(e.val)}
           </span>
-          <span style={{ fontSize: 9, color: '#A0A09A' }}>{e.label}</span>
+          <span style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A' }}>{e.label}</span>
         </div>
       ))}
     </div>
@@ -243,9 +244,9 @@ function PanelTooltip({ panel, seriesMap, activeSet, hoveredQ, canvasRef }) {
 
 // ── Scenario Toggles ─────────────────────────────────────────────────────────
 
-function ScenarioToggles({ active, onToggle }) {
+function ScenarioToggles({ active, onToggle, isMobile }) {
   return (
-    <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 6, marginBottom: 24, flexWrap: 'wrap' }}>
       {SCENARIOS.map((sc) => {
         const meta = SC_META[sc];
         const isActive = active.has(sc);
@@ -257,7 +258,8 @@ function ScenarioToggles({ active, onToggle }) {
               display: 'flex',
               alignItems: 'center',
               gap: 7,
-              padding: '5px 13px 5px 9px',
+              padding: isMobile ? '10px 14px 10px 11px' : '5px 13px 5px 9px',
+              minHeight: isMobile ? 40 : undefined,
               borderRadius: 6,
               border: isActive ? '0.5px solid #22375A' : '0.5px solid rgba(0,0,0,0.14)',
               background: isActive ? '#22375A' : 'transparent',
@@ -297,7 +299,7 @@ const BADGE_STYLES = {
   off:   { background: 'rgba(136,135,128,0.08)', color: '#73726C' },
 };
 
-function TrendBadge({ panel, g0Active }) {
+function TrendBadge({ panel, g0Active, isMobile }) {
   const cfg = g0Active ? panel.badgeG0 : null;
   const text = cfg ? cfg.text : panel.badgeOff;
   const cls = cfg ? cfg.cls : 'off';
@@ -309,9 +311,9 @@ function TrendBadge({ panel, g0Active }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: 4,
-        fontSize: 9,
+        fontSize: isMobile ? 11 : 9,
         fontWeight: 600,
-        padding: '2px 7px',
+        padding: isMobile ? '3px 8px' : '2px 7px',
         borderRadius: 4,
         marginBottom: 10,
         fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -326,7 +328,7 @@ function TrendBadge({ panel, g0Active }) {
 
 // ── Single Panel wrapper ─────────────────────────────────────────────────────
 
-function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
+function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst, isMobile }) {
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
   const g0Active = activeSet.has('G0');
@@ -335,8 +337,8 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
     if (!canvasRef.current || !wrapRef.current) return;
     const W = wrapRef.current.clientWidth;
     const H = 130;
-    drawPanel(canvasRef.current.getContext('2d'), W, H, panel, seriesMap, activeSet, hoveredQ);
-  }, [panel, seriesMap, activeSet, hoveredQ]);
+    drawPanel(canvasRef.current.getContext('2d'), W, H, panel, seriesMap, activeSet, hoveredQ, isMobile);
+  }, [panel, seriesMap, activeSet, hoveredQ, isMobile]);
 
   useEffect(() => {
     draw();
@@ -350,7 +352,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
     (e) => {
       if (!wrapRef.current) return;
       const rect = wrapRef.current.getBoundingClientRect();
-      const PAD_L = 42;
+      const PAD_L = isMobile ? 46 : 42;
       const PAD_R = 10;
       const chartW = rect.width - PAD_L - PAD_R;
       const relX = e.clientX - rect.left - PAD_L;
@@ -362,7 +364,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
       const q = Math.round(frac * 19) + 1;
       onHover(Math.max(1, Math.min(20, q)));
     },
-    [onHover]
+    [onHover, isMobile]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -375,12 +377,15 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
         padding: '16px 12px 10px',
         background: '#fff',
         position: 'relative',
-        borderLeft: isFirst ? 'none' : '0.5px solid rgba(0,0,0,0.07)',
+        // On mobile the panels stack, so the divider runs along the top instead of the left
+        ...(isMobile
+          ? { borderTop: isFirst ? 'none' : '0.5px solid rgba(0,0,0,0.07)' }
+          : { borderLeft: isFirst ? 'none' : '0.5px solid rgba(0,0,0,0.07)' }),
       }}
     >
       <div
         style={{
-          fontSize: 11,
+          fontSize: isMobile ? 13 : 11,
           fontWeight: 600,
           color: '#22375A',
           marginBottom: 2,
@@ -391,7 +396,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
       </div>
       <div
         style={{
-          fontSize: 9,
+          fontSize: isMobile ? 11 : 9,
           color: '#A0A09A',
           marginBottom: 12,
           lineHeight: 1.4,
@@ -400,7 +405,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
       >
         {panel.subtitle}
       </div>
-      <TrendBadge panel={panel} g0Active={g0Active} />
+      <TrendBadge panel={panel} g0Active={g0Active} isMobile={isMobile} />
       <div
         ref={wrapRef}
         style={{ position: 'relative', height: 130 }}
@@ -417,6 +422,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
           activeSet={activeSet}
           hoveredQ={hoveredQ}
           canvasRef={canvasRef}
+          isMobile={isMobile}
         />
       </div>
     </div>
@@ -428,6 +434,7 @@ function Panel({ panel, seriesMap, activeSet, hoveredQ, onHover, isFirst }) {
 export default function A2_SilentDrift() {
   const { profileId } = useProfile();
   const profile = profileId || 'P3';
+  const isMobile = useIsMobile();
   const { data, loading } = useCSV('trajectories_by_profile_b030.csv');
   const [activeSet, setActiveSet] = useState(new Set(SCENARIOS));
   const [hoveredQ, setHoveredQ] = useState(null);
@@ -498,7 +505,7 @@ export default function A2_SilentDrift() {
 
   if (loading) {
     return (
-      <GraphCard title="How AI adoption drifts silently toward the tail">
+      <GraphCard title="How AI adoption shifts risk into the tail over time">
         <GraphSkeleton height={300} />
       </GraphCard>
     );
@@ -512,15 +519,15 @@ export default function A2_SilentDrift() {
   return (
     <GraphCard
       id="a2"
-      title="How AI adoption drifts silently toward the tail"
+      title="How AI adoption shifts risk into the tail over time"
       subtitle={`Three signals tracked over 20 quarters: what dashboards report, and two tail-risk metrics that drift in parallel, invisible to standard KPIs. ${profileLabel}`}
     >
-      <ScenarioToggles active={activeSet} onToggle={handleToggle} />
+      <ScenarioToggles active={activeSet} onToggle={handleToggle} isMobile={isMobile} />
 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: 0,
           border: '0.5px solid rgba(0,0,0,0.07)',
           borderRadius: 8,
@@ -537,6 +544,7 @@ export default function A2_SilentDrift() {
             hoveredQ={hoveredQ}
             onHover={handleHover}
             isFirst={i === 0}
+            isMobile={isMobile}
           />
         ))}
       </div>
@@ -544,7 +552,7 @@ export default function A2_SilentDrift() {
       <div
         style={{
           textAlign: 'center',
-          fontSize: 11,
+          fontSize: isMobile ? 12 : 11,
           color: '#73726C',
           marginBottom: 4,
           fontFamily: "'Plus Jakarta Sans', sans-serif",

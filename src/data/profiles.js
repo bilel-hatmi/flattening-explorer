@@ -10,9 +10,9 @@ export const PROFILE_LIST = PROFILE_IDS.map((id) => ({
 
 export const SCENARIO_LABELS = {
   baseline: 'Baseline (no AI)',
-  G0: 'G0 — Unmanaged adoption',
-  G1: 'G1 — Passive guardrails',
-  G2: 'G2 — Active governance',
+  G0: 'G0: Unmanaged adoption',
+  G1: 'G1: Passive scaffold',
+  G2: 'G2: Active governance',
 };
 
 export const SCENARIO_COLORS = {

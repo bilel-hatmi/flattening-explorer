@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import GraphCard from '../ui/GraphCard';
 import { useProfile } from '../../context/ProfileContext';
 import { getPairByKey } from '../../data/pair_data';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── Profile data (v5, beta_conform=0.30) ────────────────────────────────────
 const PROFILE_DATA = {
@@ -44,8 +45,8 @@ function dynamicTitle(pL, pR) {
   const pct = Math.round(p99diff / Math.min(pL.P99t, pR.P99t) * 100);
 
   let title;
-  if (hPct >= 0.6) title = `Same talent tier, different tail risk — ${pct}% gap`;
-  else if (pct <= 3) title = 'Converging risk, diverging causes';
+  if (hPct >= 0.6) title = `Same talent tier, different tail risk: ${pct}% gap`;
+  else if (pct <= 3) title = 'Similar tail risk, different underlying causes';
   else title = 'Different structure, different tail risk';
 
   const sameEpi  = Math.abs(pL.epi - pR.epi) <= 0.05;
@@ -54,7 +55,7 @@ function dynamicTitle(pL, pR) {
   const subs = [];
   if (sameEpi)   subs.push('Same domain exposure');
   if (betaDiff)  subs.push('Labour market structure drives the gap');
-  if (alphaDiff) subs.push('Stack architecture is the primary driver');
+  if (alphaDiff) subs.push('Stack concentration is the primary driver');
   const sub = subs.length
     ? subs.join(' · ') + '.'
     : 'Multiple structural factors diverge simultaneously.';
@@ -73,10 +74,10 @@ function getInterpretationBadge(pL, pR) {
     diffEpi   && 'domain exposure (E[π])',
   ].filter(Boolean);
 
-  if (diffs.length === 0) return { label: 'Similar profiles',        color: 'green',  note: 'Small structural differences — gap reflects noise' };
+  if (diffs.length === 0) return { label: 'Similar profiles',        color: 'green',  note: 'Small structural differences: gap reflects noise' };
   if (diffs.length === 1) return { label: 'Clean comparison',        color: 'green',  note: `Primary driver: ${diffs[0]}` };
   if (diffs.length === 2) return { label: 'Two structural drivers',  color: 'orange', note: `Drivers: ${diffs.join(' + ')}` };
-  return               { label: 'Mixed — interpret with care',   color: 'orange', note: `All three drivers differ: ${diffs.join(', ')}` };
+  return               { label: 'Mixed: interpret with care',   color: 'orange', note: `All three drivers differ: ${diffs.join(', ')}` };
 }
 
 // ── Canvas constants ────────────────────────────────────────────────────────
@@ -85,7 +86,7 @@ const CANVAS_H = 130;
 const PAD = { l: 6, r: 6, t: 10, b: 22 };
 const N_POINTS = 400;
 
-function drawHistogram(canvas, profile) {
+function drawHistogram(canvas, profile, isMobile = false) {
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const W = canvas.getBoundingClientRect().width || 320;
@@ -149,7 +150,7 @@ function drawHistogram(canvas, profile) {
 
   // P99 label
   ctx.fillStyle = 'rgba(181,64,63,0.75)';
-  ctx.font = "8px 'JetBrains Mono', monospace";
+  ctx.font = (isMobile ? 11 : 8) + "px 'JetBrains Mono', monospace";
   ctx.textAlign = 'left';
   ctx.fillText('P99: ' + (profile.P99t / 1000).toFixed(2) + 'k', p99px + 3, PAD.t + 10);
 
@@ -157,7 +158,7 @@ function drawHistogram(canvas, profile) {
   [500, 1000, 1500, 2000, 2500].forEach((v) => {
     const x = xp(v);
     ctx.fillStyle = '#A0A09A';
-    ctx.font = "8px 'JetBrains Mono', monospace";
+    ctx.font = (isMobile ? 11 : 8) + "px 'JetBrains Mono', monospace";
     ctx.textAlign = 'center';
     ctx.fillText((v / 1000).toFixed(1) + 'k', x, PAD.t + chartH + 14);
     ctx.beginPath();
@@ -171,7 +172,7 @@ function drawHistogram(canvas, profile) {
 
 // Format numbers with English locale (dot decimal, comma thousands)
 function fmtNum(n, decimals = 0) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return n.toLocaleString('en-GB', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
 // ── Styles ──────────────────────────────────────────────────────────────────
@@ -214,9 +215,10 @@ const S = {
 const BADGE_STYLES = { green: S.badgeGreen, orange: S.badgeOrange, grey: S.badgeGrey };
 
 function MetricCard({ label, value, color }) {
+  const isMobile = useIsMobile();
   return (
-    <div style={S.metric}>
-      <div style={S.metricLbl}>{label}</div>
+    <div style={{ ...S.metric, ...(isMobile ? { padding: '7px 6px' } : {}) }}>
+      <div style={{ ...S.metricLbl, ...(isMobile ? { fontSize: 10.5 } : {}) }}>{label}</div>
       <div style={{ ...S.metricVal, color }}>{value}</div>
     </div>
   );
@@ -224,6 +226,7 @@ function MetricCard({ label, value, color }) {
 
 // ── Main component ──────────────────────────────────────────────────────────
 export default function C6_Comparator() {
+  const isMobile = useIsMobile();
   const { profileId } = useProfile();
   const [leftId,  setLeftId]  = useState('P3');
   const [rightId, setRightId] = useState('P2');
@@ -261,14 +264,14 @@ export default function C6_Comparator() {
   // Draw canvases — left always draws leftId, right always draws rightId
   const redraw = useCallback(() => {
     if (sameProfile) return;
-    if (canvasLeftRef.current  && pLeft)  drawHistogram(canvasLeftRef.current,  pLeft);
-    if (canvasRightRef.current && pRight) drawHistogram(canvasRightRef.current, pRight);
-  }, [pLeft, pRight, sameProfile]);
+    if (canvasLeftRef.current  && pLeft)  drawHistogram(canvasLeftRef.current,  pLeft,  isMobile);
+    if (canvasRightRef.current && pRight) drawHistogram(canvasRightRef.current, pRight, isMobile);
+  }, [pLeft, pRight, sameProfile, isMobile]);
 
   useEffect(() => {
     const id = requestAnimationFrame(redraw);
     return () => cancelAnimationFrame(id);
-  }, [redraw]);
+  }, [redraw, isMobile]);
 
   useEffect(() => {
     const onResize = () => requestAnimationFrame(redraw);
@@ -285,14 +288,14 @@ export default function C6_Comparator() {
       <div style={S.subtitleText}>{dynSub}</div>
 
       {/* Selectors */}
-      <div style={S.selectors}>
+      <div style={{ ...S.selectors, ...(isMobile ? { flexDirection: 'column', gap: 10, alignItems: 'stretch' } : {}) }}>
         {[['Left profile', leftId, setLeftId], ['Right profile', rightId, setRightId]].map(([lbl, val, setter]) => (
-          <div key={lbl} style={S.selectorWrap}>
-            <div style={S.selectorLabel}>{lbl}</div>
-            <select style={S.select} value={val} onChange={(e) => setter(e.target.value)}>
+          <div key={lbl} style={{ ...S.selectorWrap, ...(isMobile ? { width: '100%', minWidth: 0 } : {}) }}>
+            <div style={{ ...S.selectorLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>{lbl}</div>
+            <select style={{ ...S.select, ...(isMobile ? { fontSize: 14, padding: '11px 12px', paddingRight: 28 } : {}) }} value={val} onChange={(e) => setter(e.target.value)}>
               {PROFILE_IDS.map((pid) => {
                 const p = PROFILE_DATA[pid];
-                return <option key={pid} value={pid}>{pid} — {p.name}, {p.city}</option>;
+                return <option key={pid} value={pid}>{pid} · {p.name}, {p.city}</option>;
               })}
             </select>
           </div>
@@ -300,59 +303,59 @@ export default function C6_Comparator() {
       </div>
 
       {sameProfile ? (
-        <div style={S.whyBlock}><em>Select two different profiles to see the structural analysis.</em></div>
+        <div style={{ ...S.whyBlock, ...(isMobile ? { fontSize: 11 } : {}) }}><em>Select two different profiles to see the structural analysis.</em></div>
       ) : (
         <>
           {/* Badge */}
           {badge && (
-            <div style={S.badgeRow}>
-              <div style={{ ...S.badgeBase, ...(BADGE_STYLES[badge.color] || S.badgeGrey) }}>
+            <div style={{ ...S.badgeRow, ...(isMobile ? { flexWrap: 'wrap', gap: 8, marginBottom: 14 } : {}) }}>
+              <div style={{ ...S.badgeBase, ...(BADGE_STYLES[badge.color] || S.badgeGrey), ...(isMobile ? { fontSize: 11 } : {}) }}>
                 {badge.label}
               </div>
-              {badge.note && <div style={S.badgeDrivers}>{badge.note}</div>}
+              {badge.note && <div style={{ ...S.badgeDrivers, ...(isMobile ? { fontSize: 11 } : {}) }}>{badge.note}</div>}
             </div>
           )}
 
           {/* Dual histogram grid — left panel = leftId, right panel = rightId (no auto-swap) */}
-          <div style={S.dualWrap}>
+          <div style={{ ...S.dualWrap, ...(isMobile ? { display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 12 } : {}) }}>
             {/* Left panel */}
             <div style={S.histPanel}>
-              <div style={{ ...S.histName, color: pLeft.color }}>{pLeft.name} — {pLeft.city}</div>
-              <div style={S.histSub}>{`α=${pLeft.alpha} · Beta(${pLeft.beta},${pLeft.beta}) · E[π]=${pLeft.epi}`}</div>
+              <div style={{ ...S.histName, color: pLeft.color }}>{pLeft.name} · {pLeft.city}</div>
+              <div style={{ ...S.histSub, ...(isMobile ? { fontSize: 11 } : {}) }}>{`α=${pLeft.alpha} · Beta(${pLeft.beta},${pLeft.beta}) · E[π]=${pLeft.epi}`}</div>
               <canvas ref={canvasLeftRef} style={S.canvas} height={CANVAS_H} />
               <div style={S.metrics}>
-                <MetricCard label="E[L] — mean" value={fmtNum(pLeft.EL, 1)} color={pLeft.color} />
+                <MetricCard label="E[L]: mean" value={fmtNum(pLeft.EL, 1)} color={pLeft.color} />
                 <MetricCard label="P99×θ"       value={fmtNum(pLeft.P99t)} color="#B5403F" />
                 <MetricCard label="Tail ratio"  value={pLeft.tail.toFixed(2)} color="#22375A" />
               </div>
             </div>
 
             {/* Delta column — arrow toward safer panel */}
-            <div style={S.deltaCol}>
+            <div style={{ ...S.deltaCol, ...(isMobile ? { flexDirection: 'row', gap: 10, padding: '2px 0' } : {}) }}>
               <div style={{ ...S.deltaArrow, color: arrowColor }}>{arrowDir}</div>
               <div style={{ ...S.deltaVal, color: arrowColor }}>
                 {deltaSign}{deltaAbs.toFixed(1)}%
               </div>
-              <div style={S.deltaLbl}>{deltaLabel}</div>
+              <div style={{ ...S.deltaLbl, ...(isMobile ? { fontSize: 11, textAlign: 'left' } : {}) }}>{deltaLabel}</div>
             </div>
 
             {/* Right panel */}
             <div style={S.histPanel}>
-              <div style={{ ...S.histName, color: pRight.color }}>{pRight.name} — {pRight.city}</div>
-              <div style={S.histSub}>{`α=${pRight.alpha} · Beta(${pRight.beta},${pRight.beta}) · E[π]=${pRight.epi}`}</div>
+              <div style={{ ...S.histName, color: pRight.color }}>{pRight.name} · {pRight.city}</div>
+              <div style={{ ...S.histSub, ...(isMobile ? { fontSize: 11 } : {}) }}>{`α=${pRight.alpha} · Beta(${pRight.beta},${pRight.beta}) · E[π]=${pRight.epi}`}</div>
               <canvas ref={canvasRightRef} style={S.canvas} height={CANVAS_H} />
               <div style={S.metrics}>
-                <MetricCard label="E[L] — mean" value={fmtNum(pRight.EL, 1)} color={pRight.color} />
+                <MetricCard label="E[L]: mean" value={fmtNum(pRight.EL, 1)} color={pRight.color} />
                 <MetricCard label="P99×θ"       value={fmtNum(pRight.P99t)} color="#B5403F" />
                 <MetricCard label="Tail ratio"  value={pRight.tail.toFixed(2)} color="#22375A" />
               </div>
             </div>
           </div>
 
-          <div style={S.xLabel}>← Quarterly loss (total errors) · same axis scale for both panels →</div>
+          <div style={{ ...S.xLabel, ...(isMobile ? { fontSize: 11, marginBottom: 12 } : {}) }}>← Quarterly loss (total errors) · same axis scale for both panels →</div>
 
           <div
-            style={S.whyBlock}
+            style={{ ...S.whyBlock, ...(isMobile ? { fontSize: 11 } : {}) }}
             dangerouslySetInnerHTML={{
               __html: pair?.insight ?? '<em>No structural analysis available for this pair.</em>',
             }}

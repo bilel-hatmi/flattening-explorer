@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback, useMemo, useState } from 'react';
 import GraphCard from '../ui/GraphCard';
+import useIsMobile from '../../hooks/useIsMobile';
 
 /* ── Design tokens ─────────────────────────────────────────────── */
 const COLORS = {
@@ -86,7 +87,7 @@ const PANELS_CONFIG = [
   {
     key: 'varTau',
     title: 'Cognitive diversity',
-    sublabel: 'Variance of agent types \— how different agents think',
+    sublabel: 'Variance of agent types: how different agents think',
     direction: '\↓ worse',
     colorG0: COLORS.teal,
     yMin: 55,
@@ -105,7 +106,7 @@ const PANELS_CONFIG = [
   },
   {
     key: 'followRate',
-    title: 'Surrender rate',
+    title: 'Cognitive surrender rate',
     sublabel: 'Share of agents who follow AI output without verification',
     direction: '\↑ worse',
     colorG0: COLORS.danger,
@@ -125,14 +126,18 @@ const COLOR_G2   = '#4A7C59';  // green — active governance (solid, visible)
 const COLOR_BASE = 'rgba(34,55,90,0.20)'; // very light — no AI baseline
 
 /* ── Canvas drawing ─────────────────────────────────────────────── */
-function drawPanel(ctx, W, H, g0Points, g1Points, g2Points, basePoints, panelCfg, hoveredT) {
+function drawPanel(ctx, W, H, g0Points, g1Points, g2Points, basePoints, panelCfg, hoveredT, isMobile) {
   const dpr = window.devicePixelRatio || 1;
   ctx.canvas.width = W * dpr;
   ctx.canvas.height = H * dpr;
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
-  const PAD = { l: 32, r: 12, t: 8, b: 28 };
+  // Canvas-drawn text sizes (bumped on mobile for legibility at full width)
+  const tickFont = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
+  const refFont  = isMobile ? '11px "JetBrains Mono", monospace' : '9px "JetBrains Mono", monospace';
+
+  const PAD = { l: isMobile ? 36 : 32, r: 12, t: 8, b: isMobile ? 32 : 28 };
   const cW = W - PAD.l - PAD.r;
   const cH = H - PAD.t - PAD.b;
 
@@ -179,14 +184,14 @@ function drawPanel(ctx, W, H, g0Points, g1Points, g2Points, basePoints, panelCfg
     ctx.stroke();
     // Label "100"
     ctx.fillStyle = 'rgba(34,55,90,0.35)';
-    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.font = refFont;
     ctx.textAlign = 'right';
     ctx.fillText('100', PAD.l - 3, y100 + 3);
     ctx.restore();
   }
 
   // X ticks
-  ctx.font = '9px "JetBrains Mono", monospace';
+  ctx.font = tickFont;
   ctx.fillStyle = COLORS.tickGray;
   ctx.textAlign = 'center';
   for (let t = 0; t <= tMax; t += 5) {
@@ -301,7 +306,7 @@ function drawPanel(ctx, W, H, g0Points, g1Points, g2Points, basePoints, panelCfg
 }
 
 /* ── Single Panel Sub-component ─────────────────────────────────── */
-function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, onHover, idx }) {
+function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, onHover, idx, isMobile }) {
   const canvasRef = useRef(null);
   const wrapRef = useRef(null);
 
@@ -313,9 +318,9 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
       canvasRef.current.getContext('2d'),
       W, H,
       g0Points, g1Points, g2Points, basePoints,
-      panelCfg, hoveredT
+      panelCfg, hoveredT, isMobile
     );
-  }, [g0Points, g1Points, g2Points, basePoints, panelCfg, hoveredT]);
+  }, [g0Points, g1Points, g2Points, basePoints, panelCfg, hoveredT, isMobile]);
 
   useEffect(() => {
     draw();
@@ -351,7 +356,8 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
       style={{
         padding: '16px 14px 12px',
         background: '#fff',
-        borderLeft: idx !== 0 ? '0.5px solid rgba(0,0,0,0.07)' : undefined,
+        borderLeft: !isMobile && idx !== 0 ? '0.5px solid rgba(0,0,0,0.07)' : undefined,
+        borderTop: isMobile && idx !== 0 ? '0.5px solid rgba(0,0,0,0.07)' : undefined,
         flex: 1,
         minWidth: 0,
       }}
@@ -370,7 +376,7 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
       </div>
       <div
         style={{
-          fontSize: 9,
+          fontSize: isMobile ? 11 : 9,
           color: COLORS.sublabel,
           marginBottom: 4,
           lineHeight: 1.4,
@@ -384,7 +390,7 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
           display: 'inline-flex',
           alignItems: 'center',
           gap: 3,
-          fontSize: 9,
+          fontSize: isMobile ? 11 : 9,
           fontWeight: 600,
           color: COLORS.danger,
           marginBottom: 10,
@@ -427,7 +433,7 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
           { label: 'G1', delta: panelCfg.g1Delta, bg: 'rgba(196,154,60,0.10)', color: COLOR_G1 },
           { label: 'G2', delta: panelCfg.g2Delta, bg: 'rgba(74,124,89,0.08)', color: COLOR_G2 },
         ].map(({ label, delta, bg, color }) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 4, fontSize: 9, fontFamily: "'JetBrains Mono', monospace", fontWeight: 500, background: bg, color }}>
+          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: isMobile ? '5px 9px' : '3px 8px', borderRadius: 4, fontSize: isMobile ? 11 : 9, fontFamily: "'JetBrains Mono', monospace", fontWeight: 500, background: bg, color }}>
             {label} at Q20: {delta}
           </div>
         ))}
@@ -437,13 +443,13 @@ function Panel({ panelCfg, g0Points, g1Points, g2Points, basePoints, hoveredT, o
 }
 
 /* ── Legend ──────────────────────────────────────────────────────── */
-function Legend() {
+function Legend({ isMobile }) {
   const items = [
-    { label: 'Cognitive diversity \— Var(\τ)', color: COLORS.teal,   style: 'solid' },
-    { label: 'Mean skill \— h\̄',              color: COLORS.navy,   style: 'solid' },
-    { label: 'Surrender rate',                 color: COLORS.danger, style: 'solid' },
+    { label: 'Cognitive diversity · Var(\τ)', color: COLORS.teal,   style: 'solid' },
+    { label: 'Mean skill · h\̄',              color: COLORS.navy,   style: 'solid' },
+    { label: 'Cognitive surrender rate',       color: COLORS.danger, style: 'solid' },
     { label: 'No governance (G0)',             color: COLORS.danger, style: 'reference', marginLeft: 8 },
-    { label: 'Light governance (G1)',          color: COLOR_G1,      style: 'dashed' },
+    { label: 'Passive scaffold (G1)',          color: COLOR_G1,      style: 'dashed' },
     { label: 'Active governance (G2)',         color: COLOR_G2,      style: 'solid' },
     { label: 'No AI (baseline)',               color: COLOR_BASE,    style: 'dashed' },
   ];
@@ -452,9 +458,10 @@ function Legend() {
     <div
       style={{
         display: 'flex',
-        gap: 20,
+        gap: isMobile ? 12 : 20,
+        rowGap: isMobile ? 8 : undefined,
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: isMobile ? 16 : 20,
         flexWrap: 'wrap',
         fontFamily: "'Plus Jakarta Sans', sans-serif",
       }}
@@ -468,7 +475,7 @@ function Legend() {
             gap: 7,
             fontSize: 11,
             color: item.color || COLORS.neutral,
-            marginLeft: item.marginLeft || 0,
+            marginLeft: isMobile ? 0 : (item.marginLeft || 0),
           }}
         >
           <span
@@ -493,6 +500,7 @@ function Legend() {
 
 /* ── Main Component ─────────────────────────────────────────────── */
 export default function B2_Convergence() {
+  const isMobile = useIsMobile();
   const [hoveredT, setHoveredT] = useState(null);
 
   const panelData = useMemo(() => {
@@ -515,17 +523,17 @@ export default function B2_Convergence() {
   return (
     <GraphCard
       id="b2"
-      title="The self-tightening trap, three channels converging over 20 quarters"
-      subtitle="All three indices start at 100. Under unmanaged AI (G0), each channel drifts in the dangerous direction, independently and simultaneously. By quarter 20, the organisation has cognitive diversity falls, independent judgment weakens, and surrender rates climb. Active governance (G2) stabilises all three channels near baseline."
+      title="Three channels of decline converging over 20 quarters"
+      subtitle="All three indices start at 100. Under unmanaged AI (G0), each channel drifts in the dangerous direction, independently and simultaneously. By quarter 20, cognitive diversity has fallen, independent judgment has weakened, and the share who defer to AI has climbed. Active governance (G2) holds all three channels near baseline."
     >
       {/* Legend */}
-      <Legend />
+      <Legend isMobile={isMobile} />
 
       {/* Three-panel row */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: 0,
           border: '0.5px solid rgba(0,0,0,0.07)',
           borderRadius: 8,
@@ -544,6 +552,7 @@ export default function B2_Convergence() {
             hoveredT={hoveredT}
             onHover={handleHover}
             idx={idx}
+            isMobile={isMobile}
           />
         ))}
       </div>
@@ -558,7 +567,7 @@ export default function B2_Convergence() {
           fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}
       >
-        Quarter &mdash; index: 100 = organisation at AI adoption (quarter 0)
+        Quarter · index: 100 = organisation at AI adoption (quarter 0)
       </div>
 
       {/* Insight block */}
@@ -567,8 +576,8 @@ export default function B2_Convergence() {
           background: 'rgba(34,55,90,0.04)',
           borderLeft: '2px solid rgba(34,55,90,0.25)',
           borderRadius: '0 6px 6px 0',
-          padding: '10px 14px',
-          fontSize: 10,
+          padding: isMobile ? '12px 14px' : '10px 14px',
+          fontSize: isMobile ? 11.5 : 10,
           color: COLORS.navy,
           lineHeight: 1.6,
           marginTop: 4,
@@ -582,7 +591,7 @@ export default function B2_Convergence() {
         the few dissenters who might resist AI errors disappear &rarr; surrender
         rate rises &rarr; agents stop practising independent judgment &rarr;
         skill erodes &rarr; surrender rate rises further. The longer governance
-        is deferred, the more entrenched each channel becomes &mdash; and the
+        is deferred, the more entrenched each channel becomes, and the
         more costly the transition back.
       </div>
 
@@ -590,15 +599,16 @@ export default function B2_Convergence() {
       <div
         style={{
           marginTop: 12,
-          fontSize: 10,
+          fontSize: isMobile ? 11 : 10,
           color: '#C0BFB9',
           fontStyle: 'italic',
-          textAlign: 'right',
+          textAlign: isMobile ? 'left' : 'right',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}
       >
-        Simulation outputs normalised to index 100 at t=0 (strategy consulting
-        profile, P3)
+        Schematic trajectories, indexed to 100 at AI adoption (strategy
+        consulting profile, P3). Directions match the simulation; magnitudes are
+        illustrative.
       </div>
     </GraphCard>
   );

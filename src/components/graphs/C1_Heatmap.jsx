@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { useCSV } from '../../hooks/useCSV';
+import useIsMobile from '../../hooks/useIsMobile';
 
 /* ── DATA ──────────────────────────────────────────────────────────────────── */
 
@@ -71,10 +72,10 @@ function buildGrids(csvRows, scenario) {
 }
 
 const PROFILES = [
-  { id: 'P3', label: 'P3 — Strategy, Paris', color: '#B5403F', row: 0, col: 2 },
-  { id: 'P8', label: 'P8 — Central admin, nat. exam', color: '#888780', row: 0, col: 1 },
-  { id: 'P2', label: 'P2 — Inv. bank, London', color: '#378ADD', row: 2, col: 2 },
-  { id: 'P6', label: 'P6 — Creative agency, Singapore', color: '#1D9E75', row: 3, col: 0 },
+  { id: 'P3', label: 'P3 · Strategy, Paris', color: '#B5403F', row: 0, col: 2 },
+  { id: 'P8', label: 'P8 · Central admin, nat. exam', color: '#888780', row: 0, col: 1 },
+  { id: 'P2', label: 'P2 · Inv. bank, London', color: '#378ADD', row: 2, col: 2 },
+  { id: 'P6', label: 'P6 · Creative agency, Singapore', color: '#1D9E75', row: 3, col: 0 },
 ];
 
 // Build profile lookup by cell key "row-col"
@@ -120,7 +121,9 @@ const S = {
     gap: 7,
     padding: '6px 16px',
     borderRadius: 6,
-    border: '0.5px solid rgba(0,0,0,0.14)',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(0,0,0,0.14)',
     background: 'transparent',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontSize: 12,
@@ -133,6 +136,13 @@ const S = {
     background: '#22375A',
     color: '#fff',
     borderColor: '#22375A',
+  },
+  toggleBtnMobile: {
+    flex: '1 1 auto',
+    justifyContent: 'center',
+    minHeight: 42,
+    fontSize: 13,
+    padding: '8px 14px',
   },
   colorLegend: {
     display: 'flex',
@@ -359,21 +369,22 @@ const S = {
 
 /* ── CELL COMPONENT ────────────────────────────────────────────────────────── */
 
-function HeatmapCell({ riskVal, outputVal, row, col, onMouseEnter, onMouseLeave }) {
+function HeatmapCell({ riskVal, outputVal, row, col, onMouseEnter, onMouseLeave, onClick, isMobile }) {
   const colors = getCellColors(riskVal);
   const profilesHere = PROFILE_MAP[`${row}-${col}`] || [];
 
   return (
     <div
-      style={{ ...S.cell, backgroundColor: colors.bg }}
+      style={{ ...S.cell, backgroundColor: colors.bg, ...(isMobile ? { minHeight: 48 } : {}) }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
-      <div style={{ ...S.cellValue, color: '#22375A' }}>
+      <div style={{ ...S.cellValue, color: '#22375A', ...(isMobile ? { fontSize: 14 } : {}) }}>
         +{outputVal}%
-        <span style={{ fontSize: 9, fontWeight: 400, color: '#A0A09A', marginLeft: 3 }}>output</span>
+        <span style={{ fontSize: isMobile ? 10 : 9, fontWeight: 400, color: '#A0A09A', marginLeft: 3 }}>output</span>
       </div>
-      <div style={{ ...S.cellSublabel, color: colors.text, fontWeight: 600 }}>
+      <div style={{ ...S.cellSublabel, color: colors.text, fontWeight: 600, ...(isMobile ? { fontSize: 9.5, marginTop: 3 } : {}) }}>
         {colors.tag}
       </div>
       {profilesHere.map((p, i) => (
@@ -448,6 +459,7 @@ function Tooltip({ row, col, riskVal, outputVal, pos }) {
 /* ── MAIN COMPONENT ────────────────────────────────────────────────────────── */
 
 export default function C1_Heatmap() {
+  const isMobile = useIsMobile();
   const { data: csvData, loading } = useCSV('heatmap_alpha_pi_b030.csv');
   const [scenario, setScenario] = useState('G0');
   const [hover, setHover] = useState({ row: null, col: null, riskVal: null, outputVal: null, pos: null });
@@ -511,21 +523,21 @@ export default function C1_Heatmap() {
       subtitle={subtitle}
     >
       {/* Toggle */}
-      <div style={S.controls}>
+      <div style={{ ...S.controls, ...(isMobile ? { flexWrap: 'wrap', gap: 8 } : {}) }}>
         <button
-          style={{ ...S.toggleBtn, ...(scenario === 'G0' ? S.toggleBtnActive : {}) }}
+          style={{ ...S.toggleBtn, ...(isMobile ? S.toggleBtnMobile : {}), ...(scenario === 'G0' ? S.toggleBtnActive : {}) }}
           onClick={() => setScenario('G0')}
         >
           Unmanaged AI (G0)
         </button>
         <button
-          style={{ ...S.toggleBtn, ...(scenario === 'G1' ? S.toggleBtnActive : {}) }}
+          style={{ ...S.toggleBtn, ...(isMobile ? S.toggleBtnMobile : {}), ...(scenario === 'G1' ? S.toggleBtnActive : {}) }}
           onClick={() => setScenario('G1')}
         >
-          Light governance (G1)
+          Passive scaffold (G1)
         </button>
         <button
-          style={{ ...S.toggleBtn, ...(scenario === 'G2' ? S.toggleBtnActive : {}) }}
+          style={{ ...S.toggleBtn, ...(isMobile ? S.toggleBtnMobile : {}), ...(scenario === 'G2' ? S.toggleBtnActive : {}) }}
           onClick={() => setScenario('G2')}
         >
           Active governance (G2)
@@ -533,39 +545,40 @@ export default function C1_Heatmap() {
       </div>
 
       {/* Color legend */}
-      <div style={S.colorLegend}>
-        <div style={S.clItem}>
+      <div style={{ ...S.colorLegend, ...(isMobile ? { gap: 8 } : {}) }}>
+        <div style={{ ...S.clItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <div style={{
             width: 14, height: 14, borderRadius: 3, flexShrink: 0,
             background: 'rgba(181,64,63,0.22)',
             border: '1px solid rgba(181,64,63,0.50)',
           }} />
-          P99 risk premium &gt;75% — counterproductive
+          P99 risk premium &gt;75%: counterproductive
         </div>
-        <div style={S.clItem}>
+        <div style={{ ...S.clItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <div style={{
             width: 14, height: 14, borderRadius: 3, flexShrink: 0,
             background: 'rgba(196,154,60,0.22)',
             border: '1px solid rgba(196,154,60,0.50)',
           }} />
-          P99 risk premium 35–75% — governance needed
+          P99 risk premium 35–75%: governance needed
         </div>
-        <div style={S.clItem}>
+        <div style={{ ...S.clItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <div style={{
             width: 14, height: 14, borderRadius: 3, flexShrink: 0,
             background: 'rgba(74,124,89,0.22)',
             border: '1px solid rgba(74,124,89,0.45)',
           }} />
-          P99 risk premium &lt;35% — managed
+          P99 risk premium &lt;35%: managed
         </div>
       </div>
 
       {/* Heatmap */}
-      <div style={S.heatmapOuter}>
+      <div style={isMobile ? { overflowX: 'auto', marginBottom: 20, WebkitOverflowScrolling: 'touch' } : undefined}>
+      <div style={{ ...S.heatmapOuter, ...(isMobile ? { marginBottom: 0, minWidth: 460 } : {}) }}>
         {/* Y axis label */}
         <div style={S.yAxisWrap}>
           <div style={S.yAxisDanger}>↑ worse</div>
-          <div style={S.yAxisLabel}>AI stack concentration (α)</div>
+          <div style={{ ...S.yAxisLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>AI stack concentration (α)</div>
         </div>
 
         <div style={S.gridXWrap}>
@@ -574,8 +587,8 @@ export default function C1_Heatmap() {
             <div style={S.rowLabelCol}>
               {ALPHA_ROWS.map((r, i) => (
                 <div key={i} style={S.rowLabel}>
-                  <div style={S.rowLabelMain}>{r.label}</div>
-                  <div style={S.rowLabelSub}>{r.sub}</div>
+                  <div style={{ ...S.rowLabelMain, ...(isMobile ? { fontSize: 11 } : {}) }}>{r.label}</div>
+                  <div style={{ ...S.rowLabelSub, ...(isMobile ? { fontSize: 9 } : {}) }}>{r.sub}</div>
                 </div>
               ))}
             </div>
@@ -590,8 +603,10 @@ export default function C1_Heatmap() {
                     outputVal={outputGrid[ri][ci]}
                     row={ri}
                     col={ci}
+                    isMobile={isMobile}
                     onMouseEnter={(e) => handleMouseEnter(ri, ci, riskVal, outputGrid[ri][ci], e)}
                     onMouseLeave={handleMouseLeave}
+                    onClick={(e) => handleMouseEnter(ri, ci, riskVal, outputGrid[ri][ci], e)}
                   />
                 ))
               )}
@@ -602,26 +617,28 @@ export default function C1_Heatmap() {
           <div style={S.xAxisRow}>
             {PI_COLS.map((c, i) => (
               <div key={i} style={S.xLabel}>
-                <div style={S.xLabelMain}>{c.label}</div>
-                <div style={S.xLabelSub}>{c.sub}</div>
+                <div style={{ ...S.xLabelMain, ...(isMobile ? { fontSize: 11 } : {}) }}>{c.label}</div>
+                <div style={{ ...S.xLabelSub, ...(isMobile ? { fontSize: 9 } : {}) }}>{c.sub}</div>
               </div>
             ))}
           </div>
 
           {/* X axis title */}
           <div style={S.xAxisTitle}>
-            <div style={S.xAxisTitleText}>
-              Domain exposure — share of work inside AI frontier (E[π])
+            <div style={{ ...S.xAxisTitleText, ...(isMobile ? { fontSize: 11 } : {}) }}>
+              Domain exposure: share of work inside AI frontier (E[π])
             </div>
             <div style={S.xAxisDanger}>riskier →</div>
           </div>
         </div>
       </div>
+      {isMobile && <div style={{ fontSize: 11, color: '#A0A09A', fontStyle: 'italic', marginTop: 4, marginBottom: 14, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Scroll the matrix sideways to see all columns →</div>}
+      </div>
 
       {/* Profile legend */}
-      <div style={S.profileLegend}>
+      <div style={{ ...S.profileLegend, ...(isMobile ? { gap: 8 } : {}) }}>
         {PROFILES.map(p => (
-          <div key={p.id} style={S.plItem}>
+          <div key={p.id} style={{ ...S.plItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
             <div style={{ ...S.plDot, background: p.color }} />
             {p.label}
           </div>

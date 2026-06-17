@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useCSV } from '../../hooks/useCSV';
 import { useProfile } from '../../context/ProfileContext';
+import useIsMobile from '../../hooks/useIsMobile';
 import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { hexToRgba, buildKDE } from '../../utils/helpers';
@@ -9,7 +10,7 @@ const SCENARIOS = ['baseline', 'G0', 'G1', 'G2'];
 const SC_META = {
   baseline: { label: 'No AI (baseline)', color: '#888780', fillAlpha: 0.10 },
   G0:       { label: 'Unmanaged AI',      color: '#B5403F', fillAlpha: 0.07 },
-  G1:       { label: 'Passive guardrails', color: '#C49A3C', fillAlpha: 0.07 },
+  G1:       { label: 'Passive scaffold', color: '#C49A3C', fillAlpha: 0.07 },
   G2:       { label: 'Active governance',  color: '#4A7C59', fillAlpha: 0.07 },
 };
 
@@ -19,7 +20,7 @@ function pct(val, ref) {
 }
 
 // ─── Main histogram chart on Canvas ───
-function drawMainChart(ctx, W, H, kdeData, activeSet, metrics) {
+function drawMainChart(ctx, W, H, kdeData, activeSet, metrics, isMobile = false) {
   const dpr = window.devicePixelRatio || 1;
   ctx.canvas.width = W * dpr;
   ctx.canvas.height = H * dpr;
@@ -43,10 +44,11 @@ function drawMainChart(ctx, W, H, kdeData, activeSet, metrics) {
   if (yMax === 0) yMax = 0.004;
   const yPx = (v) => PAD.t + cH * (1 - v / yMax);
 
-  // X gridlines + ticks
-  ctx.font = '10px "JetBrains Mono", monospace';
+  // X gridlines + ticks — fewer, larger labels on mobile so they read at ~340px wide
+  ctx.font = isMobile ? '11px "JetBrains Mono", monospace' : '10px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
-  for (let v = 250; v <= 1750; v += 250) {
+  const xTickStep = isMobile ? 500 : 250;
+  for (let v = xTickStep; v <= 1750; v += xTickStep) {
     const x = xPx(v);
     ctx.strokeStyle = 'rgba(0,0,0,0.04)';
     ctx.lineWidth = 1;
@@ -55,10 +57,10 @@ function drawMainChart(ctx, W, H, kdeData, activeSet, metrics) {
     ctx.lineTo(x, PAD.t + cH);
     ctx.stroke();
     ctx.fillStyle = '#73726C';
-    ctx.fillText(v.toLocaleString(), x, PAD.t + cH + 14);
+    ctx.fillText(v.toLocaleString('en-GB'), x, PAD.t + cH + 14);
   }
 
-  ctx.font = '11px "Plus Jakarta Sans", sans-serif';
+  ctx.font = isMobile ? '12px "Plus Jakarta Sans", sans-serif' : '11px "Plus Jakarta Sans", sans-serif';
   ctx.fillStyle = '#73726C';
   ctx.fillText('Quarterly loss (total errors)', PAD.l + cW / 2, H - 4);
 
@@ -118,7 +120,7 @@ function drawMainChart(ctx, W, H, kdeData, activeSet, metrics) {
     // P99 label
     if (activeSet.size <= 2 || sc === 'G0') {
       ctx.fillStyle = hexToRgba(meta.color, 0.85);
-      ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+      ctx.font = isMobile ? '500 11px "Plus Jakarta Sans", sans-serif' : '500 9px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('P99', xPx(m.p99), PAD.t - 5);
     }
@@ -211,7 +213,7 @@ function drawInsetChart(ctx, W, H, kdeData, activeSet) {
 }
 
 // ─── Metric Cards ───
-function MetricCards({ metrics }) {
+function MetricCards({ metrics, isMobile }) {
   if (!metrics.G2) return null;
 
   const mG2 = metrics.G2;
@@ -221,7 +223,7 @@ function MetricCards({ metrics }) {
   const cards = [
     {
       label: 'Average quarterly loss',
-      sublabel: 'What dashboards and KPIs report — the visible signal',
+      sublabel: 'What dashboards and KPIs report: the visible signal',
       value: Math.round(mG2.mean),
       valueClass: '',
       refB: mB.mean,
@@ -229,7 +231,7 @@ function MetricCards({ metrics }) {
     },
     {
       label: 'Worst-case quarter (P99)',
-      sublabel: 'One-in-a-hundred quarter — raw, unadjusted for output gains',
+      sublabel: 'One-in-a-hundred quarter: raw, unadjusted for output gains',
       value: Math.round(mG2.p99),
       valueClass: 'warning',
       refB: mB.p99,
@@ -247,32 +249,32 @@ function MetricCards({ metrics }) {
 
   return (
     <div>
-      <div style={{ fontSize: 11, fontWeight: 600, color: '#22375A', marginBottom: 10, display: 'flex', alignItems: 'baseline', gap: 8 }}>
+      <div style={{ fontSize: isMobile ? 12 : 11, fontWeight: 600, color: '#22375A', marginBottom: 10, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
         Outcomes under <strong style={{ marginLeft: 4 }}>Active governance (G2)</strong>
-        <span style={{ fontSize: 10, fontWeight: 400, color: '#73726C' }}>{'\— what changes under active governance'}</span>
+        <span style={{ fontSize: isMobile ? 11 : 10, fontWeight: 400, color: '#73726C' }}>{': what changes under active governance'}</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 10 }}>
         {cards.map((c) => {
           const vsBase = pct(c.value, c.refB);
           const vsG0 = pct(c.value, c.refG0);
           return (
             <div key={c.label} style={{ background: '#F5F4EF', borderRadius: 8, padding: '13px 13px 11px' }}>
-              <div style={{ fontSize: 10, color: '#73726C', fontWeight: 600, marginBottom: 1 }}>{c.label}</div>
-              <div style={{ fontSize: 9, color: '#A0A09A', lineHeight: 1.4, marginBottom: 7 }}>{c.sublabel}</div>
+              <div style={{ fontSize: isMobile ? 12 : 10, color: '#73726C', fontWeight: 600, marginBottom: 1 }}>{c.label}</div>
+              <div style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A', lineHeight: 1.4, marginBottom: 7 }}>{c.sublabel}</div>
               <div style={{
                 fontFamily: "'JetBrains Mono', monospace", fontSize: 20, fontWeight: 500, lineHeight: 1.15, marginBottom: 9,
                 color: c.valueClass === 'warning' ? '#C49A3C' : '#22375A',
               }}>
-                {c.value.toLocaleString()}
+                {c.value.toLocaleString('en-GB')}
               </div>
               <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.07)', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 9, color: '#A0A09A' }}>vs No AI</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 500, color: vsBase.startsWith('+') ? '#B5403F' : '#4A7C59' }}>{vsBase}</span>
+                  <span style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A' }}>vs No AI</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 12 : 11, fontWeight: 500, color: vsBase.startsWith('+') ? '#B5403F' : '#4A7C59' }}>{vsBase}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 9, color: '#A0A09A' }}>vs Unmanaged AI</span>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 500, color: vsG0.startsWith('+') ? '#B5403F' : '#4A7C59' }}>{vsG0}</span>
+                  <span style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A' }}>vs Unmanaged AI</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 12 : 11, fontWeight: 500, color: vsG0.startsWith('+') ? '#B5403F' : '#4A7C59' }}>{vsG0}</span>
                 </div>
               </div>
             </div>
@@ -284,9 +286,9 @@ function MetricCards({ metrics }) {
 }
 
 // ─── Toggle buttons ───
-function ScenarioToggles({ active, onToggle }) {
+function ScenarioToggles({ active, onToggle, isMobile }) {
   return (
-    <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 6, marginBottom: 20, flexWrap: 'wrap' }}>
       {SCENARIOS.map((sc) => {
         const meta = SC_META[sc];
         const isActive = active.has(sc);
@@ -296,7 +298,9 @@ function ScenarioToggles({ active, onToggle }) {
             onClick={() => onToggle(sc)}
             style={{
               display: 'flex', alignItems: 'center', gap: 7,
-              padding: '5px 13px 5px 9px', borderRadius: 6,
+              padding: isMobile ? '10px 14px 10px 11px' : '5px 13px 5px 9px',
+              minHeight: isMobile ? 40 : undefined,
+              borderRadius: 6,
               border: isActive ? '0.5px solid #22375A' : '0.5px solid rgba(0,0,0,0.14)',
               background: isActive ? '#22375A' : 'transparent',
               color: isActive ? '#fff' : '#73726C',
@@ -317,6 +321,7 @@ function ScenarioToggles({ active, onToggle }) {
 export default function A1_BimodalHero() {
   const { profileId } = useProfile();
   const profile = profileId || 'P3';
+  const isMobile = useIsMobile();
   const { data, loading } = useCSV('histograms_by_profile_b030.csv');
   const [activeSet, setActiveSet] = useState(new Set(SCENARIOS));
   const mainRef = useRef(null);
@@ -360,11 +365,14 @@ export default function A1_BimodalHero() {
 
   // Draw both canvases
   const draw = useCallback(() => {
-    if (!mainRef.current || !insetRef.current || !wrapRef.current) return;
+    if (!mainRef.current || !wrapRef.current) return;
     const W = wrapRef.current.clientWidth;
-    drawMainChart(mainRef.current.getContext('2d'), W, 220, kdeData, activeSet, metrics);
-    drawInsetChart(insetRef.current.getContext('2d'), 200, 80, kdeData, activeSet);
-  }, [kdeData, activeSet, metrics]);
+    drawMainChart(mainRef.current.getContext('2d'), W, 220, kdeData, activeSet, metrics, isMobile);
+    // Inset (tail detail) is hidden on mobile to avoid covering the curves on a narrow canvas
+    if (!isMobile && insetRef.current) {
+      drawInsetChart(insetRef.current.getContext('2d'), 200, 80, kdeData, activeSet);
+    }
+  }, [kdeData, activeSet, metrics, isMobile]);
 
   useEffect(() => {
     draw();
@@ -379,29 +387,33 @@ export default function A1_BimodalHero() {
     <GraphCard
       id="a1"
       title="Quarterly loss distribution under AI adoption"
-      subtitle={`Distribution of total quarterly errors across several hundred Monte Carlo replications \— ${profile === 'P3' ? 'Strategy consulting profile (P3)' : profile}`}
+      subtitle={`Distribution of total quarterly errors across several hundred Monte Carlo replications · ${profile === 'P3' ? 'Strategy consulting profile (P3)' : profile}`}
     >
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#22375A', marginBottom: 16, lineHeight: 1.5, maxWidth: 640 }}>
-        Under unmanaged AI, average errors fall while worst-case losses rise. Dashboards capture only the first signal.
+      <div style={{ fontSize: isMobile ? 13 : 12, fontWeight: 600, color: '#22375A', marginBottom: 16, lineHeight: 1.5, maxWidth: 640 }}>
+        {metrics && metrics.G0 && metrics.baseline && metrics.G0.mean >= metrics.baseline.mean
+          ? 'Under unmanaged AI, average errors rise while worst-case losses rise far more. Dashboards capture only the first signal.'
+          : 'Under unmanaged AI, average errors fall while worst-case losses rise. Dashboards capture only the first signal.'}
       </div>
 
-      <ScenarioToggles active={activeSet} onToggle={handleToggle} />
+      <ScenarioToggles active={activeSet} onToggle={handleToggle} isMobile={isMobile} />
 
       <div ref={wrapRef} style={{ position: 'relative', height: 220, marginBottom: 8 }}>
         <canvas ref={mainRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />
-        <div style={{
-          position: 'absolute', top: 8, right: 8, width: 200, height: 110,
-          background: '#FAFAF8', border: '0.5px solid rgba(0,0,0,0.10)', borderRadius: 8,
-          padding: '6px 8px 4px', zIndex: 10,
-        }}>
-          <div style={{ fontSize: 9, color: '#73726C', fontStyle: 'italic', marginBottom: 3 }}>
-            {'Tail detail \— P99 zone (\×8 zoom)'}
+        {!isMobile && (
+          <div style={{
+            position: 'absolute', top: 8, right: 8, width: 200, height: 110,
+            background: '#FAFAF8', border: '0.5px solid rgba(0,0,0,0.10)', borderRadius: 8,
+            padding: '6px 8px 4px', zIndex: 10,
+          }}>
+            <div style={{ fontSize: 9, color: '#73726C', fontStyle: 'italic', marginBottom: 3 }}>
+              {'Tail detail · P99 zone'}
+            </div>
+            <canvas ref={insetRef} style={{ width: '100%', height: 80 }} />
           </div>
-          <canvas ref={insetRef} style={{ width: '100%', height: 80 }} />
-        </div>
+        )}
       </div>
 
-      <MetricCards metrics={metrics} />
+      <MetricCards metrics={metrics} isMobile={isMobile} />
 
       <div style={{ marginTop: 14, fontSize: 10, color: '#C0BFB9', fontStyle: 'italic', textAlign: 'right' }}>
         {'v5 Monte Carlo simulation. See Calibration.'}

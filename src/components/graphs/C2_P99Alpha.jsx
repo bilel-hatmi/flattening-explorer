@@ -3,8 +3,12 @@ import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { useCSV } from '../../hooks/useCSV';
 import { fmt } from '../../utils/helpers';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── SVG LAYOUT ────────────────────────────────────────────────────────────────
+// Desktop geometry. Mobile uses a taller viewBox (see component) so that text,
+// whose font sizes are in viewBox units, reads larger after the SVG scales to
+// the ~358px container. Mobile overrides are applied via fs() / the *_M values.
 const SVG_W = 680, SVG_H = 200;
 const PAD = { l: 62, r: 58, t: 20, b: 32 };
 const cW = SVG_W - PAD.l - PAD.r;
@@ -65,6 +69,11 @@ const Y_TICKS = [1200, 1400, 1600, 1800, 2000, 2200];
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────
 export default function C2_P99Alpha() {
+  const isMobile = useIsMobile();
+  // On mobile the SVG scales to ~358px (×0.53), so viewBox-unit fonts shrink to
+  // unreadable. Scale text up so it renders near its nominal size, and trim the
+  // x-axis tick density / annotations to avoid overlap at narrow width.
+  const fs = (px) => (isMobile ? Math.round(px * 1.75 * 10) / 10 : px);
   const svgRef = useRef(null);
   const [hover, setHover] = useState(null);
   const { data, loading } = useCSV('heatmap_alpha_pi_b030.csv');
@@ -228,7 +237,7 @@ export default function C2_P99Alpha() {
     return (
       <GraphCard
         id="c2-p99-alpha"
-        title={'Stack diversification \u2014 the most powerful single lever'}
+        title={'Stack diversification: the single largest lever on the tail'}
         subtitle="Loading data..."
       >
         <GraphSkeleton height={400} />
@@ -239,8 +248,8 @@ export default function C2_P99Alpha() {
   // Crossover annotation values
   const g2AtCross = spG2 ? evalSpline(spG2, CROSSOVER_ALPHA) : BASELINE;
   const xCross = xPx(CROSSOVER_ALPHA);
-  const annW = 130, annH = 38;
-  const annX = xCross - annW - 12;
+  const annW = isMobile ? 250 : 130, annH = isMobile ? 62 : 38;
+  const annX = isMobile ? PAD.l + 2 : xCross - annW - 12;
   const annY = PAD.t + 2; // Force annotation to top of chart
 
   // +29% bracket values — use highest-alpha data point
@@ -269,29 +278,37 @@ export default function C2_P99Alpha() {
     if (tipX + 160 > PAD.l + cW) tipX = hover.xp - 170;
   }
 
+  // Mobile-merged delta-card styles (bump small fonts; desktop objects untouched)
+  const deltaCardM     = isMobile ? { ...deltaCard, padding: '14px 16px' } : deltaCard;
+  const deltaCardTitleM = isMobile ? { ...deltaCardTitle, fontSize: 12 } : deltaCardTitle;
+  const deltaLineM     = isMobile ? { ...deltaLine, fontSize: 12, marginBottom: 6 } : deltaLine;
+  const deltaLabelM    = isMobile ? { ...deltaLabel, fontSize: 12 } : deltaLabel;
+  const deltaValM      = isMobile ? { ...deltaVal, fontSize: 12.5 } : deltaVal;
+  const deltaHighlightM = isMobile ? { ...deltaHighlight, fontSize: 11.5 } : deltaHighlight;
+
   return (
     <GraphCard
       id="c2-p99-alpha"
-      title={'Stack diversification \u2014 the most powerful single lever'}
-      subtitle={'P99 worst-case quarterly loss as a function of AI stack concentration (\u03B1). When \u03B1 = 1.0, a single provider handles all decisions; at \u03B1 = 0, the stack is fully diversified. Below \u03B1 \u2248 0.35, active governance eliminates all excess tail risk \u2014 P99 falls below the pre-AI baseline.'}
+      title={'Stack diversification: the single largest lever on the tail'}
+      subtitle={'P99 worst-case quarterly loss as a function of AI stack concentration (\u03B1). When \u03B1 = 1.0, a single provider handles all decisions; at \u03B1 = 0, the stack is fully diversified. Below \u03B1 \u2248 0.35, active governance shrinks the excess tail, though P99 stays above the pre-AI baseline.'}
     >
       {/* Legend */}
-      <div style={legendRow}>
+      <div style={{ ...legendRow, ...(isMobile ? { gap: 12, columnGap: 14, marginBottom: 14 } : {}) }}>
         <div style={legItem}>
           <span style={{ ...legLine, borderTop: '2.5px solid #B5403F' }} />
-          <span style={legText}>Unmanaged AI (G0)</span>
+          <span style={{ ...legText, ...(isMobile ? legTextMobile : {}) }}>Unmanaged AI (G0)</span>
         </div>
         <div style={legItem}>
           <span style={{ ...legLine, borderTop: '2px dashed #C49A3C' }} />
-          <span style={legText}>Light governance (G1)</span>
+          <span style={{ ...legText, ...(isMobile ? legTextMobile : {}) }}>Passive scaffold (G1)</span>
         </div>
         <div style={legItem}>
           <span style={{ ...legLine, borderTop: '2.5px solid #4A7C59' }} />
-          <span style={legText}>Active governance (G2)</span>
+          <span style={{ ...legText, ...(isMobile ? legTextMobile : {}) }}>Active governance (G2)</span>
         </div>
         <div style={legItem}>
           <span style={{ ...legLine, borderTop: '2px dashed #888780' }} />
-          <span style={legText}>No-AI baseline</span>
+          <span style={{ ...legText, ...(isMobile ? legTextMobile : {}) }}>No-AI baseline</span>
         </div>
       </div>
 
@@ -321,7 +338,7 @@ export default function C2_P99Alpha() {
                   x={PAD.l - 6} y={y + 3.5}
                   textAnchor="end"
                   fontFamily="'JetBrains Mono', monospace"
-                  fontSize={9} fill="#A0A09A"
+                  fontSize={fs(9)} fill="#A0A09A"
                 >
                   {(v / 1000).toFixed(1)}k
                 </text>
@@ -334,9 +351,9 @@ export default function C2_P99Alpha() {
             transform={`translate(12, ${PAD.t + cH / 2}) rotate(-90)`}
             textAnchor="middle"
             fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize={10} fontWeight={600} fill="#22375A"
+            fontSize={fs(10)} fontWeight={600} fill="#22375A"
           >
-            P99 quarterly loss (total errors)
+            P99×θ quarterly loss (total errors)
           </text>
 
           {/* 3–8. Chart data — clipped to chart area */}
@@ -369,12 +386,16 @@ export default function C2_P99Alpha() {
           <text
             x={PAD.l + cW + 4} y={yPx(BASELINE) + 4}
             fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize={9} fill="#888780"
+            fontSize={fs(9)} fill="#888780"
+            textAnchor={isMobile ? 'end' : 'start'}
+            {...(isMobile ? { x: PAD.l + cW - 2, y: yPx(BASELINE) - 5 } : {})}
           >
             no-AI baseline
           </text>
 
-          {/* 9. Zone labels */}
+          {/* 9. Zone labels — hidden on mobile to avoid overlap with the scaled-up curves/annotations */}
+          {!isMobile && (
+          <>
           {/* Red zone label */}
           <text
             x={midRedX} y={yRedMid + 4} textAnchor="middle"
@@ -382,7 +403,7 @@ export default function C2_P99Alpha() {
             fontSize={8.5} fontWeight={600} fill="rgba(181,64,63,0.75)"
             fontStyle="italic"
           >
-            Residual risk &#8212; governance alone
+            Residual risk: governance
           </text>
           <text
             x={midRedX} y={yRedMid + 15} textAnchor="middle"
@@ -390,7 +411,7 @@ export default function C2_P99Alpha() {
             fontSize={8.5} fontWeight={600} fill="rgba(181,64,63,0.75)"
             fontStyle="italic"
           >
-            cannot eliminate
+            alone cannot remove
           </text>
 
           {/* Green zone label */}
@@ -402,6 +423,8 @@ export default function C2_P99Alpha() {
           >
             Reduced by governance
           </text>
+          </>
+          )}
 
           {/* 10. Crossover annotation */}
           {/* Vertical guide at crossover */}
@@ -420,18 +443,18 @@ export default function C2_P99Alpha() {
             fill="rgba(74,124,89,0.10)" stroke="rgba(74,124,89,0.35)" strokeWidth={0.5}
           />
           <text
-            x={annX + 8} y={annY + 14}
+            x={annX + 8} y={annY + (isMobile ? 20 : 14)}
             fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize={9.5} fontWeight={600} fill="#4A7C59"
+            fontSize={fs(9.5)} fontWeight={600} fill="#4A7C59"
           >
             Below &#945; &#8776; 0.35:
           </text>
           <text
-            x={annX + 8} y={annY + 27}
+            x={annX + 8} y={annY + (isMobile ? 42 : 27)}
             fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize={9} fill="#4A7C59" fontStyle="italic"
+            fontSize={fs(9)} fill="#4A7C59" fontStyle="italic"
           >
-            governance eliminates excess risk
+            governance shrinks the excess tail most
           </text>
           {/* Arrow from box to dot */}
           <line
@@ -459,14 +482,18 @@ export default function C2_P99Alpha() {
           <text
             x={xRight + 16} y={yBracketMid - 5}
             fontFamily="'JetBrains Mono', monospace"
-            fontSize={10} fontWeight={500} fill="#B5403F"
+            fontSize={fs(10)} fontWeight={500} fill="#B5403F"
+            textAnchor={isMobile ? 'end' : 'start'}
+            {...(isMobile ? { x: xRight - 6 } : {})}
           >
             +{bracketPct}%
           </text>
           <text
             x={xRight + 16} y={yBracketMid + 8}
             fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize={8} fill="#B5403F" fontStyle="italic"
+            fontSize={fs(8)} fill="#B5403F" fontStyle="italic"
+            textAnchor={isMobile ? 'end' : 'start'}
+            {...(isMobile ? { x: xRight - 6, y: yBracketMid + 16 } : {})}
           >
             residual
           </text>
@@ -542,13 +569,14 @@ export default function C2_P99Alpha() {
             fill="transparent" cursor="crosshair"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onClick={handleMouseMove}
           />
         </svg>
       </div>
 
-      {/* X-axis labels */}
-      <div style={xAxisRow}>
-        {X_LABELS.map(l => {
+      {/* X-axis labels — thinned on mobile (every other tick) so they don't overlap at narrow width */}
+      <div style={{ ...xAxisRow, ...(isMobile ? { height: 34 } : {}) }}>
+        {X_LABELS.filter((l, i) => !isMobile || i % 2 === 0).map(l => {
           const pct = (l.a - A_MIN) / (A_MAX - A_MIN);
           const leftPct = (PAD.l / SVG_W * 100) + pct * ((cW) / SVG_W * 100);
           return (
@@ -561,88 +589,88 @@ export default function C2_P99Alpha() {
                 textAlign: 'center',
               }}
             >
-              <div style={xMainLabel}>{l.main}</div>
-              <div style={xSubLabel}>{l.sub}</div>
+              <div style={{ ...xMainLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>{l.main}</div>
+              <div style={{ ...xSubLabel, ...(isMobile ? { display: 'none' } : {}) }}>{l.sub}</div>
             </div>
           );
         })}
       </div>
 
       {/* X-axis title */}
-      <div style={xAxisTitle}>
-        AI stack concentration (&alpha;) &mdash; share of decisions handled by a single provider
-        <span style={xDanger}>&nbsp;riskier &rarr;</span>
+      <div style={{ ...xAxisTitle, ...(isMobile ? { fontSize: 11, gap: 6, marginBottom: 16, flexWrap: 'wrap', padding: '0 4px' } : {}) }}>
+        AI stack concentration (&alpha;): share of decisions handled by a single provider
+        <span style={{ ...xDanger, ...(isMobile ? { fontSize: 10 } : {}) }}>&nbsp;riskier &rarr;</span>
       </div>
 
-      {/* Delta cards */}
-      <div style={deltaRow}>
+      {/* Delta cards — stack to one column on mobile */}
+      <div style={{ ...deltaRow, ...(isMobile ? { gridTemplateColumns: '1fr', gap: 10 } : {}) }}>
         {/* Left card: highest alpha */}
         {deltaCards.high && (
-          <div style={deltaCard}>
-            <div style={deltaCardTitle}>At &alpha; = {deltaCards.high.alpha.toFixed(2)} &mdash; single vendor</div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Unmanaged AI (G0)</span>
-              <span style={{ ...deltaVal, color: '#B5403F' }}>
+          <div style={deltaCardM}>
+            <div style={deltaCardTitleM}>At &alpha; = {deltaCards.high.alpha.toFixed(2)}: single vendor</div>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Unmanaged AI (G0)</span>
+              <span style={{ ...deltaValM, color: '#B5403F' }}>
                 {fmt(deltaCards.high.G0)}&ensp;+{deltaCards.high.g0Pct}%
               </span>
             </div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Light governance (G1)</span>
-              <span style={{ ...deltaVal, color: '#C49A3C' }}>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Passive scaffold (G1)</span>
+              <span style={{ ...deltaValM, color: '#C49A3C' }}>
                 {fmt(deltaCards.high.G1)}&ensp;+{deltaCards.high.g1Pct}%
               </span>
             </div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Active governance (G2)</span>
-              <span style={{ ...deltaVal, color: deltaCards.high.g2Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Active governance (G2)</span>
+              <span style={{ ...deltaValM, color: deltaCards.high.g2Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
                 {fmt(deltaCards.high.G2)}&ensp;{deltaCards.high.g2Pct > 0 ? '+' : ''}{deltaCards.high.g2Pct}%
               </span>
             </div>
             <hr style={deltaDivider} />
-            <div style={deltaLine}>
-              <span style={deltaLabel}>No-AI baseline</span>
-              <span style={{ ...deltaVal, color: '#73726C' }}>{fmt(deltaCards.high.base)}</span>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>No-AI baseline</span>
+              <span style={{ ...deltaValM, color: '#73726C' }}>{fmt(deltaCards.high.base)}</span>
             </div>
           </div>
         )}
 
         {/* Right card: lowest alpha */}
         {deltaCards.low && (
-          <div style={deltaCard}>
-            <div style={deltaCardTitle}>At &alpha; = {deltaCards.low.alpha.toFixed(2)} &mdash; diversified stack</div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Unmanaged AI (G0)</span>
-              <span style={{ ...deltaVal, color: '#B5403F' }}>
+          <div style={deltaCardM}>
+            <div style={deltaCardTitleM}>At &alpha; = {deltaCards.low.alpha.toFixed(2)}: diversified stack</div>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Unmanaged AI (G0)</span>
+              <span style={{ ...deltaValM, color: '#B5403F' }}>
                 {fmt(deltaCards.low.G0)}&ensp;+{deltaCards.low.g0Pct}%
               </span>
             </div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Light governance (G1)</span>
-              <span style={{ ...deltaVal, color: deltaCards.low.g1Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Passive scaffold (G1)</span>
+              <span style={{ ...deltaValM, color: deltaCards.low.g1Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
                 {fmt(deltaCards.low.G1)}&ensp;{deltaCards.low.g1Pct > 0 ? '+' : ''}{deltaCards.low.g1Pct}%
               </span>
             </div>
-            <div style={deltaLine}>
-              <span style={deltaLabel}>Active governance (G2)</span>
-              <span style={{ ...deltaVal, color: deltaCards.low.g2Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>Active governance (G2)</span>
+              <span style={{ ...deltaValM, color: deltaCards.low.g2Pct <= 0 ? '#4A7C59' : '#C49A3C' }}>
                 {fmt(deltaCards.low.G2)}&ensp;{deltaCards.low.g2Pct > 0 ? '+' : ''}{deltaCards.low.g2Pct === 0 ? '\u00B10' : deltaCards.low.g2Pct}%
               </span>
             </div>
             <hr style={deltaDivider} />
-            <div style={deltaLine}>
-              <span style={deltaLabel}>No-AI baseline</span>
-              <span style={{ ...deltaVal, color: '#73726C' }}>{fmt(deltaCards.low.base)}</span>
+            <div style={deltaLineM}>
+              <span style={deltaLabelM}>No-AI baseline</span>
+              <span style={{ ...deltaValM, color: '#73726C' }}>{fmt(deltaCards.low.base)}</span>
             </div>
             {deltaCards.low.g2Pct <= 0 && (
-              <div style={deltaHighlight}>&check; G2 below baseline &mdash; governance eliminates excess risk</div>
+              <div style={deltaHighlightM}>&check; G2 below baseline: governance shrinks the excess tail most</div>
             )}
           </div>
         )}
       </div>
 
       {/* Disclaimer */}
-      <div style={disclaimer}>
-        v5 simulation. P99&times;&theta; marginalized at E[&pi;] = {TARGET_EPI} (strategy consulting, P3). See Calibration.
+      <div style={{ ...disclaimer, ...(isMobile ? { fontSize: 11, textAlign: 'left' } : {}) }}>
+        v5 simulation. P99&times;&theta; marginalized at E[&pi;] = {TARGET_EPI} (reference organisation, central case). See Calibration.
       </div>
     </GraphCard>
   );
@@ -675,6 +703,10 @@ const legText = {
   fontFamily: "'Plus Jakarta Sans', sans-serif",
   fontSize: 11,
   color: '#73726C',
+};
+
+const legTextMobile = {
+  fontSize: 12,
 };
 
 const xAxisRow = {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import GraphCard from '../ui/GraphCard';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── Firm data ─────────────────────────────────────────────────────────────────
 const FIRMS = [
@@ -127,7 +128,7 @@ function makeCoords(cw) {
 }
 
 // ── Draw ──────────────────────────────────────────────────────────────────────
-function drawScene(canvas, firms, selectedId, regime) {
+function drawScene(canvas, firms, selectedId, regime, isMobile = false) {
   const dpr = window.devicePixelRatio || 1;
   const CW = canvas.clientWidth || 600;
   if (canvas.width !== Math.round(CW * dpr) || canvas.height !== Math.round(CH * dpr)) {
@@ -163,7 +164,7 @@ function drawScene(canvas, firms, selectedId, regime) {
 
   // Y-axis tick labels
   ctx.fillStyle = '#B0AFA9';
-  ctx.font = "10px 'JetBrains Mono', monospace";
+  ctx.font = (isMobile ? '11px' : '10px') + " 'JetBrains Mono', monospace";
   ctx.textAlign = 'right';
   [0.45, 0.55, 0.65, 0.75, 0.85].forEach(v =>
     ctx.fillText(v.toFixed(2), ML - 8, yPx(v) + 3.5)
@@ -186,7 +187,7 @@ function drawScene(canvas, firms, selectedId, regime) {
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
   ctx.fillStyle = '#888780';
-  ctx.font = "11px 'Plus Jakarta Sans', sans-serif";
+  ctx.font = (isMobile ? '11.5px' : '11px') + " 'Plus Jakarta Sans', sans-serif";
   ctx.fillText('Domain exposure E[\u03c0]', 0, 0);
   ctx.restore();
 
@@ -225,13 +226,13 @@ function drawScene(canvas, firms, selectedId, regime) {
 
   // X-axis labels
   ctx.fillStyle = '#B0AFA9';
-  ctx.font = "10px 'JetBrains Mono', monospace";
+  ctx.font = (isMobile ? '11px' : '10px') + " 'JetBrains Mono', monospace";
   ctx.textAlign = 'center';
-  [0, 50, 100, 150, 200, 250].forEach(v => ctx.fillText(String(v), xPx(v), MT + CHART_H + 15));
+  (isMobile ? [0, 100, 200] : [0, 50, 100, 150, 200, 250]).forEach(v => ctx.fillText(String(v), xPx(v), MT + CHART_H + 15));
 
   // X-axis label
   ctx.fillStyle = '#888780';
-  ctx.font = "11px 'Plus Jakarta Sans', sans-serif";
+  ctx.font = (isMobile ? '11.5px' : '11px') + " 'Plus Jakarta Sans', sans-serif";
   ctx.textAlign = 'center';
   ctx.fillText('Loss index \u2192', ML + chartW / 2, MT + CHART_H + 36);
 
@@ -338,12 +339,13 @@ function hitTest(e, canvas, firms) {
 
 // ── Contextual notes ──────────────────────────────────────────────────────────
 const NOTES = {
-  normal: 'Normal: domain exposure E[\u03c0] drives loss index. Firms of all providers spread by sector. Shared factor \u03be_t \u2248 0 \u2014 no provider clustering visible.',
+  normal: 'Normal: domain exposure E[\u03c0] drives loss index. Firms of all providers spread by sector. Shared factor \u03be_t \u2248 0: no provider clustering visible.',
   crisis: 'Crisis (\u03be_t = 2.2): Provider A firms sweep right in unison regardless of sector. The shared Vasicek factor \u03be_t dominates. Colour becomes the risk predictor.',
 };
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function D1_Contagion() {
+  const isMobile = useIsMobile();
   const [regime, setRegime] = useState('normal');
   const [selectedId, setSelectedId] = useState(null);
   const [tooltip, setTooltip] = useState(null);
@@ -363,8 +365,8 @@ export default function D1_Contagion() {
   // Draw on data/selection change
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas) drawScene(canvas, firms, selectedId, regime);
-  }, [firms, selectedId, regime]);
+    if (canvas) drawScene(canvas, firms, selectedId, regime, isMobile);
+  }, [firms, selectedId, regime, isMobile]);
 
   // Redraw on container resize
   useEffect(() => {
@@ -372,11 +374,11 @@ export default function D1_Contagion() {
     if (!container) return;
     const ro = new ResizeObserver(() => {
       const canvas = canvasRef.current;
-      if (canvas) drawScene(canvas, firms, selectedId, regime);
+      if (canvas) drawScene(canvas, firms, selectedId, regime, isMobile);
     });
     ro.observe(container);
     return () => ro.disconnect();
-  }, [firms, selectedId, regime]);
+  }, [firms, selectedId, regime, isMobile]);
 
   const handleRegime = useCallback((r) => {
     if (r === regime) return;
@@ -399,6 +401,8 @@ export default function D1_Contagion() {
     if (!canvas) return;
     const hit = hitTest(e, canvas, firms);
     setSelectedId(hit ? (hit.id === selectedId ? null : hit.id) : null);
+    // Touch: tap a firm to reveal its tooltip (no hover on touch devices).
+    setTooltip(hit ? { x: e.clientX, y: e.clientY, firm: hit } : null);
   }, [firms, selectedId]);
 
   const handleLeave = useCallback(() => {
@@ -409,7 +413,7 @@ export default function D1_Contagion() {
   return (
     <GraphCard
       id="d1"
-      title={'Provider contagion \u2014 in crisis, colour becomes predictive'}
+      title={'Provider contagion: in crisis, colour becomes predictive'}
       subtitle={'30 firms across three AI providers. X\u00a0=\u00a0loss index, Y\u00a0=\u00a0domain exposure E[\u03c0]. In normal quarters, sector determines each firm\'s position; in crisis, all Provider\u00a0A firms shift right as a single cluster.'}
       footnote={'Vasicek single-factor correlation model. Systematic shock shared within provider. v5 simulation.'}
     >
@@ -419,26 +423,28 @@ export default function D1_Contagion() {
         <div style={{
           display: 'flex', flexShrink: 0,
           border: '0.5px solid rgba(34,55,90,0.25)', borderRadius: 7, overflow: 'hidden',
+          ...(isMobile ? { width: '100%' } : {}),
         }}>
           {[
             { k: 'normal', l: 'Normal (\u03c0\u22480.75)' },
             { k: 'crisis', l: 'Crisis (\u03c0\u22480.30)' },
           ].map(({ k, l }, i) => (
             <button key={k} onClick={() => handleRegime(k)} style={{
-              padding: '7px 20px',
+              padding: isMobile ? '11px 16px' : '7px 20px',
+              ...(isMobile ? { flex: 1 } : {}),
               background: regime === k ? '#22375A' : '#fff',
               color: regime === k ? '#fff' : '#22375A',
               border: 'none',
               borderLeft: i > 0 ? '0.5px solid rgba(34,55,90,0.22)' : 'none',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 11.5, fontWeight: 600, cursor: 'pointer',
+              fontSize: isMobile ? 12.5 : 11.5, fontWeight: 600, cursor: 'pointer',
               transition: 'background 0.15s, color 0.15s',
             }}>{l}</button>
           ))}
         </div>
         <div style={{
-          flex: 1, minWidth: 200,
-          fontSize: 11,
+          flex: 1, minWidth: isMobile ? 0 : 200,
+          fontSize: isMobile ? 12 : 11,
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           lineHeight: 1.55,
           color: regime === 'crisis' ? '#7a3232' : '#3a5a3a',
@@ -453,7 +459,7 @@ export default function D1_Contagion() {
       </div>
 
       {/* ── Counters ──────────────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 9, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 9, marginBottom: 16 }}>
         {[
           { label: 'Firms in crisis', val: counters.total, max: 30, color: null },
           { label: 'Provider A',       val: counters.A,     max: 15,  color: PROV.A.color },
@@ -465,7 +471,7 @@ export default function D1_Contagion() {
             border: '0.5px solid rgba(0,0,0,0.07)',
           }}>
             <div style={{
-              fontSize: 9.5, color: '#B0AFA9', marginBottom: 5, letterSpacing: '0.01em',
+              fontSize: isMobile ? 11 : 9.5, color: '#B0AFA9', marginBottom: 5, letterSpacing: '0.01em',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}>{label}</div>
             <div style={{
@@ -487,7 +493,7 @@ export default function D1_Contagion() {
       </div>
 
       {/* ── Scatter + list ────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch', ...(isMobile ? { flexDirection: 'column' } : {}) }}>
 
         {/* Canvas — fills all available width */}
         <div ref={containerRef} style={{ flex: 1, minWidth: 0 }}>
@@ -509,8 +515,8 @@ export default function D1_Contagion() {
 
         {/* Ranked list */}
         <div style={{
-          width: 188, flexShrink: 0,
-          height: CH + 'px',
+          width: isMobile ? '100%' : 188, flexShrink: 0,
+          height: (isMobile ? 240 : CH) + 'px',
           overflowY: 'auto',
           border: '0.5px solid rgba(0,0,0,0.08)',
           borderRadius: 8, background: '#fff',
@@ -519,11 +525,11 @@ export default function D1_Contagion() {
           <div style={{
             position: 'sticky', top: 0, zIndex: 1,
             padding: '7px 11px',
-            fontSize: 9, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+            fontSize: isMobile ? 11 : 9, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
             color: '#B0AFA9', borderBottom: '0.5px solid rgba(0,0,0,0.07)',
             fontFamily: "'Plus Jakarta Sans', sans-serif", background: '#fff',
           }}>
-            All firms \u2014 sorted by loss
+            All firms, sorted by loss
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -535,7 +541,7 @@ export default function D1_Contagion() {
                   onClick={() => setSelectedId(f.id === selectedId ? null : f.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 7,
-                    padding: '5px 11px',
+                    padding: isMobile ? '9px 12px' : '5px 11px',
                     cursor: 'pointer',
                     background: isSel ? PROV[f.p].color + '15' : 'transparent',
                     borderBottom: idx < sortedFirms.length - 1 ? '0.5px solid rgba(0,0,0,0.04)' : 'none',
@@ -548,13 +554,13 @@ export default function D1_Contagion() {
                     background: PROV[f.p].color, flexShrink: 0, opacity: 0.85,
                   }} />
                   <span style={{
-                    flex: 1, fontSize: 10.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    flex: 1, fontSize: isMobile ? 12.5 : 10.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     color: isSel ? PROV[f.p].color : '#22375A',
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     fontWeight: isSel ? 600 : 400,
                   }}>{f.n}</span>
                   <span style={{
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5, fontWeight: 500, flexShrink: 0,
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 12.5 : 10.5, fontWeight: 500, flexShrink: 0,
                     color: f.inCrisis ? '#B5403F' : '#A0A09A',
                   }}>
                     {f.lossIndex}
@@ -581,22 +587,22 @@ export default function D1_Contagion() {
               <circle cx={v.r + 3} cy={v.r + 3} r={v.r} fill={v.color} fillOpacity={0.82} />
             </svg>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: '#22375A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <div style={{ fontSize: isMobile ? 11.5 : 10, fontWeight: 600, color: '#22375A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                 {v.label}
               </div>
-              <div style={{ fontSize: 9, color: '#A0A09A', fontFamily: "'JetBrains Mono', monospace" }}>
+              <div style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A', fontFamily: "'JetBrains Mono', monospace" }}>
                 {v.meta}
               </div>
             </div>
           </div>
         ))}
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ marginLeft: isMobile ? 0 : 'auto', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <svg width={22} height={10}>
               <line x1={0} y1={5} x2={22} y2={5} stroke="#B5403F" strokeWidth={1.5} strokeDasharray="5 3" opacity={0.6} />
             </svg>
-            <span style={{ fontSize: 9.5, color: '#B5403F', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <span style={{ fontSize: isMobile ? 11 : 9.5, color: '#B5403F', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               Crisis threshold (150)
             </span>
           </div>
@@ -604,7 +610,7 @@ export default function D1_Contagion() {
             <svg width={14} height={14}>
               <circle cx={7} cy={7} r={5.5} fill="none" stroke="#B5403F" strokeWidth={1.5} opacity={0.6} />
             </svg>
-            <span style={{ fontSize: 9.5, color: '#888780', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <span style={{ fontSize: isMobile ? 11 : 9.5, color: '#888780', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               In crisis
             </span>
           </div>
@@ -616,9 +622,11 @@ export default function D1_Contagion() {
         const f = tooltip.firm;
         return (
           <div style={{
-            position: 'fixed', left: tooltip.x + 14, top: tooltip.y - 12,
+            position: 'fixed',
+            left: Math.max(6, Math.min(tooltip.x + 14, window.innerWidth - 236)),
+            top: Math.max(6, Math.min(tooltip.y - 12, window.innerHeight - 175)),
             background: '#fff', border: '0.5px solid rgba(0,0,0,0.11)', borderRadius: 9,
-            padding: '10px 13px', pointerEvents: 'none', zIndex: 300, minWidth: 180,
+            padding: '10px 13px', pointerEvents: 'none', zIndex: 300, minWidth: 180, maxWidth: 230,
           }}>
             <div style={{
               fontWeight: 700, fontSize: 12, marginBottom: 6,

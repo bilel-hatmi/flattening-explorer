@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { usePyodide } from '../hooks/usePyodide';
+import useIsMobile from '../hooks/useIsMobile';
 import GraphCard from '../components/ui/GraphCard';
 import GraphSkeleton from '../components/ui/GraphSkeleton';
 import { PROFILES, CENTRAL_CASE } from '../data/v5_reference';
@@ -9,7 +10,7 @@ import { hexToRgba, fmt, buildKDE } from '../utils/helpers';
 const PROFILE_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
 const PROFILE_ETA = { P1: 0.02, P2: 0.02, P3: 0.02, P4: 0.01, P5: 0.03, P6: 0.01, P7: 0.04, P8: 0.01 };
 const SC_COLORS = { G0: '#B5403F', G1: '#C49A3C', G2: '#4A7C59', baseline: '#888780' };
-const SC_LABELS = { G0: 'Unmanaged AI (G0)', G1: 'Passive guardrails (G1)', G2: 'Active governance (G2)' };
+const SC_LABELS = { G0: 'Unmanaged AI (G0)', G1: 'Passive scaffold (G1)', G2: 'Active governance (G2)' };
 const BASELINE_P99 = CENTRAL_CASE.baseline.p99theta;
 const THETA = { G0: 1.25, G1: 1.20, G2: 1.10, baseline: 1.00 };
 
@@ -63,6 +64,9 @@ const DOMAIN_LIST = [
   { label: 'Back-office ops', epi: 0.75 }, { label: 'Development finance', epi: 0.50 },
 ];
 
+// Talent tier matched to each profile's real h-range (per the /model profiles table), not an alpha/epi proxy
+const PROFILE_TALENT = { P1: 'professional', P2: 'elite', P3: 'elite', P4: 'professional', P5: 'professional', P6: 'professional', P7: 'operational', P8: 'professional' };
+
 function profileToMacro(pid) {
   const p = PROFILES[pid]; const eta = PROFILE_ETA[pid];
   return {
@@ -70,7 +74,7 @@ function profileToMacro(pid) {
     screening: SCREENING_OPTIONS.reduce((b, o) => Math.abs(o.value - p.beta) < Math.abs(b.value - p.beta) ? o : b).key,
     domain: DOMAIN_LIST.reduce((b, o) => Math.abs(o.epi - p.epi) < Math.abs(b.epi - p.epi) ? o : b).label,
     deskill: DESKILL_OPTIONS.reduce((b, o) => Math.abs(o.value - eta) < Math.abs(b.value - eta) ? o : b).key,
-    talent: p.epi >= 0.75 ? 'operational' : (p.alpha <= 0.50 ? 'elite' : 'professional'),
+    talent: PROFILE_TALENT[pid] || 'professional',
   };
 }
 
@@ -84,23 +88,25 @@ const cardS = { background: '#FFFFFF', border: '0.5px solid rgba(0,0,0,0.08)', b
 const lblS = { fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#22375A', marginBottom: 8, display: 'block' };
 
 function RadioGroup({ label, options, value, onChange }) {
+  const isMobile = useIsMobile();
   return (
     <div style={cardS}>
       <span style={lblS}>{label}</span>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 6 : 3 }}>
         {options.map(o => {
           const on = value === o.key;
           return (
             <button key={o.key} onClick={() => onChange(o.key)} style={{
-              padding: '6px 10px', borderRadius: 5, border: 'none', textAlign: 'left',
+              padding: isMobile ? '10px 12px' : '6px 10px', borderRadius: 5, border: 'none', textAlign: 'left',
+              minHeight: isMobile ? 40 : undefined,
               background: on ? 'rgba(97,158,168,0.12)' : 'transparent',
               color: on ? '#22375A' : '#888780',
-              fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11,
+              fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: isMobile ? 13 : 11,
               fontWeight: on ? 600 : 400, cursor: 'pointer', transition: 'all 0.12s',
             }}>
               <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', marginRight: 8, verticalAlign: 'middle', background: on ? '#619EA8' : 'rgba(0,0,0,0.08)' }} />
               {o.label}
-              {o.desc && <span style={{ fontSize: 9, color: '#A0A09A', marginLeft: 6 }}>{o.desc}</span>}
+              {o.desc && <span style={{ fontSize: isMobile ? 11 : 9, color: '#A0A09A', marginLeft: 6 }}>{o.desc}</span>}
             </button>
           );
         })}
@@ -110,13 +116,15 @@ function RadioGroup({ label, options, value, onChange }) {
 }
 
 function DomainSelect({ value, onChange }) {
+  const isMobile = useIsMobile();
   return (
     <div style={cardS}>
       <span style={lblS}>Domain</span>
       <select value={value} onChange={e => onChange(e.target.value)} style={{
-        width: '100%', padding: '8px 10px', borderRadius: 6,
+        width: '100%', padding: isMobile ? '11px 10px' : '8px 10px', borderRadius: 6,
+        minHeight: isMobile ? 44 : undefined,
         border: '0.5px solid rgba(0,0,0,0.12)', background: '#FAFAF8',
-        fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12,
+        fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: isMobile ? 13 : 12,
         color: '#22375A', cursor: 'pointer',
       }}>
         {DOMAIN_LIST.map(d => (
@@ -129,6 +137,7 @@ function DomainSelect({ value, onChange }) {
 
 // ── LabHistogram ─────────────────────────────────────────────────────────────
 function LabHistogram({ results }) {
+  const isMobile = useIsMobile();
   const canvasRef = useRef(null), wrapRef = useRef(null);
 
   const kdes = useMemo(() => {
@@ -188,7 +197,7 @@ function LabHistogram({ results }) {
 
   return (
     <GraphCard title="Loss distribution" subtitle="G0 (red), G1 (amber), G2 (green) overlaid. Governance progressively compresses the right tail.">
-      <div style={{ display: 'flex', gap: 16, marginBottom: 10, fontSize: 10, fontFamily: "'Plus Jakarta Sans', sans-serif", flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: isMobile ? 10 : 16, marginBottom: 10, fontSize: isMobile ? 11 : 10, fontFamily: "'Plus Jakarta Sans', sans-serif", flexWrap: 'wrap' }}>
         {['G0', 'G1', 'G2'].map(sc => (
           <span key={sc}><span style={{ display: 'inline-block', width: 14, height: 3, background: SC_COLORS[sc], marginRight: 6, verticalAlign: 'middle' }} />{SC_LABELS[sc]}</span>
         ))}
@@ -240,6 +249,7 @@ function LabTrajectory({ results }) {
 
 // ── LabConvergence (3 stacked mini-charts) ───────────────────────────────────
 function LabConvergence({ results }) {
+  const isMobile = useIsMobile();
   const METRICS = [
     { key: 'var_tau',     label: 'Cognitive diversity',  unit: '' },
     { key: 'h_bar',       label: 'Independent skill',    unit: '' },
@@ -272,7 +282,7 @@ function LabConvergence({ results }) {
 
   return (
     <GraphCard title="How the organisation tightens" subtitle="Three structural indicators tracked over 20 quarters, normalised to 1.0 at Q1. Compare G0 (red), G1 (amber), G2 (green).">
-      <div style={{ display: 'flex', gap: 12, marginBottom: 8, fontSize: 10, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 8, fontSize: isMobile ? 11 : 10, fontFamily: "'Plus Jakarta Sans', sans-serif", flexWrap: 'wrap' }}>
         {SC_LIST.map(sc => <span key={sc}><span style={{ display: 'inline-block', width: 12, height: 2.5, background: SC_COLORS[sc], marginRight: 5, verticalAlign: 'middle' }}/>{SC_LABELS[sc]}</span>)}
       </div>
       {METRICS.map(m => {
@@ -299,7 +309,7 @@ function LabConvergence({ results }) {
           </div>
         );
       })}
-      <div style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 130, paddingRight: 16, fontSize: 9, color: '#A0A09A', fontFamily: "'JetBrains Mono', monospace" }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: isMobile ? 88 : 130, paddingRight: 16, fontSize: isMobile ? 11 : 9, color: '#A0A09A', fontFamily: "'JetBrains Mono', monospace" }}>
         <span>Q1</span><span>Q5</span><span>Q10</span><span>Q15</span><span>Q20</span>
       </div>
     </GraphCard>
@@ -308,6 +318,7 @@ function LabConvergence({ results }) {
 
 // ── LabScaffoldGauge ─────────────────────────────────────────────────────────
 function LabScaffoldGauge({ results }) {
+  const isMobile = useIsMobile();
   const g0 = results?.G0, g1 = results?.G1, g2 = results?.G2;
   const p99G0 = g0?.p99_theta || 0, p99G1 = g1?.p99_theta || 0, p99G2 = g2?.p99_theta || 0;
   const scaffold = g2?.scaffold_benefit;
@@ -319,17 +330,17 @@ function LabScaffoldGauge({ results }) {
 
   return (
     <GraphCard title="Governance efficiency" subtitle="Does governance earn its velocity cost? Positive scaffold benefit means governance preserves more output per unit of risk reduced than it costs in speed.">
-      <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: 200, textAlign: 'center', padding: '12px 0' }}>
+      <div style={{ display: 'flex', gap: isMobile ? 14 : 28, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: isMobile ? '100%' : 200, textAlign: 'center', padding: '12px 0' }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 36, fontWeight: 700, color, marginBottom: 4 }}>
-            {val != null ? `${val >= 0 ? '+' : ''}${val}%` : '\u2014'}
+            {val != null ? `${val >= 0 ? '+' : ''}${val}%` : '\u2013'}
           </div>
           <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color, fontWeight: 600, marginBottom: 12 }}>
-            {val != null ? (isPos ? 'Governance is productive' : 'Governance is counterproductive') : '\u2014'}
+            {val != null ? (isPos ? 'Governance is productive' : 'Governance is counterproductive') : '\u2013'}
           </div>
         </div>
         {p99G0 > 0 && (
-          <div style={{ minWidth: 200, background: '#F5F4EF', borderRadius: 8, padding: '14px 16px' }}>
+          <div style={{ minWidth: isMobile ? '100%' : 200, width: isMobile ? '100%' : undefined, boxSizing: 'border-box', background: '#F5F4EF', borderRadius: 8, padding: '14px 16px' }}>
             <div style={{ fontSize: 10, fontWeight: 600, color: '#A0A09A', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10 }}>
               P99{'\u00d7'}{'\u03b8'} tail risk
             </div>
@@ -358,6 +369,7 @@ function LabScaffoldGauge({ results }) {
 
 // ── Main Lab Component ───────────────────────────────────────────────────────
 export default function Lab() {
+  const isMobile = useIsMobile();
   const [stack, setStack] = useState('dominant');
   const [screening, setScreening] = useState('natexam');
   const [domainLabel, setDomainLabel] = useState('Strategy consulting');
@@ -410,33 +422,34 @@ export default function Lab() {
   }, [pyReady, running, numP, run_custom_scenario]);
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '80px 24px 64px' }}>
-      <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, color: '#22375A', marginBottom: 8 }}>
+    <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '32px 16px 56px' : '80px 24px 64px' }}>
+      <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 30 : 36, color: '#22375A', marginBottom: 8 }}>
         Parameter Explorer
       </h1>
-      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: '#888780', marginBottom: 28, maxWidth: 640 }}>
+      <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, color: '#888780', marginBottom: isMobile ? 22 : 28, maxWidth: 640 }}>
         Configure your organisation's structural parameters, then run the Monte Carlo simulation to see how tail risk responds under three governance regimes.
       </p>
 
       {/* ═══════ CONFIGURATION ═══════ */}
-      <div style={{ background: '#FFFFFF', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 14, padding: '24px 24px 20px', marginBottom: 32 }}>
+      <div style={{ background: '#FFFFFF', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 14, padding: isMobile ? '18px 16px 16px' : '24px 24px 20px', marginBottom: isMobile ? 24 : 32 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: '#A0A09A', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
           1. Start from a preset (optional)
         </div>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: isMobile ? 8 : 6, flexWrap: 'wrap', marginBottom: 20 }}>
           {PROFILE_IDS.map(pid => {
             const pr = PROFILES[pid];
             return (
               <button key={pid} onClick={() => selectProfile(pid)} style={{
-                padding: '8px 14px', borderRadius: 7, cursor: 'pointer',
+                padding: isMobile ? '11px 14px' : '8px 14px', borderRadius: 7, cursor: 'pointer',
+                minHeight: isMobile ? 40 : undefined,
                 border: '0.5px solid rgba(0,0,0,0.08)', background: '#FFFFFF',
                 color: '#73726C', fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 11, fontWeight: 600, transition: 'all 0.15s',
+                fontSize: isMobile ? 12 : 11, fontWeight: 600, transition: 'all 0.15s',
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = pr.color; e.currentTarget.style.color = pr.color; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'; e.currentTarget.style.color = '#73726C'; }}
+                onMouseEnter={e => { e.currentTarget.style.border = '0.5px solid ' + pr.color; e.currentTarget.style.color = pr.color; }}
+                onMouseLeave={e => { e.currentTarget.style.border = '0.5px solid rgba(0,0,0,0.08)'; e.currentTarget.style.color = '#73726C'; }}
               >
-                {pr.name} {'\u2014'} {pr.city}
+                {pr.name} {'\u00b7'} {pr.city}
               </button>
             );
           })}
@@ -445,12 +458,12 @@ export default function Lab() {
         <div style={{ fontSize: 11, fontWeight: 700, color: '#A0A09A', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
           2. Adjust structural parameters
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 12 }}>
-          <RadioGroup label="AI stack architecture" options={STACK_OPTIONS} value={stack} onChange={setStack} />
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12, marginBottom: 12 }}>
+          <RadioGroup label="AI stack concentration" options={STACK_OPTIONS} value={stack} onChange={setStack} />
           <RadioGroup label="Screening pipeline" options={SCREENING_OPTIONS} value={screening} onChange={setScreening} />
           <DomainSelect value={domainLabel} onChange={setDomainLabel} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
           <RadioGroup label="Deskilling speed" options={DESKILL_OPTIONS} value={deskill} onChange={setDeskill} />
           <RadioGroup label="Talent tier" options={TALENT_OPTIONS} value={talent} onChange={setTalent} />
           <div style={{ ...cardS, display: 'flex', flexDirection: 'column' }}>
@@ -465,9 +478,10 @@ export default function Lab() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 10 : 16 }}>
           <button onClick={handleRun} disabled={!pyReady || running} style={{
             padding: '12px 32px', borderRadius: 8, border: 'none',
+            width: isMobile ? '100%' : undefined, minHeight: isMobile ? 48 : undefined,
             background: !pyReady ? '#E0DFD9' : running ? '#E0DFD9' : '#619EA8',
             color: !pyReady || running ? '#888780' : '#FFFFFF',
             fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 700,
@@ -492,14 +506,14 @@ export default function Lab() {
 
       {/* ═══════ RESULTS ═══════ */}
       {!results && !running && (
-        <div style={{ textAlign: 'center', padding: '80px 24px', color: '#A0A09A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <div style={{ textAlign: 'center', padding: isMobile ? '48px 16px' : '80px 24px', color: '#A0A09A', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
           <div style={{ fontSize: 16, marginBottom: 8 }}>Configure parameters above, then click <strong style={{ color: '#619EA8' }}>Run simulation</strong></div>
-          <div style={{ fontSize: 12 }}>Results will appear here {'\u2014'} three governance regimes compared side by side.</div>
+          <div style={{ fontSize: 12 }}>Results will appear here, three governance regimes compared side by side.</div>
         </div>
       )}
 
       {running && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 20, marginBottom: 20 }}>
           <GraphSkeleton height={360} /><GraphSkeleton height={360} />
           <GraphSkeleton height={300} /><GraphSkeleton height={200} />
         </div>
@@ -510,11 +524,11 @@ export default function Lab() {
           <div style={{ fontSize: 11, fontWeight: 700, color: '#A0A09A', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 16 }}>
             Simulation results
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 20, marginBottom: isMobile ? 16 : 20 }}>
             <LabHistogram results={results} />
             <LabTrajectory results={results} />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 20, marginBottom: isMobile ? 16 : 20 }}>
             <LabConvergence results={results} />
             <LabScaffoldGauge results={results} />
           </div>

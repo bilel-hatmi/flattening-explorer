@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import useIsMobile from '../../hooks/useIsMobile';
 
 const ExploreIcon = ({ opacity }) => (
   <svg width={14} height={14} viewBox="0 0 14 14" fill="none" style={{ opacity }}>
@@ -9,8 +10,8 @@ const ExploreIcon = ({ opacity }) => (
 
 const ModelIcon = ({ opacity }) => (
   <svg width={14} height={14} viewBox="0 0 14 14" fill="none" style={{ opacity }}>
-    <text x={7} y={11} textAnchor="middle" fontFamily="serif" fontSize={13} fontWeight={700} fill="#FFFFFF">
-      {'\u03A3'}
+    <text x={7} y={11} textAnchor="middle" fontFamily="'Instrument Serif', serif" fontSize={13} fontWeight={700} fill="#FFFFFF">
+      {'Σ'}
     </text>
   </svg>
 );
@@ -33,17 +34,18 @@ const NAV_ITEMS = [
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 1000, height: 44,
       background: '#22375A', display: 'flex', alignItems: 'center',
-      justifyContent: 'space-between', padding: '0 20px',
+      justifyContent: 'space-between', padding: isMobile ? '0 12px' : '0 20px',
       fontFamily: "'Plus Jakarta Sans', sans-serif",
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 2 : 4 }}>
         <span
-          style={{ fontFamily: "'Instrument Serif', serif", fontSize: 17, fontWeight: 400, color: '#FFFFFF', marginRight: 24, cursor: 'pointer', letterSpacing: '-0.01em' }}
+          style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 15 : 17, fontWeight: 400, color: '#FFFFFF', marginRight: isMobile ? 10 : 24, cursor: 'pointer', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}
           onClick={() => navigate('/')}
         >
           The Flattening
@@ -54,26 +56,26 @@ export default function Nav() {
           return (
             <button key={item.label} onClick={() => navigate(item.route)} style={{
               background: active ? 'rgba(255,255,255,0.12)' : 'none',
-              border: 'none', color: '#FFFFFF', fontSize: 13, fontWeight: active ? 600 : 400,
-              cursor: 'pointer', padding: '6px 16px', borderRadius: 5,
+              border: 'none', color: '#FFFFFF', fontSize: isMobile ? 12 : 13, fontWeight: active ? 600 : 400,
+              cursor: 'pointer', padding: isMobile ? '6px 9px' : '6px 16px', borderRadius: 5,
               fontFamily: 'inherit', opacity: active ? 1 : 0.65, transition: 'all 0.15s',
-              display: 'flex', alignItems: 'center', gap: 6,
+              display: 'flex', alignItems: 'center', gap: isMobile ? 0 : 6, whiteSpace: 'nowrap',
             }}
               onMouseEnter={e => { if (!active) e.currentTarget.style.opacity = '0.9'; }}
               onMouseLeave={e => { if (!active) e.currentTarget.style.opacity = '0.65'; }}
             >
-              {Icon && <Icon opacity={active ? 1 : 0.65} />}
+              {!isMobile && Icon && <Icon opacity={active ? 1 : 0.65} />}
               {item.label}
             </button>
           );
         })}
       </div>
       <a href="/docs/essay_prize.pdf" target="_blank" rel="noopener noreferrer" style={{
-        color: '#FFFFFF', fontSize: 12, fontWeight: 500, padding: '5px 14px',
+        color: '#FFFFFF', fontSize: isMobile ? 11 : 12, fontWeight: 500, padding: isMobile ? '5px 9px' : '5px 14px',
         border: '1px solid rgba(255,255,255,0.20)', borderRadius: 5,
-        textDecoration: 'none', fontFamily: 'inherit', opacity: 0.8,
+        textDecoration: 'none', fontFamily: 'inherit', opacity: 0.8, whiteSpace: 'nowrap',
       }}>
-        Read the essay
+        {isMobile ? 'Essay' : 'Read the essay'}
       </a>
     </nav>
   );

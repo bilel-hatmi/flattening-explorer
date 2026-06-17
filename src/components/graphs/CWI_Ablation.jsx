@@ -4,13 +4,14 @@ import { useProfile } from '../../context/ProfileContext';
 import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { PROFILES } from '../../data/v5_reference';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── G2 — governance ceiling (separate from ablations) ────────────────────────
 const G2_DEF = {
   key: 'g2',
   csvKey: 'G2',
   name: 'Governance ceiling (G2)',
-  desc: 'Full scaffold: Socratic questioning gates + audit loops + diversity targets',
+  desc: 'Active scaffold: independent human judgment formed before the AI is consulted, plus audit loops',
 };
 
 // ── Ablation toggles (sorted by effect amplitude per profile) ─────────────────
@@ -19,7 +20,7 @@ const ABLATION_DEFS = [
     key: 'noScreen',
     csvKey: 'no_screen',
     name: 'Remove AI screening',
-    desc: 'Disable algorithmic filtering in hiring \u2014 restore cognitive diversity to baseline',
+    desc: 'Disable algorithmic filtering in hiring: restore cognitive diversity to baseline',
   },
   {
     key: 'noConform',
@@ -31,26 +32,26 @@ const ABLATION_DEFS = [
     key: 'divStack',
     csvKey: 'div_stack',
     name: 'Diversify the AI stack',
-    desc: 'Move to multi-provider architecture (\u03b1 \u2192 0.30) \u2014 one procurement decision',
+    desc: 'Move to multi-provider architecture (\u03b1 \u2192 0.30): one procurement decision',
   },
   {
     key: 'noDeskill',
     csvKey: 'no_deskill',
     name: 'Halt deskilling',
-    desc: 'Freeze skill decay (\u03b7 \u2192 0) \u2014 maintain current human judgment levels',
+    desc: 'Freeze skill decay (\u03b7 \u2192 0): maintain current human judgment levels',
   },
 ];
 
 // ── Profile notes (exact wording from spec, with <strong> tags) ──────────────
 const NOTES = {
-  P1: "Frankfurt\u2019s main lever is <strong>stack diversification</strong> (\u221213%) followed by conformism removal (\u22126%). Governance (G2) eliminates \u221232%. Scaffold benefit is slightly negative (\u22123%) \u2014 the velocity cost marginally exceeds the risk reduction.",
-  P2: "London is already near-optimal structurally. <strong>Active governance (G2)</strong> produces the largest single reduction (\u221241%). Stack diversification has minimal effect \u2014 \u03b1=0.40 is already partially diversified. Scaffold benefit is the highest in the model (+146%).",
+  P1: "Frankfurt\u2019s main lever is <strong>stack diversification</strong> (\u221211%) followed by conformism removal (\u22127%). Governance (G2) eliminates \u221231%. Scaffold benefit is slightly negative (\u22123%): the velocity cost marginally exceeds the risk reduction.",
+  P2: "London is already near-optimal structurally. <strong>Active governance (G2)</strong> produces the largest single reduction (\u221238%). Stack diversification has minimal effect: \u03b1=0.40 is already partially diversified. Scaffold benefit is the highest in the model (+146%).",
   P3: "Paris responds strongly to both <strong>stack diversification</strong> (\u221213%) and <strong>conformism removal</strong> (\u22129%). The grandes \u00e9coles pipeline and centralised LLM are Paris\u2019s two structural constraints. Governance (G2) yields \u221236%. Scaffold benefit: +77%.",
-  P4: "Brussels is dominated by <strong>stack concentration</strong> \u2014 diversification yields \u221213%. Domain exposure (E[\u03c0]=0.45) is structural and cannot be toggled away. Governance (G2) provides \u221230%, but scaffold benefit is slightly negative (\u22128%).",
-  P5: "<strong>Governance is counterproductive for this profile.</strong> Stack diversification helps (\u22127%). Conformism has near-zero effect \u2014 the pipeline is already diverse. G2 reduces tail risk but the velocity cost dominates: scaffold benefit \u221236%. This grounds the Nash equilibrium argument.",
-  P6: "Singapore is already protected by architecture. <strong>No single ablation produces meaningful reduction</strong> \u2014 the profile has near-optimal stack diversification and inside-frontier domain. Governance (G2) is the only lever with visible effect (\u221239%). Scaffold benefit: +40%.",
-  P7: "Bangalore\u2019s dominant lever is <strong>stack diversification</strong> (\u221221%) \u2014 the most responsive profile on this dimension. Conformism and screening effects are muted. Governance (G2): \u221224%. Scaffold benefit is negative (\u221226%) \u2014 forcing independent judgment in a low-skill workforce is counterproductive.",
-  P8: "Seoul has the highest absolute tail risk and <strong>the weakest response to any single intervention</strong>. Stack diversification yields \u221212%. Governance yields \u221220%. Scaffold benefit: \u22126%. Structural reform across multiple dimensions is the only effective path.",
+  P4: "Brussels is dominated by <strong>stack concentration</strong>, diversification yields \u221212%. Domain exposure (E[\u03c0]=0.45) is structural and cannot be toggled away. Governance (G2) provides \u221229%, but scaffold benefit is slightly negative (\u22128%).",
+  P5: "<strong>Governance is counterproductive for this profile.</strong> Stack diversification helps (\u221211%). Conformism has near-zero effect: the pipeline is already diverse. G2 reduces tail risk but the velocity cost dominates: scaffold benefit \u221236%. The Nash equilibrium argument rests on exactly this case.",
+  P6: "Singapore is already protected by architecture. <strong>No single ablation produces meaningful reduction</strong>: the profile has near-optimal stack diversification and inside-frontier domain. Governance (G2) is the only lever with visible effect (\u221227%). Scaffold benefit: +40%.",
+  P7: "Bangalore\u2019s dominant lever is <strong>stack diversification</strong> (\u221211%). Conformism and screening effects are muted. Governance (G2): \u221222%. Scaffold benefit is negative (\u221226%): forcing independent judgment in a low-skill workforce is counterproductive.",
+  P8: "Seoul has the highest absolute tail risk and <strong>the weakest response to any single intervention</strong>. Stack diversification yields \u221212%. Governance yields \u221227%. Scaffold benefit: \u22126%. Structural reform across multiple dimensions is the only effective path.",
 };
 
 // ── Profile meta (labels + colors from v5_reference) ─────────────────────────
@@ -76,7 +77,9 @@ const S = {
     gap: 6,
     padding: '6px 14px',
     borderRadius: 6,
-    border: '0.5px solid rgba(0,0,0,0.14)',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(0,0,0,0.14)',
     background: 'transparent',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontSize: 11,
@@ -163,7 +166,9 @@ const S = {
     gap: 10,
     padding: '10px 12px',
     borderRadius: 8,
-    border: '0.5px solid rgba(0,0,0,0.08)',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(0,0,0,0.08)',
     background: '#FAFAF8',
     cursor: 'pointer',
     transition: 'all 0.2s',
@@ -313,7 +318,7 @@ const SVG_H = 80;
 const BAR_Y = 18;
 const BAR_H = 34;
 
-function AblationBar({ fullVal, currentVal, profileColor }) {
+function AblationBar({ fullVal, currentVal, profileColor, isMobile = false }) {
   // Axis starts at ~58% of fullVal so variations are clearly visible
   const xMin = Math.floor(fullVal * 0.58 / 100) * 100;
   const xMax = Math.ceil(fullVal * 1.07 / 100) * 100;
@@ -350,8 +355,8 @@ function AblationBar({ fullVal, currentVal, profileColor }) {
         stroke="rgba(34,55,90,0.35)" strokeWidth={1.5} strokeDasharray="3 2" />
       {/* Reference label */}
       <text x={fullX + 3} y={BAR_Y - 4} textAnchor="start"
-        fontFamily="Plus Jakarta Sans, sans-serif" fontSize={8} fill="rgba(34,55,90,0.45)">
-        full: {Math.round(fullVal).toLocaleString()}
+        fontFamily="Plus Jakarta Sans, sans-serif" fontSize={isMobile ? 13 : 8} fill="rgba(34,55,90,0.45)">
+        full: {Math.round(fullVal).toLocaleString('en-GB')}
       </text>
       {/* X axis ticks */}
       {ticks.map((v) => {
@@ -361,7 +366,7 @@ function AblationBar({ fullVal, currentVal, profileColor }) {
             <line x1={x} y1={BAR_Y + BAR_H + 4} x2={x} y2={BAR_Y + BAR_H + 8}
               stroke="rgba(0,0,0,0.15)" strokeWidth={1} />
             <text x={x} y={BAR_Y + BAR_H + 20} textAnchor="middle"
-              fontFamily="JetBrains Mono, monospace" fontSize={8.5} fill="#A0A09A">
+              fontFamily="JetBrains Mono, monospace" fontSize={isMobile ? 13 : 8.5} fill="#A0A09A">
               {(v / 1000).toFixed(1)}k
             </text>
           </g>
@@ -373,6 +378,7 @@ function AblationBar({ fullVal, currentVal, profileColor }) {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function CWI_Ablation() {
+  const isMobile = useIsMobile();
   const { profileId } = useProfile();
   const { data: rawData, loading, error } = useCSV('ablation_results.csv');
   const [selectedProfile, setSelectedProfile] = useState(profileId || 'P3');
@@ -477,7 +483,7 @@ export default function CWI_Ablation() {
     // Special case: P2 London + divStack
     if (toggleKey === 'divStack' && selectedProfile === 'P2') {
       return {
-        text: 'minimal effect \u2014 stack already partially diversified (\u03b1=0.40)',
+        text: 'minimal effect: stack already partially diversified (\u03b1=0.40)',
         color: '#C49A3C',
       };
     }
@@ -489,7 +495,7 @@ export default function CWI_Ablation() {
       return { text: `+${tDelta}% (worsens)`, color: '#B5403F' };
     }
     return {
-      text: `${tDelta}%  (\u2212${tAbs.toLocaleString()})`,
+      text: `${tDelta}%  (\u2212${tAbs.toLocaleString('en-GB')})`,
       color: '#4A7C59',
     };
   }
@@ -500,7 +506,7 @@ export default function CWI_Ablation() {
       <GraphCard
         id="cwi-ablation"
         title="What if you removed one risk driver?"
-        subtitle={'Activate a structural intervention to see how much tail risk it removes. Effects are ablation results \u2014 each toggle removes one mechanism independently. Combining multiple toggles does not produce additive effects.'}
+        subtitle={'Activate a structural intervention to see how much tail risk it removes. Effects are ablation results: each toggle removes one mechanism independently. Combining multiple toggles does not produce additive effects.'}
       >
         <GraphSkeleton height={400} />
       </GraphCard>
@@ -533,10 +539,10 @@ export default function CWI_Ablation() {
     <GraphCard
       id="cwi-ablation"
       title="What if you removed one risk driver?"
-      subtitle={'Activate a structural intervention to see how much tail risk it removes. Effects are ablation results \u2014 each toggle removes one mechanism independently. Combining multiple toggles does not produce additive effects.'}
+      subtitle={'Activate a structural intervention to see how much tail risk it removes. Effects are ablation results: each toggle removes one mechanism independently. Combining multiple toggles does not produce additive effects.'}
     >
       {/* ── Profile selector buttons ─────────────────────────────────────── */}
-      <div style={S.profileRow}>
+      <div style={{ ...S.profileRow, ...(isMobile ? { marginBottom: 16 } : {}) }}>
         {PROFILE_META.map((p) => {
           const isActive = selectedProfile === p.id;
           return (
@@ -547,6 +553,7 @@ export default function CWI_Ablation() {
                 ...(isActive
                   ? { ...S.profBtnActive, background: p.color }
                   : {}),
+                ...(isMobile ? { padding: '9px 14px', fontSize: 12 } : {}),
               }}
               onClick={() => handleProfileSwitch(p.id)}
             >
@@ -558,17 +565,18 @@ export default function CWI_Ablation() {
       </div>
 
       {/* ── Main layout: bar left, toggles right ────────────────────────── */}
-      <div style={S.mainLayout}>
+      <div style={{ ...S.mainLayout, ...(isMobile ? { gridTemplateColumns: '1fr', gap: 16 } : {}) }}>
         {/* ── Bar section ─────────────────────────────────────────────────── */}
         <div style={S.barSection}>
           <div style={S.barWrap}>
-            <div style={S.barLabel}>
-              P99&times;&theta; &mdash; risk-adjusted worst-case quarterly loss
+            <div style={{ ...S.barLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>
+              P99&times;&theta;: risk-adjusted worst-case quarterly loss
             </div>
             <AblationBar
               fullVal={fullVal}
               currentVal={currentVal}
               profileColor={profileColor}
+              isMobile={isMobile}
             />
             <div style={S.valRow}>
               <div>
@@ -578,13 +586,13 @@ export default function CWI_Ablation() {
                     color: hasActiveToggles ? '#4A7C59' : '#22375A',
                   }}
                 >
-                  {currentVal.toLocaleString()}
+                  {currentVal.toLocaleString('en-GB')}
                 </div>
-                <div style={S.valLabel}>current P99&times;&theta;</div>
+                <div style={{ ...S.valLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>current P99&times;&theta;</div>
               </div>
               {delta < 0 && (
                 <div style={S.valDelta}>
-                  {`${deltaPct}%\u00a0\u00a0(\u2212${Math.abs(delta).toLocaleString()})`}
+                  {`${deltaPct}%\u00a0\u00a0(\u2212${Math.abs(delta).toLocaleString('en-GB')})`}
                 </div>
               )}
             </div>
@@ -594,6 +602,7 @@ export default function CWI_Ablation() {
           <div
             style={{
               ...S.interactionWarn,
+              ...(isMobile ? { fontSize: 11 } : {}),
               opacity: showInteractionWarn ? 1 : 0,
               height: showInteractionWarn ? 'auto' : 0,
               padding: showInteractionWarn ? '8px 12px' : 0,
@@ -603,7 +612,7 @@ export default function CWI_Ablation() {
                 : 'none',
             }}
           >
-            {'\u26a0'} Multiple interventions active. Effects interact &mdash;
+            {'\u26a0'} Multiple interventions active. Effects interact:
             the combined reduction is not the sum of individual effects. Showing
             independent ablation estimates only.
           </div>
@@ -613,7 +622,7 @@ export default function CWI_Ablation() {
         <div style={S.toggleSection}>
           {/* G2 governance ceiling — separated from ablations */}
           <div style={{ marginBottom: 4 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: '#22375A', marginBottom: 5,
+            <div style={{ fontSize: isMobile ? 11 : 9, fontWeight: 700, color: '#22375A', marginBottom: 5,
               letterSpacing: '0.06em', textTransform: 'uppercase' }}>
               Governance ceiling
             </div>
@@ -631,20 +640,20 @@ export default function CWI_Ablation() {
                 activeColor="#22375A"
               />
               <div style={S.toggleText}>
-                <div style={{ ...S.toggleName, color: '#22375A' }}>{G2_DEF.name}</div>
-                <div style={S.toggleDesc}>{G2_DEF.desc}</div>
-                <div style={{ ...S.toggleEffect, color: getEffectLabel('g2').color || '#22375A' }}>
+                <div style={{ ...S.toggleName, color: '#22375A', ...(isMobile ? { fontSize: 12 } : {}) }}>{G2_DEF.name}</div>
+                <div style={{ ...S.toggleDesc, ...(isMobile ? { fontSize: 11 } : {}) }}>{G2_DEF.desc}</div>
+                <div style={{ ...S.toggleEffect, color: getEffectLabel('g2').color || '#22375A', ...(isMobile ? { fontSize: 11.5 } : {}) }}>
                   {getEffectLabel('g2').text}
                 </div>
               </div>
             </div>
-            <div style={{ fontSize: 8, color: '#A0A09A', marginTop: 4, paddingLeft: 2, fontStyle: 'italic' }}>
-              Upper bound &mdash; combining all interventions cannot exceed this
+            <div style={{ fontSize: isMobile ? 11 : 8, color: '#A0A09A', marginTop: 4, paddingLeft: 2, fontStyle: 'italic' }}>
+              Upper bound: combining all interventions cannot exceed this
             </div>
           </div>
 
           {/* Ablation toggles */}
-          <div style={{ fontSize: 9, fontWeight: 700, color: '#73726C', paddingBottom: 5,
+          <div style={{ fontSize: isMobile ? 11 : 9, fontWeight: 700, color: '#73726C', paddingBottom: 5,
             paddingTop: 6, borderTop: '0.5px solid rgba(0,0,0,0.08)',
             letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Structural interventions
@@ -664,9 +673,9 @@ export default function CWI_Ablation() {
                     onChange={() => handleToggle(t.key)}
                   />
                   <div style={S.toggleText}>
-                    <div style={S.toggleName}>{t.name}</div>
-                    <div style={S.toggleDesc}>{t.desc}</div>
-                    <div style={{ ...S.toggleEffect, color: effect.color || '#4A7C59' }}>
+                    <div style={{ ...S.toggleName, ...(isMobile ? { fontSize: 12 } : {}) }}>{t.name}</div>
+                    <div style={{ ...S.toggleDesc, ...(isMobile ? { fontSize: 11 } : {}) }}>{t.desc}</div>
+                    <div style={{ ...S.toggleEffect, color: effect.color || '#4A7C59', ...(isMobile ? { fontSize: 11.5 } : {}) }}>
                       {effect.text}
                     </div>
                   </div>
@@ -674,7 +683,7 @@ export default function CWI_Ablation() {
               );
             })}
           </div>
-          <button style={S.resetBtn} onClick={handleReset}>
+          <button style={{ ...S.resetBtn, ...(isMobile ? { padding: 12, fontSize: 12 } : {}) }} onClick={handleReset}>
             Reset all
           </button>
         </div>
@@ -684,6 +693,7 @@ export default function CWI_Ablation() {
       <div
         style={{
           ...S.p5Banner,
+          ...(isMobile ? { fontSize: 11 } : {}),
           opacity: showP5Banner ? 1 : 0,
           height: showP5Banner ? 'auto' : 0,
           padding: showP5Banner ? '10px 14px' : 0,
@@ -695,19 +705,19 @@ export default function CWI_Ablation() {
         }}
       >
         {'\u26d4'} For this profile, active governance is counterproductive. The
-        velocity cost exceeds the risk reduction &mdash; scaffold benefit:
-        &minus;36%. This grounds the Nash equilibrium argument.
+        velocity cost exceeds the risk reduction: scaffold benefit
+        &minus;36%. The Nash equilibrium argument rests on exactly this case.
       </div>
 
       {/* ── Bottom note ───────────────────────────────────────────────────── */}
       <div
-        style={S.bottomNote}
+        style={{ ...S.bottomNote, ...(isMobile ? { fontSize: 11 } : {}) }}
         dangerouslySetInnerHTML={{ __html: NOTES[selectedProfile] || '' }}
       />
 
       {/* ── Disclaimer ────────────────────────────────────────────────────── */}
-      <div style={S.disclaimer}>
-        Independent ablation &mdash; one mechanism removed at a time. Effects
+      <div style={{ ...S.disclaimer, ...(isMobile ? { fontSize: 11 } : {}) }}>
+        Independent ablation: one mechanism removed at a time. Effects
         are not additive. Based on v5 Monte Carlo simulation.
       </div>
     </GraphCard>

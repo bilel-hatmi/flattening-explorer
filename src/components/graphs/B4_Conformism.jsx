@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import GraphCard from '../ui/GraphCard';
 import { useProfile } from '../../context/ProfileContext';
 import { PROFILES } from '../../data/v5_reference';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────────
 const N_CIRCLES   = 40;
@@ -22,9 +23,16 @@ function nDissentersFromA(a) {
   return Math.round(N_CIRCLES * f);
 }
 function pEffFromA(a) {
-  // Reference anchors: (1.5→0.73), (2.0→0.80), (3.0→0.86), (4.0→0.92)
+  // Piecewise-linear through the reference-card anchors so the slider readout
+  // matches the cards exactly: (1.5→0.73), (2.0→0.80), (3.0→0.86), (4.0→0.92).
+  const pts = [[1.5, 0.73], [2.0, 0.80], [3.0, 0.86], [4.0, 0.92]];
   const clamp = Math.min(Math.max(a, A_MIN), A_MAX);
-  return Math.min(0.99, 0.73 + (clamp - 1.5) * 0.076);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x0, y0] = pts[i];
+    const [x1, y1] = pts[i + 1];
+    if (clamp <= x1) return y0 + (y1 - y0) * (clamp - x0) / (x1 - x0);
+  }
+  return pts[pts.length - 1][1];
 }
 function varTauFromA(a) {
   return 1 / (4 * (2 * a + 1));
@@ -79,7 +87,7 @@ function drawRing(canvas, circleT) {
 }
 function getAnnotation(nDiss) {
   if (nDiss === 0)  return { text: 'No dissenters remain. The entire organisation defers to AI.', color: '#B5403F' };
-  if (nDiss === 1)  return { text: 'One dissenter left — the last line of independent judgement.', color: '#C49A3C' };
+  if (nDiss === 1)  return { text: 'One dissenter left: the last line of independent judgement.', color: '#C49A3C' };
   if (nDiss <= 5)   return { text: 'Diversity is thinning.', color: '#C49A3C' };
   return null;
 }
@@ -222,6 +230,7 @@ const S = {
 
 // ── MAIN COMPONENT ─────────────────────────────────────────────────────────────
 export default function B4_Conformism() {
+  const isMobile = useIsMobile();
   const { profileId } = useProfile();
   const rawInitialA = PROFILES[profileId]?.beta ?? 2.0;
   const initialA = Math.min(Math.max(rawInitialA, A_MIN), A_MAX);
@@ -295,30 +304,38 @@ export default function B4_Conformism() {
     Math.abs(cfg.a - aVal) < Math.abs(CONFIGS[best].a - aVal) ? i : best, 0
   );
 
+  // Mobile-bumped legibility variants for reference cards (desktop untouched)
+  const mConfigLabel     = isMobile ? { ...S.configLabel, fontSize: 11 } : S.configLabel;
+  const mConfigSub       = isMobile ? { ...S.configSub, fontSize: 10 } : S.configSub;
+  const mConfigPeff      = isMobile ? { ...S.configPeff, fontSize: 18 } : S.configPeff;
+  const mConfigPeffLabel = isMobile ? { ...S.configPeffLabel, fontSize: 10 } : S.configPeffLabel;
+  const mConfigDiss      = isMobile ? { ...S.configDiss, fontSize: 11 } : S.configDiss;
+  const mConfigVarTau    = isMobile ? { ...S.configVarTau, fontSize: 10 } : S.configVarTau;
+
   return (
     <GraphCard
       id="b4-conformism"
       title="Why cognitive dissenters protect organisations"
       subtitle={
-        'Each circle is one employee. Teal circles are cognitive dissenters — they question AI outputs. ' +
+        'Each circle is one employee. Teal circles are cognitive dissenters: they question AI outputs. ' +
         'As recruitment homogenises, dissenters disappear and the effective surrender rate climbs.'
       }
     >
       {/* ── Asch callout ── */}
-      <div style={S.aschCallout}>
+      <div style={{ ...S.aschCallout, ...(isMobile ? { fontSize: 11.5, padding: '12px 14px', marginBottom: 18 } : {}) }}>
         <span style={{ flexShrink: 0 }}>&#128206;</span>
         <span>
-          <strong style={{ fontWeight: 600 }}>Asch (1951):</strong> with no ally, 75% of people conform to an obviously wrong answer.
-          With <strong style={{ fontWeight: 600 }}>a single dissenting ally</strong>, conformity drops from 37% to 5%.
+          <strong style={{ fontWeight: 600 }}>Asch (1951):</strong> without an ally, people conform to an obviously wrong answer about 37% of the time.
+          With <strong style={{ fontWeight: 600 }}>a single dissenting ally</strong>, that drops to 5%.
           Organisations that recruit from a narrow cognitive profile eliminate this protective friction entirely.
         </span>
       </div>
 
       {/* ── Slider ── */}
       <div style={{ marginBottom: 0 }}>
-        <div style={S.sliderHeader}>
-          <span style={S.sliderLabel}>Cognitive homogeneity of recruitment — Beta(a, a)</span>
-          <span style={S.sliderValue}>a = {aStr}</span>
+        <div style={{ ...S.sliderHeader, ...(isMobile ? { flexDirection: 'column', alignItems: 'flex-start', gap: 2 } : {}) }}>
+          <span style={{ ...S.sliderLabel, ...(isMobile ? { fontSize: 12 } : {}) }}>Cognitive homogeneity of recruitment · Beta(a, a)</span>
+          <span style={{ ...S.sliderValue, ...(isMobile ? { fontSize: 14 } : {}) }}>a = {aStr}</span>
         </div>
         <input
           type="range"
@@ -327,11 +344,11 @@ export default function B4_Conformism() {
           step={0.05}
           value={aVal}
           onChange={(e) => handleAChange(Number(e.target.value))}
-          style={S.sliderInput}
+          style={{ ...S.sliderInput, ...(isMobile ? { height: 8 } : {}) }}
         />
-        <div style={S.sliderEnds}>
-          <span>a = 1.5 — internationally diverse</span>
-          <span>a = 4.5 — single elite pipeline</span>
+        <div style={{ ...S.sliderEnds, ...(isMobile ? { fontSize: 11, marginBottom: 20 } : {}) }}>
+          <span>a = 1.5 · internationally diverse</span>
+          <span>a = 4.5 · single elite pipeline</span>
         </div>
       </div>
 
@@ -341,21 +358,21 @@ export default function B4_Conformism() {
       </div>
 
       {/* ── Stats row ── */}
-      <div style={S.statsRow}>
+      <div style={{ ...S.statsRow, ...(isMobile ? { gap: 16, justifyContent: 'space-around' } : {}) }}>
         <div style={S.statBlock}>
           <div style={{ ...S.statValue, color: '#619EA8' }}>{nDiss}</div>
-          <div style={S.statLabel}>dissenters</div>
-          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1 }}>out of {N_CIRCLES} employees</div>
+          <div style={{ ...S.statLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>dissenters</div>
+          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1, ...(isMobile ? { fontSize: 10.5 } : {}) }}>out of {N_CIRCLES} employees</div>
         </div>
         <div style={S.statBlock}>
           <div style={{ ...S.statValue, color: pEffColor(pEff) }}>{pEffStr}</div>
-          <div style={S.statLabel}>AI override rate</div>
-          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1 }}>defer without independent check</div>
+          <div style={{ ...S.statLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>AI deference rate</div>
+          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1, ...(isMobile ? { fontSize: 10.5 } : {}) }}>defer without independent check</div>
         </div>
         <div style={S.statBlock}>
           <div style={{ ...S.statValue, color: '#888780', fontSize: 18 }}>{vTauStr}</div>
-          <div style={S.statLabel}>var&#8321; — cognitive diversity</div>
-          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1 }}>var of Beta(a, a)</div>
+          <div style={{ ...S.statLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>var&#8321; · cognitive diversity</div>
+          <div style={{ ...S.statLabel, color: '#C0BFB9', marginTop: 1, ...(isMobile ? { fontSize: 10.5 } : {}) }}>var of Beta(a, a)</div>
         </div>
       </div>
 
@@ -369,19 +386,19 @@ export default function B4_Conformism() {
       </div>
 
       {/* ── Legend ── */}
-      <div style={S.legendRow}>
-        <div style={S.legItem}>
+      <div style={{ ...S.legendRow, ...(isMobile ? { flexDirection: 'column', alignItems: 'flex-start', gap: 8 } : {}) }}>
+        <div style={{ ...S.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <div style={{ ...S.legDot, background: '#619EA8' }} />
-          Cognitive dissenter — questions AI outputs
+          Cognitive dissenter: questions AI outputs
         </div>
-        <div style={S.legItem}>
+        <div style={{ ...S.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <div style={{ ...S.legDot, background: '#22375A' }} />
-          Follower — defers to AI without independent check
+          Follower: defers to AI without independent check
         </div>
       </div>
 
       {/* ── 4 reference cards (no ring) ── */}
-      <div style={S.configsRow}>
+      <div style={{ ...S.configsRow, ...(isMobile ? { gridTemplateColumns: '1fr 1fr', gap: 8 } : {}) }}>
         {CONFIGS.map((cfg, idx) => {
           const active = idx === nearestConfigIdx;
           return (
@@ -390,18 +407,18 @@ export default function B4_Conformism() {
               style={S.configCard(active)}
               onClick={() => handleAChange(cfg.a)}
             >
-              <div style={S.configLabel}>{cfg.label}</div>
-              <div style={S.configSub}>{cfg.sub}</div>
+              <div style={mConfigLabel}>{cfg.label}</div>
+              <div style={mConfigSub}>{cfg.sub}</div>
               <div style={S.configStat}>
-                <div style={{ ...S.configPeff, color: pEffColor(cfg.pEff) }}>
+                <div style={{ ...mConfigPeff, color: pEffColor(cfg.pEff) }}>
                   {cfg.pEff.toFixed(2)}
                 </div>
-                <div style={S.configPeffLabel}>AI override rate</div>
-                <div style={S.configDiss}>
+                <div style={mConfigPeffLabel}>AI deference rate</div>
+                <div style={mConfigDiss}>
                   <span style={{ color: '#619EA8' }}>{cfg.nDiss}</span>
                   <span style={{ color: '#A0A09A' }}> / {N_CIRCLES} dissenters</span>
                 </div>
-                <div style={S.configVarTau}>var&#8321; = {cfg.varTau.toFixed(3)}</div>
+                <div style={mConfigVarTau}>var&#8321; = {cfg.varTau.toFixed(3)}</div>
               </div>
             </div>
           );
@@ -409,21 +426,21 @@ export default function B4_Conformism() {
       </div>
 
       {/* ── Direction note ── */}
-      <div style={S.directionNote}>
+      <div style={{ ...S.directionNote, ...(isMobile ? { fontSize: 11.5, padding: '10px 12px' } : {}) }}>
         Moving right: fewer dissenters &rarr; more agents defer to AI without questioning &rarr;
         errors become correlated across the organisation.{' '}
         <strong style={{ color: '#B5403F', fontWeight: 600 }}>
           Between the most diverse (a&nbsp;=&nbsp;1.5) and the most homogeneous (a&nbsp;=&nbsp;4.0)
-          recruitment profile, tail risk increases by up to 35% — with identical talent quality and
+          recruitment profile, tail risk increases by about 11 to 13%, with identical talent quality and
           the same AI stack.
         </strong>{' '}
         One dissenting voice is enough to break the conformist cascade (Asch).
         Narrow the recruitment filter, and the cascade runs unchecked.
       </div>
 
-      <div style={S.clarification}>
-        35% reflects the full contrast between Beta(1.5) and Beta(4.0) profiles.
-        Marginal effect around the central case is ~13% — consistent with the tornado chart (C3).
+      <div style={{ ...S.clarification, ...(isMobile ? { fontSize: 11 } : {}) }}>
+        This isolates the cognitive-homogeneity channel (Beta 1.5 vs 4.0), holding talent and AI stack fixed,
+        and matches the homogeneity driver in the tornado chart (C3).
       </div>
 
       {/* Thumb styling */}
@@ -439,6 +456,14 @@ export default function B4_Conformism() {
           background: #22375A; border: 3px solid #fff;
           box-shadow: 0 1px 4px rgba(0,0,0,0.22); cursor: pointer;
           border: none;
+        }
+        @media (max-width: 768px) {
+          #b4-conformism input[type=range]::-webkit-slider-thumb {
+            width: 26px; height: 26px; border-width: 4px;
+          }
+          #b4-conformism input[type=range]::-moz-range-thumb {
+            width: 26px; height: 26px;
+          }
         }
       `}</style>
     </GraphCard>

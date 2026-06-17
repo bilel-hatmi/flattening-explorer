@@ -120,19 +120,19 @@ export const QUESTIONS = [
     options: [
       {
         key: 'A',
-        label: 'Elite \u2014 top-decile hires, independent judgment strong',
+        label: 'Elite: top-decile hires, independent judgment strong',
         mapping: 'h ~ U(0.65, 0.95), p0 = 0.70',
         profilePointers: ['P2', 'P3'],
       },
       {
         key: 'B',
-        label: 'Standard professional \u2014 solid execution, some AI reliance',
+        label: 'Standard professional: solid execution, some AI reliance',
         mapping: 'h ~ U(0.50, 0.85), p0 = 0.75-0.80',
         profilePointers: ['P1', 'P4', 'P5'],
       },
       {
         key: 'C',
-        label: 'Operational / technical \u2014 structured tasks, process-driven',
+        label: 'Operational / technical: structured tasks, process-driven',
         mapping: 'h ~ U(0.30, 0.60), p0 = 0.85',
         profilePointers: ['P7'],
       },
@@ -150,7 +150,7 @@ export const QUESTIONS = [
       {
         key: 'A',
         label: 'Startup (1\u201350)',
-        mapping: 'Tail risk externalised \u2014 absorbed by clients and ecosystem',
+        mapping: 'Tail risk externalised, absorbed by clients and ecosystem',
         riskImplication: 'Nash: G0 rational',
         profilePointers: [],
       },
@@ -267,19 +267,19 @@ export const RADAR_AXES = [
     key:     'stack',
     label:   'Stack concentration',
     value:   (p) => p.alpha,                          // already 0-1
-    tooltip: '\u03B1 \u2014 share of decisions routed through a single AI provider',
+    tooltip: '\u03B1: share of decisions routed through a single AI provider',
   },
   {
     key:     'domain',
     label:   'Outside-frontier exposure',
     value:   (p) => 1 - p.epi,                        // invert: high epi = low risk
-    tooltip: 'E[\u03C0] \u2014 fraction of decisions outside AI training distribution',
+    tooltip: 'E[\u03C0]: fraction of decisions outside AI training distribution',
   },
   {
     key:     'homogeneity',
     label:   'Cognitive homogeneity',
     value:   (p) => (p.beta - 1.5) / 3.0,             // normalise Beta 1.5->4.5 to 0->1
-    tooltip: 'Beta(a,a) \u2014 labour market pipeline concentration',
+    tooltip: 'Beta(a,a): labour market pipeline concentration',
   },
   {
     key:     'talent',
@@ -288,13 +288,13 @@ export const RADAR_AXES = [
                   : p.p99G0 > 1900 ? 0.60
                   : 0.35,
     // Proxy: elite talent + concentrated stack = maximum relative loss
-    tooltip: 'h \u2014 independent judgment competence vs AI outside-frontier accuracy',
+    tooltip: 'h: independent judgment competence vs AI outside-frontier accuracy',
   },
   {
     key:     'governance',
     label:   'Governance effectiveness',
     value:   (p) => Math.max(0, -p.scaffold),          // negative scaffold = governance fails
-    tooltip: 'scaffold_benefit \u2014 governance efficiency: output gain per unit of risk reduction',
+    tooltip: 'scaffold_benefit: governance efficiency, output gain per unit of risk reduction',
   },
 ];
 
@@ -397,11 +397,11 @@ export function getDiversityLabel(beta) {
 export const LINKS = {
   essay_title:  'The Flattening: Invisible Tail Risk in AI-Adopting Organisations',
   essay_venue:  'Cambridge\u2013McKinsey Risk Prize 2026',
-  essay_pdf:    '[URL \u2014 add when available]',
-  github:       '[URL \u2014 add when available]',
-  cartesia_url: '[URL \u2014 add when available]',
+  essay_pdf:    '[URL: add when available]',
+  github:       '[URL: add when available]',
+  cartesia_url: '[URL: add when available]',
 };
 
 export const AUTHOR_BIO = 'Bilel Hatmi is a Part III Mathematical Statistics student at the University of Cambridge and founder of CartesIA, a psychometric AI platform spanning HR assessment, mental health triage, and youth orientation. This essay and its companion application were developed as part of the Cambridge\u2013McKinsey Risk Prize 2026 submission.';
 
-export const DISCLAIMER = 'This application accompanies an academic essay submitted to the Cambridge\u2013McKinsey Risk Prize 2026. All simulation results are stress tests under stated assumptions \u2014 not empirical predictions. No user data is collected or stored.';
+export const DISCLAIMER = 'This application accompanies an academic essay submitted to the Cambridge\u2013McKinsey Risk Prize 2026. All simulation results are stress tests under stated assumptions, not empirical predictions. No user data is collected or stored.';

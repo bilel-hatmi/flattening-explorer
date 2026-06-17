@@ -18,3 +18,5 @@ prototypes/
 specs/
 latex-document-skill/
 CV_*.pdf
+
+.vercel

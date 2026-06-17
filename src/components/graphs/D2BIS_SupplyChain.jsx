@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import GraphCard from '../ui/GraphCard';
 import { fmt } from '../../utils/helpers';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // DATA
 const P99_OWN = 2135; // v5 central case, G0 unmanaged -- NOT 1500
@@ -13,11 +14,11 @@ function omegaEff(fracG0) {
 
 const ANNOTATIONS = [
   { max: 0,    cls: '',       text: 'All suppliers run active governance. Your effective tail risk equals your own exposure.' },
-  { max: 0.20, cls: '',       text: 'Some risk leaking through supply chain. Modest amplification \u2014 individual supplier discipline still limits contagion.' },
-  { max: 0.40, cls: '',       text: 'Risk accumulation building. The convexity is beginning to show \u2014 each additional unmanaged supplier costs more than the last.' },
+  { max: 0.20, cls: '',       text: 'Some risk leaking through supply chain. Modest amplification: individual supplier discipline still limits contagion.' },
+  { max: 0.40, cls: '',       text: 'Risk accumulation building. The convexity is beginning to show: each additional unmanaged supplier costs more than the last.' },
   { max: 0.60, cls: 'warn',   text: "Supply chain exposure now exceeds your internal tail risk. Your governance decisions are being overwhelmed by your suppliers' choices." },
-  { max: 0.80, cls: 'warn',   text: 'Effective tail risk 57% above your own. The majority of your risk now originates outside your organisation and outside your control.' },
-  { max: 1.00, cls: 'danger', text: 'Effective tail risk 80% above your own \u2014 even though your AI is fully governed. Your supply chain has doubled your exposure. Regulation is the only lever that works here.' },
+  { max: 0.80, cls: 'warn',   text: 'Effective tail risk now roughly 47 to 57% above your own. The majority of your risk now originates outside your organisation, beyond the reach of your own governance.' },
+  { max: 1.00, cls: 'danger', text: 'Effective tail risk 80% above your own, even though your AI is fully governed. Your supply chain has nearly doubled your exposure. Regulation is the only lever that works here.' },
 ];
 
 function getAnnotation(frac) {
@@ -170,19 +171,21 @@ const S = {
     lineHeight: 1.55,
     padding: '8px 12px',
     borderRadius: 6,
-    borderLeft: '2px solid rgba(34,55,90,0.20)',
+    borderLeftWidth: '2px',
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'rgba(34,55,90,0.20)',
     background: 'rgba(34,55,90,0.04)',
     minHeight: 38,
     transition: 'background 0.3s, border-color 0.3s, color 0.3s',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
   annotationWarn: {
-    borderColor: 'rgba(196,154,60,0.40)',
+    borderLeftColor: 'rgba(196,154,60,0.40)',
     background: 'rgba(196,154,60,0.07)',
     color: '#8a6d22',
   },
   annotationDanger: {
-    borderColor: 'rgba(181,64,63,0.40)',
+    borderLeftColor: 'rgba(181,64,63,0.40)',
     background: 'rgba(181,64,63,0.07)',
     color: '#B5403F',
   },
@@ -220,16 +223,17 @@ const S = {
 };
 
 // SVG NETWORK DIAGRAM
-function NetworkDiagram({ supplierT, fracG0 }) {
+function NetworkDiagram({ supplierT, fracG0, isMobile = false }) {
   const svgRef = useRef(null);
-  const [dims, setDims] = useState({ width: 420, height: 200 });
+  const DIAGRAM_H = isMobile ? 230 : 200;
+  const [dims, setDims] = useState({ width: 420, height: DIAGRAM_H });
   const containerRef = useRef(null);
 
   useEffect(() => {
     function handleResize() {
       if (containerRef.current) {
         const w = containerRef.current.getBoundingClientRect().width;
-        setDims({ width: w, height: 200 });
+        setDims({ width: w, height: DIAGRAM_H });
       }
     }
     handleResize();
@@ -240,7 +244,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
     }
     window.addEventListener('resize', debounced);
     return () => { window.removeEventListener('resize', debounced); clearTimeout(timerId); };
-  }, []);
+  }, [DIAGRAM_H]);
 
   const { width: W, height: H } = dims;
   const cx = W / 2;
@@ -264,7 +268,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
         width={W}
         height={H}
         viewBox={`0 0 ${W} ${H}`}
-        style={{ display: 'block' }}
+        style={{ display: 'block', maxWidth: '100%' }}
       >
         {/* Red dashed arrows from G0 suppliers to centre */}
         {suppliers.map(({ i, sx, sy, t }) => {
@@ -315,7 +319,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill="#fff"
-                style={{ fontSize: 8.5, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                style={{ fontSize: isMobile ? 10.5 : 8.5, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
                 S{i + 1}
               </text>
@@ -330,7 +334,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
           textAnchor="middle"
           dominantBaseline="central"
           fill="#fff"
-          style={{ fontSize: 9, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          style={{ fontSize: isMobile ? 10.5 : 9, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           YOUR
         </text>
@@ -339,7 +343,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
           textAnchor="middle"
           dominantBaseline="central"
           fill="#fff"
-          style={{ fontSize: 9, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          style={{ fontSize: isMobile ? 10.5 : 9, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           FIRM
         </text>
@@ -351,7 +355,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
             textAnchor="middle"
             dominantBaseline="central"
             fill={fracG0 >= 0.6 ? 'rgba(181,64,63,0.85)' : 'rgba(196,154,60,0.85)'}
-            style={{ fontSize: 9, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace" }}
+            style={{ fontSize: isMobile ? 11 : 9, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace" }}
           >
             {'\u00d7'}{omega.toFixed(2)}
           </text>
@@ -362,7 +366,7 @@ function NetworkDiagram({ supplierT, fracG0 }) {
 }
 
 // OMEGA CURVE (Canvas)
-function OmegaCurve({ fracG0, regulationActive }) {
+function OmegaCurve({ fracG0, regulationActive, isMobile = false }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -373,7 +377,7 @@ function OmegaCurve({ fracG0, regulationActive }) {
 
     const DPR = window.devicePixelRatio || 1;
     const W = container.getBoundingClientRect().width || 380;
-    const H = 70;
+    const H = isMobile ? 96 : 70;
     cv.width = W * DPR;
     cv.height = H * DPR;
     cv.style.width = W + 'px';
@@ -402,7 +406,7 @@ function OmegaCurve({ fracG0, regulationActive }) {
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = '#A0A09A';
-      ctx.font = "8px 'JetBrains Mono', monospace";
+      ctx.font = (isMobile ? '10px' : '8px') + " 'JetBrains Mono', monospace";
       ctx.textAlign = 'right';
       ctx.fillText(o.toFixed(1), PAD.l - 4, y + 3);
     });
@@ -479,10 +483,10 @@ function OmegaCurve({ fracG0, regulationActive }) {
     }
 
     // X axis ticks
-    [0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
+    (isMobile ? [0, 0.4, 0.8, 1.0] : [0, 0.2, 0.4, 0.6, 0.8, 1.0]).forEach(v => {
       const x = xp(v);
       ctx.fillStyle = '#A0A09A';
-      ctx.font = "8px 'JetBrains Mono', monospace";
+      ctx.font = (isMobile ? '10px' : '8px') + " 'JetBrains Mono', monospace";
       ctx.textAlign = 'center';
       ctx.fillText(Math.round(v * 100) + '%', x, PAD.t + cH + 14);
     });
@@ -492,11 +496,11 @@ function OmegaCurve({ fracG0, regulationActive }) {
     ctx.translate(10, PAD.t + cH / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = '#A0A09A';
-    ctx.font = "8px 'Plus Jakarta Sans', sans-serif";
+    ctx.font = (isMobile ? '10px' : '8px') + " 'Plus Jakarta Sans', sans-serif";
     ctx.textAlign = 'center';
     ctx.fillText('\u03c9_eff', 0, 0);
     ctx.restore();
-  }, [fracG0, regulationActive]);
+  }, [fracG0, regulationActive, isMobile]);
 
   useEffect(() => {
     draw();
@@ -511,9 +515,9 @@ function OmegaCurve({ fracG0, regulationActive }) {
 
   return (
     <div style={S.curveWrap}>
-      <div style={S.curveTitle}>{'\u03c9'}_eff as a function of supplier G0 fraction</div>
+      <div style={isMobile ? { ...S.curveTitle, fontSize: 12 } : S.curveTitle}>{'\u03c9'}_eff as a function of supplier G0 fraction</div>
       <p style={{
-        fontSize: 11,
+        fontSize: isMobile ? 12 : 11,
         color: '#888780',
         fontStyle: 'italic',
         margin: '2px 0 12px 0',
@@ -523,7 +527,7 @@ function OmegaCurve({ fracG0, regulationActive }) {
         Convex amplification model. {'\u03c9'}_eff{'\u202f'}={'\u202f'}1.0{'\u202f'}+{'\u202f'}0.8{'\u202f'}{'\u00d7'}{'\u202f'}f{'\u00b9'}{'\u00b7'}{'\u2075'}.
       </p>
       <div ref={containerRef}>
-        <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} height={70} />
+        <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} height={isMobile ? 96 : 70} />
       </div>
     </div>
   );
@@ -531,6 +535,7 @@ function OmegaCurve({ fracG0, regulationActive }) {
 
 // MAIN COMPONENT
 export default function D2BIS_SupplyChain({ p99Own = P99_OWN }) {
+  const isMobile = useIsMobile();
   const [sliderValue, setSliderValue] = useState(0); // 0-100, step 10
   const [regulated, setRegulated] = useState(false);
   const supplierTRef = useRef(Array(N_SUPPLIERS).fill(0));
@@ -605,7 +610,7 @@ export default function D2BIS_SupplyChain({ p99Own = P99_OWN }) {
 
   // Excess sub-label
   const excessSub = excess === 0
-    ? 'None \u2014 all suppliers governed'
+    ? 'None: all suppliers governed'
     : `+${Math.round((omega - 1) * 100)}% above your own exposure`;
 
   // Annotation style
@@ -629,40 +634,40 @@ export default function D2BIS_SupplyChain({ p99Own = P99_OWN }) {
   return (
     <GraphCard
       id="d2bis"
-      title={"Your tail risk is not your own \u2014 supply chain accumulation"}
-      subtitle={"Slide to set the fraction of your suppliers running unmanaged AI (G0). Each G0 supplier injects risk into your supply chain that compounds your own exposure. The effect is convex \u2014 the last 20% of unmanaged suppliers costs more than the first."}
+      title={"Your tail risk extends past your own walls: supply chain accumulation"}
+      subtitle={"Slide to set the fraction of your suppliers running unmanaged AI (G0). Each G0 supplier injects risk into your supply chain that compounds your own exposure. The effect is convex: the last 20% of unmanaged suppliers costs more than the first."}
     >
       <div>
       {/* Legend */}
       <div style={S.legendRow}>
-        <div style={S.legItem}>
+        <div style={isMobile ? { ...S.legItem, fontSize: 11.5 } : S.legItem}>
           <div style={{ ...S.legDot, background: '#22375A' }} />
           Your organisation (governed)
         </div>
-        <div style={S.legItem}>
+        <div style={isMobile ? { ...S.legItem, fontSize: 11.5 } : S.legItem}>
           <div style={{ ...S.legDot, background: '#4A7C59' }} />
-          Supplier {'\u2014'} G2 governed
+          Supplier {' \u00b7 '} G2 governed
         </div>
-        <div style={S.legItem}>
+        <div style={isMobile ? { ...S.legItem, fontSize: 11.5 } : S.legItem}>
           <div style={{ ...S.legDot, background: '#B5403F' }} />
-          Supplier {'\u2014'} G0 unmanaged
+          Supplier {' \u00b7 '} G0 unmanaged
         </div>
       </div>
 
-      <div style={S.layout}>
+      <div style={isMobile ? { ...S.layout, gridTemplateColumns: 'minmax(0, 1fr)', gap: 16 } : S.layout}>
         {/* Left column: diagram + curve */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <NetworkDiagram supplierT={supplierT} fracG0={fracG0} />
-          <OmegaCurve fracG0={fracG0} regulationActive={regulated} />
+          <NetworkDiagram supplierT={supplierT} fracG0={fracG0} isMobile={isMobile} />
+          <OmegaCurve fracG0={fracG0} regulationActive={regulated} isMobile={isMobile} />
         </div>
 
         {/* Right column: controls */}
         <div style={S.controls}>
           {/* Slider */}
-          <div style={S.sliderSection}>
+          <div style={isMobile ? { ...S.sliderSection, padding: '14px 14px 14px' } : S.sliderSection}>
             <div style={S.sliderHeader}>
-              <span style={S.sliderLabel}>Suppliers running unmanaged AI (G0)</span>
-              <span style={{ ...S.sliderPct, color: pctColor }}>{Math.round(fracG0 * 100)}%</span>
+              <span style={isMobile ? { ...S.sliderLabel, fontSize: 12 } : S.sliderLabel}>Suppliers running unmanaged AI (G0)</span>
+              <span style={{ ...S.sliderPct, color: pctColor, ...(isMobile ? { fontSize: 20 } : {}) }}>{Math.round(fracG0 * 100)}%</span>
             </div>
             <input
               type="range"
@@ -671,11 +676,11 @@ export default function D2BIS_SupplyChain({ p99Own = P99_OWN }) {
               step={10}
               value={sliderValue}
               onChange={handleSliderChange}
-              style={S.sliderInput}
+              style={isMobile ? { ...S.sliderInput, height: 12, borderRadius: 6, margin: '8px 0' } : S.sliderInput}
             />
-            <div style={S.sliderEnds}>
-              <span>{'0% \u2014 all governed'}</span>
-              <span>{'100% \u2014 none governed'}</span>
+            <div style={isMobile ? { ...S.sliderEnds, fontSize: 10.5 } : S.sliderEnds}>
+              <span>{'0% \u00b7 all governed'}</span>
+              <span>{'100% \u00b7 none governed'}</span>
             </div>
           </div>
 
@@ -683,59 +688,59 @@ export default function D2BIS_SupplyChain({ p99Own = P99_OWN }) {
           <div style={S.metricGroup}>
             {/* Card 1: omega_eff */}
             <div style={S.metricCard}>
-              <div style={S.metricLbl}>Supply chain multiplier ({'\u03c9'}_eff)</div>
+              <div style={isMobile ? { ...S.metricLbl, fontSize: 11 } : S.metricLbl}>Supply chain multiplier ({'\u03c9'}_eff)</div>
               <div style={{ ...S.metricVal, color: omegaColor }}>{omega.toFixed(2)}{'\u00d7'}</div>
-              <div style={S.metricSub}>{omegaSub}</div>
+              <div style={isMobile ? { ...S.metricSub, fontSize: 11 } : S.metricSub}>{omegaSub}</div>
             </div>
 
             {/* Card 2: Effective P99xtheta */}
             <div style={S.metricCard}>
-              <div style={S.metricLbl}>Effective P99{'\u00d7'}{'\u03b8'} (your own = {fmt(p99Own)})</div>
+              <div style={isMobile ? { ...S.metricLbl, fontSize: 11 } : S.metricLbl}>Effective P99{'\u00d7'}{'\u03b8'} (your own = {fmt(p99Own)})</div>
               <div style={{ ...S.metricVal, color: p99Color }}>{fmt(effectiveP99)}</div>
-              <div style={S.metricSub}>{p99Sub}</div>
+              <div style={isMobile ? { ...S.metricSub, fontSize: 11 } : S.metricSub}>{p99Sub}</div>
             </div>
 
             {/* Card 3: Excess */}
             <div style={S.metricCard}>
-              <div style={S.metricLbl}>Excess P99{'\u00d7'}{'\u03b8'} from supply chain</div>
+              <div style={isMobile ? { ...S.metricLbl, fontSize: 11 } : S.metricLbl}>Excess P99{'\u00d7'}{'\u03b8'} from supply chain</div>
               <div style={{ ...S.metricVal, color: excessColor }}>
                 {excess > 0 ? `+ ${fmt(excess)}` : '+ 0'}
               </div>
-              <div style={S.metricSub}>{excessSub}</div>
+              <div style={isMobile ? { ...S.metricSub, fontSize: 11 } : S.metricSub}>{excessSub}</div>
             </div>
           </div>
 
           {/* Annotation */}
-          <div style={annotationStyle}>
+          <div style={isMobile ? { ...annotationStyle, fontSize: 12 } : annotationStyle}>
             {annotation.text}
           </div>
 
           {/* Regulation button */}
           <button
-            style={{ ...S.regBtn, opacity: regulated ? 0.5 : 1 }}
+            style={{ ...S.regBtn, opacity: regulated ? 0.5 : 1, ...(isMobile ? { padding: 13, fontSize: 12.5 } : {}) }}
             onClick={handleRegulation}
           >
-            {'\u2713'} Add regulation {'\u2014'} mandate supplier G2
+            {'\u2713'} Add regulation {': '} mandate supplier G2
           </button>
         </div>
       </div>
 
       {/* Bottom note */}
-      <div style={S.bottomNote}>
+      <div style={isMobile ? { ...S.bottomNote, fontSize: 12 } : S.bottomNote}>
         <strong>Why convex?</strong>{' '}
-        The first G0 suppliers add moderate risk {'\u2014'} your supply chain can absorb some exposure.
+        The first G0 suppliers add moderate risk {': '} your supply chain can absorb some exposure.
         As the fraction grows, correlated failures become increasingly likely to cascade simultaneously.
-        At 100%, your effective P99 is 80% above your own {'\u2014'} even though your own AI is fully governed.
+        At 100%, your effective P99 is 80% above your own {', '} even though your own AI is fully governed.
         Regulation that mandates G2 for suppliers collapses {'\u03c9'}_eff back to 1.0 in one step.
       </div>
 
       {/* Disclaimer */}
-      <div style={S.disclaimer}>
+      <div style={isMobile ? { ...S.disclaimer, fontSize: 11, textAlign: 'left' } : S.disclaimer}>
         {'\u03c9'}_eff = 1.0 + 0.8 {'\u00d7'} (fraction_G0)^1.5. Own P99{'\u00d7'}{'\u03b8'} = {fmt(p99Own)} (v5 central case, G0
         unmanaged). Supplier AI errors feed decision inputs (decision-chain contagion),
         distinct from the shared {'\u03be'}_t vendor correlation in V6 (+4% inter-firm effect).
         The convex shape reflects increasing cascade probability
-        as the fraction of unmanaged suppliers grows. v5 Monte Carlo simulation.
+        as the fraction of unmanaged suppliers grows; it is a parametric extension of the v5 model, not a direct simulation output.
       </div>
       </div>
     </GraphCard>

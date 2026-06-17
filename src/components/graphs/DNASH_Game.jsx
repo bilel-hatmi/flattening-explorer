@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import GraphCard from '../ui/GraphCard';
 import { fmt } from '../../utils/helpers';
+import useIsMobile from '../../hooks/useIsMobile';
 
 const NASH_THRESHOLD = 3.5;
 
@@ -39,7 +40,7 @@ const S = {
   badge: { fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 4, flexShrink: 0 },
   badgeG0: { background: 'rgba(181,64,63,0.12)', color: '#B5403F' },
   badgeG2: { background: 'rgba(74,124,89,0.12)', color: '#4A7C59' },
-  cell: { borderRadius: 8, padding: '10px 10px', display: 'flex', flexDirection: 'column', gap: 6, border: '1.5px solid transparent', transition: 'border-color 0.35s, background 0.35s, box-shadow 0.35s', cursor: 'default' },
+  cell: { borderRadius: 8, padding: '10px 10px', display: 'flex', flexDirection: 'column', gap: 6, borderWidth: '1.5px', borderStyle: 'solid', borderColor: 'transparent', transition: 'border-color 0.35s, background 0.35s, box-shadow 0.35s', cursor: 'default' },
   nash: { borderColor: '#B5403F', boxShadow: '0 0 0 2px rgba(181,64,63,0.15)' },
   pareto: { borderColor: '#4A7C59', boxShadow: '0 0 0 2px rgba(74,124,89,0.15)' },
   bgGG: { background: 'rgba(181,64,63,0.07)' },
@@ -56,14 +57,14 @@ const S = {
   sliderLabel: { fontSize: 10, fontWeight: 600, color: '#22375A' },
   sliderPct: { fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 500 },
   sliderEnds: { display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 8, color: '#A0A09A', fontFamily: "'JetBrains Mono', monospace" },
-  nashCard: { borderRadius: 8, padding: 10, border: '0.5px solid rgba(0,0,0,0.08)', transition: 'background 0.4s, border-color 0.4s' },
+  nashCard: { borderRadius: 8, padding: 10, borderWidth: '0.5px', borderStyle: 'solid', borderColor: 'rgba(0,0,0,0.08)', transition: 'background 0.4s, border-color 0.4s' },
   nashTrap: { background: 'rgba(181,64,63,0.07)', borderColor: 'rgba(181,64,63,0.30)' },
   nashOk: { background: 'rgba(74,124,89,0.07)', borderColor: 'rgba(74,124,89,0.30)' },
   nashTitle: { fontSize: 10, fontWeight: 600, marginBottom: 6 },
   nashVal: { fontFamily: "'JetBrains Mono', monospace", fontSize: 16, fontWeight: 700, marginBottom: 5 },
   nashDesc: { fontSize: 9, color: '#73726C', lineHeight: 1.5 },
   velocityCost: { background: '#F5F4EF', borderRadius: 7, padding: '10px 12px', fontSize: 9, color: '#73726C', lineHeight: 1.5 },
-  regBtn: { width: '100%', padding: 10, borderRadius: 7, border: '0.5px solid rgba(74,124,89,0.40)', background: 'rgba(74,124,89,0.08)', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 600, color: '#4A7C59', cursor: 'pointer', transition: 'all 0.2s' },
+  regBtn: { width: '100%', padding: 10, borderRadius: 7, borderWidth: '0.5px', borderStyle: 'solid', borderColor: 'rgba(74,124,89,0.40)', background: 'rgba(74,124,89,0.08)', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11, fontWeight: 600, color: '#4A7C59', cursor: 'pointer', transition: 'all 0.2s' },
   regBtnDisabled: { opacity: 0.45, cursor: 'not-allowed', background: '#F5F4EF', color: '#A0A09A', borderColor: 'rgba(0,0,0,0.10)' },
   regNote: { fontSize: 9, color: '#A0A09A', marginTop: 5, lineHeight: 1.4 },
   threshNote: { fontSize: 9, fontStyle: 'italic', lineHeight: 1.4 },
@@ -76,6 +77,7 @@ const S = {
 };
 
 export default function DNASH_Game() {
+  const isMobile = useIsMobile();
   const [pressure, setPressure] = useState(0);
   const [regulated, setRegulated] = useState(false);
   const [explainOpen, setExplainOpen] = useState(false);
@@ -93,41 +95,41 @@ export default function DNASH_Game() {
     if (id === 'pp' && nash !== 'pp') {
       highlight = S.pareto;
     }
-    return { ...S.cell, ...bg, ...highlight };
+    return { ...S.cell, ...bg, ...highlight, ...(isMobile ? { padding: '8px 7px', gap: 5 } : {}) };
   };
 
   const nashState = regulated
-    ? { cls: S.nashOk, title: 'Nash equilibrium (regulated)', titleColor: '#4A7C59', val: '(G2, G2)', valColor: '#4A7C59', desc: 'Regulation adds tail risk tax \u2014 G0 now costly. Both firms govern. Pareto optimal outcome restored.' }
+    ? { cls: S.nashOk, title: 'Nash equilibrium (regulated)', titleColor: '#4A7C59', val: '(G2, G2)', valColor: '#4A7C59', desc: 'Regulation adds tail risk tax: G0 now costly. Both firms govern. Pareto optimal outcome restored.' }
     : nash === 'gg'
-    ? { cls: S.nashTrap, title: 'Nash equilibrium \u2014 governance trap', titleColor: '#B5403F', val: '(G0, G0)', valColor: '#B5403F', desc: 'Competitive pressure makes G2 individually costly. Neither firm can defect first. Collective outcome is worse than either firm wants.' }
-    : { cls: S.nashOk, title: 'Nash equilibrium', titleColor: '#4A7C59', val: '(G2, G2)', valColor: '#4A7C59', desc: 'No competitive pressure \u2014 both firms govern voluntarily. Pareto optimal outcome.' };
+    ? { cls: S.nashTrap, title: 'Nash equilibrium: governance trap', titleColor: '#B5403F', val: '(G0, G0)', valColor: '#B5403F', desc: 'Competitive pressure makes G2 individually costly. Neither firm can defect first. Collective outcome is worse than either firm wants.' }
+    : { cls: S.nashOk, title: 'Nash equilibrium', titleColor: '#4A7C59', val: '(G2, G2)', valColor: '#4A7C59', desc: 'No competitive pressure: both firms govern voluntarily. Pareto optimal outcome.' };
 
   return (
     <GraphCard
       id="d-nash"
-      title={'The governance trap \u2014 why rational firms choose collective harm'}
+      title={'The governance trap: why rational firms choose collective harm'}
       subtitle={'Two competing firms choose between unmanaged AI (G0) and active governance (G2). At low pressure, both govern. As pressure rises, each defects to G0; governance costs speed, and no firm can absorb that disadvantage unilaterally. The resulting Nash equilibrium traps both at the collectively worse outcome.'}
     >
-      <div style={S.layout}>
+      <div style={isMobile ? { ...S.layout, gridTemplateColumns: '1fr', gap: 16 } : S.layout}>
         {/* Matrix */}
         <div>
-          <div style={S.matrixTitle}>{'Payoff matrix \u2014 output \u00d7 tail risk for each strategy combination'}</div>
-          <div style={S.firmNote}>You are Firm A. Firm B is your competitor.</div>
+          <div style={isMobile ? { ...S.matrixTitle, fontSize: 11.5 } : S.matrixTitle}>{'Payoff matrix: output \u00d7 tail risk for each strategy combination'}</div>
+          <div style={isMobile ? { ...S.firmNote, fontSize: 12 } : S.firmNote}>You are Firm A. Firm B is your competitor.</div>
 
-          <div style={S.grid}>
+          <div style={isMobile ? { ...S.grid, gridTemplateColumns: '52px 1fr 1fr', gap: 5 } : S.grid}>
             {/* Header row */}
             <div style={S.mh} />
-            <div style={{ ...S.mh, ...S.mhFirmB }}>Firm B: <span style={{ ...S.badge, ...S.badgeG0, marginLeft: 4 }}>G0</span></div>
-            <div style={{ ...S.mh, ...S.mhFirmB }}>Firm B: <span style={{ ...S.badge, ...S.badgeG2, marginLeft: 4 }}>G2</span></div>
+            <div style={{ ...S.mh, ...S.mhFirmB, ...(isMobile ? { fontSize: 11 } : {}) }}>Firm B: <span style={{ ...S.badge, ...S.badgeG0, marginLeft: 4 }}>G0</span></div>
+            <div style={{ ...S.mh, ...S.mhFirmB, ...(isMobile ? { fontSize: 11 } : {}) }}>Firm B: <span style={{ ...S.badge, ...S.badgeG2, marginLeft: 4 }}>G2</span></div>
 
             {/* Row 1: A=G0 */}
-            <div style={S.stratLabel}>Firm A: <span style={{ ...S.badge, ...S.badgeG0 }}>G0</span></div>
+            <div style={isMobile ? { ...S.stratLabel, fontSize: 10, paddingRight: 4, gap: 3, flexDirection: 'column', justifyContent: 'center' } : S.stratLabel}>Firm A: <span style={{ ...S.badge, ...S.badgeG0 }}>G0</span></div>
 
             {/* cell-gg */}
             <div style={cellStyle('gg')}>
-              <div style={{ fontSize: 8, fontWeight: 600, color: '#B5403F', marginBottom: 2 }}>Both unmanaged</div>
+              <div style={{ fontSize: isMobile ? 11 : 8, fontWeight: 600, color: '#B5403F', marginBottom: 2 }}>Both unmanaged</div>
               <div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> each &middot; P99&times;&theta;: {fmt(PAYOFFS.p99G0)} <span style={{ fontSize: 8 }}>(correlated)</span></div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> each &middot; P99&times;&theta;: {fmt(PAYOFFS.p99G0)} <span style={{ fontSize: isMobile ? 11 : 8 }}>(correlated)</span></div>
                 <div style={S.riskHigh}></div>
               </div>
             </div>
@@ -135,61 +137,61 @@ export default function DNASH_Game() {
             {/* cell-gp */}
             <div style={cellStyle('gp')}>
               <div>
-                <div style={S.firm}>Firm A (G0)</div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> <span style={{ color: '#4A7C59', fontSize: 9 }}>{PAYOFFS.pctGain}</span></div>
+                <div style={isMobile ? { ...S.firm, fontSize: 11 } : S.firm}>Firm A (G0)</div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> <span style={{ color: '#4A7C59', fontSize: isMobile ? 11 : 9 }}>{PAYOFFS.pctGain}</span></div>
                 <div style={S.riskHigh}>P99&times;&theta;: {fmt(PAYOFFS.p99G0)}</div>
               </div>
               <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.07)', paddingTop: 6 }}>
-                <div style={S.firm}>Firm B (G2)</div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> <span style={{ color: '#B5403F', fontSize: 9 }}>{PAYOFFS.pctLoss}</span></div>
+                <div style={isMobile ? { ...S.firm, fontSize: 11 } : S.firm}>Firm B (G2)</div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> <span style={{ color: '#B5403F', fontSize: isMobile ? 11 : 9 }}>{PAYOFFS.pctLoss}</span></div>
                 <div style={S.riskLow}>P99&times;&theta;: {fmt(PAYOFFS.p99G2)}</div>
               </div>
             </div>
 
             {/* Row 2: A=G2 */}
-            <div style={S.stratLabel}>Firm A: <span style={{ ...S.badge, ...S.badgeG2 }}>G2</span></div>
+            <div style={isMobile ? { ...S.stratLabel, fontSize: 10, paddingRight: 4, gap: 3, flexDirection: 'column', justifyContent: 'center' } : S.stratLabel}>Firm A: <span style={{ ...S.badge, ...S.badgeG2 }}>G2</span></div>
 
             {/* cell-pg */}
             <div style={cellStyle('pg')}>
               <div>
-                <div style={S.firm}>Firm A (G2)</div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> <span style={{ color: '#B5403F', fontSize: 9 }}>{PAYOFFS.pctLoss}</span></div>
+                <div style={isMobile ? { ...S.firm, fontSize: 11 } : S.firm}>Firm A (G2)</div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> <span style={{ color: '#B5403F', fontSize: isMobile ? 11 : 9 }}>{PAYOFFS.pctLoss}</span></div>
                 <div style={S.riskLow}>P99&times;&theta;: {fmt(PAYOFFS.p99G2)}</div>
               </div>
               <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.07)', paddingTop: 6 }}>
-                <div style={S.firm}>Firm B (G0)</div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> <span style={{ color: '#4A7C59', fontSize: 9 }}>{PAYOFFS.pctGain}</span></div>
+                <div style={isMobile ? { ...S.firm, fontSize: 11 } : S.firm}>Firm B (G0)</div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG0)}</strong> <span style={{ color: '#4A7C59', fontSize: isMobile ? 11 : 9 }}>{PAYOFFS.pctGain}</span></div>
                 <div style={S.riskHigh}>P99&times;&theta;: {fmt(PAYOFFS.p99G0)}</div>
               </div>
             </div>
 
             {/* cell-pp */}
             <div style={cellStyle('pp')}>
-              <div style={{ fontSize: 8, fontWeight: 600, color: '#4A7C59', marginBottom: 2 }}>Both governed</div>
+              <div style={{ fontSize: isMobile ? 11 : 8, fontWeight: 600, color: '#4A7C59', marginBottom: 2 }}>Both governed</div>
               <div>
-                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> each &middot; P99&times;&theta;: {fmt(PAYOFFS.p99G2)} <span style={{ fontSize: 8 }}>(independent)</span></div>
+                <div style={S.output}>Output: <strong>{fmt(PAYOFFS.outputG2)}</strong> each &middot; P99&times;&theta;: {fmt(PAYOFFS.p99G2)} <span style={{ fontSize: isMobile ? 11 : 8 }}>(independent)</span></div>
                 <div style={S.riskLow}></div>
               </div>
             </div>
           </div>
 
-          <div style={S.arrowHint}>
+          <div style={isMobile ? { ...S.arrowHint, fontSize: 11 } : S.arrowHint}>
             Highlighted border = Nash equilibrium (red) or Pareto optimum (green). Slide the competitive pressure to shift the equilibrium.
           </div>
 
           {/* Explain accordion */}
           <div style={S.explain}>
-            <button style={S.explainToggle} onClick={() => setExplainOpen(!explainOpen)}>
+            <button style={isMobile ? { ...S.explainToggle, fontSize: 12, padding: '8px 0' } : S.explainToggle} onClick={() => setExplainOpen(!explainOpen)}>
               {explainOpen ? '\u25be' : '\u25b8'} Why is (G0, G0) a Nash equilibrium?
             </button>
             {explainOpen && (
-              <div style={S.explainBody}>
+              <div style={isMobile ? { ...S.explainBody, fontSize: 12 } : S.explainBody}>
                 A Nash equilibrium is a state where no player can improve their outcome by changing
                 strategy alone. At (G0, G0): if Firm A unilaterally switches to G2, its output drops
                 from {fmt(G0_OUTPUT)} to {fmt(G2_OUTPUT)} ({DELTA_NEG}%) while Firm B stays at {fmt(G0_OUTPUT)}. Under competitive pressure,
                 this output gap translates to market share loss. Firm A cannot afford to defect first
-                {'\u2014'} and neither can Firm B. Both firms are trapped. The only exit is a simultaneous
-                binding commitment {'\u2014'} which is what regulation provides.
+                {', '} and neither can Firm B. Both firms are trapped. The only exit is a simultaneous
+                binding commitment {', '} which is what regulation provides.
               </div>
             )}
           </div>
@@ -197,10 +199,10 @@ export default function DNASH_Game() {
 
         {/* Controls */}
         <div style={S.controls}>
-          <div style={S.sliderSection}>
+          <div style={isMobile ? { ...S.sliderSection, padding: '12px 14px' } : S.sliderSection}>
             <div style={S.sliderHeader}>
-              <span style={S.sliderLabel}>Competitive pressure</span>
-              <span style={{ ...S.sliderPct, color: pctColor }}>{pressure}%</span>
+              <span style={isMobile ? { ...S.sliderLabel, fontSize: 12 } : S.sliderLabel}>Competitive pressure</span>
+              <span style={{ ...S.sliderPct, color: pctColor, ...(isMobile ? { fontSize: 20 } : {}) }}>{pressure}%</span>
             </div>
             <input
               type="range"
@@ -209,37 +211,37 @@ export default function DNASH_Game() {
               step={0.5}
               value={pressure}
               onChange={(e) => { setPressure(Number(e.target.value)); setRegulated(false); }}
-              style={{ width: '100%', accentColor: '#619EA8', cursor: 'pointer', background: 'linear-gradient(to right, #4A7C59, #C49A3C, #B5403F)', height: 6, borderRadius: 3 }}
+              style={{ width: '100%', accentColor: '#619EA8', cursor: 'pointer', background: 'linear-gradient(to right, #4A7C59, #C49A3C, #B5403F)', height: isMobile ? 12 : 6, borderRadius: isMobile ? 6 : 3, ...(isMobile ? { margin: '8px 0' } : {}) }}
             />
-            <div style={S.sliderEnds}>
-              <span>{'0% \u2014 no penalty'}</span>
-              <span>{'15% \u2014 severe'}</span>
+            <div style={isMobile ? { ...S.sliderEnds, fontSize: 10.5 } : S.sliderEnds}>
+              <span>{'0% \u00b7 no penalty'}</span>
+              <span>{'15% \u00b7 severe'}</span>
             </div>
           </div>
 
           {/* Nash status */}
           <div style={{ ...S.nashCard, ...nashState.cls }}>
-            <div style={{ ...S.nashTitle, color: nashState.titleColor }}>{nashState.title}</div>
-            <div style={{ ...S.nashVal, color: nashState.valColor }}>{nashState.val}</div>
-            <div style={S.nashDesc}>{nashState.desc}</div>
+            <div style={{ ...S.nashTitle, color: nashState.titleColor, ...(isMobile ? { fontSize: 12 } : {}) }}>{nashState.title}</div>
+            <div style={{ ...S.nashVal, color: nashState.valColor, ...(isMobile ? { fontSize: 18 } : {}) }}>{nashState.val}</div>
+            <div style={isMobile ? { ...S.nashDesc, fontSize: 11.5 } : S.nashDesc}>{nashState.desc}</div>
           </div>
 
           {/* Velocity cost */}
-          <div style={S.velocityCost}>
+          <div style={isMobile ? { ...S.velocityCost, fontSize: 11.5 } : S.velocityCost}>
             <strong style={{ color: '#22375A' }}>Velocity cost of G2:</strong>{' '}
-            Active governance reduces output by ~3.5% for this profile (&theta; drops from 1.25 to 1.10 {'\u2014'} a 12% reduction in throughput multiplier). Under competitive pressure, this output gap triggers market share loss {'\u2014'} making G2 individually irrational even when collectively optimal.
+            Active governance reduces output by ~3.5% for this profile (&theta; drops from 1.25 to 1.10, a 12% cut in the throughput multiplier). That gap is small in absolute terms, yet under competitive pressure even a few points of lost throughput trigger market-share loss, which makes G2 individually irrational even when it is collectively optimal.
           </div>
 
           {/* Regulator button */}
           <div>
             <button
-              style={{ ...S.regBtn, ...(regulated ? S.regBtnDisabled : {}) }}
+              style={{ ...S.regBtn, ...(regulated ? S.regBtnDisabled : {}), ...(isMobile ? { padding: 13, fontSize: 12.5 } : {}) }}
               disabled={regulated}
               onClick={() => setRegulated(true)}
             >
-              {regulated ? '\u2713 Regulator active \u2014 G2 mandated' : '\u2696 Add regulator \u2014 mandate G2 for all'}
+              {regulated ? '\u2713 Regulator active: G2 mandated' : '\u2696 Add regulator: mandate G2 for all'}
             </button>
-            <div style={S.regNote}>
+            <div style={isMobile ? { ...S.regNote, fontSize: 11.5 } : S.regNote}>
               {regulated
                 ? 'Tail risk tax in force. Nash = (G2,G2) regardless of competitive pressure. Remove by resetting pressure to 0%.'
                 : 'Regulation adds a tail risk tax that makes G0 individually costly. Nash shifts back to (G2, G2) regardless of competitive pressure.'}
@@ -247,8 +249,8 @@ export default function DNASH_Game() {
           </div>
 
           {/* Threshold note */}
-          <div style={{ ...S.threshNote, color: pressure >= NASH_THRESHOLD && !regulated ? '#B5403F' : '#A0A09A' }}>
-            The Nash equilibrium shifts to (G0, G0) when competitive pressure exceeds ~3.5% {'\u2014'}
+          <div style={{ ...S.threshNote, color: pressure >= NASH_THRESHOLD && !regulated ? '#B5403F' : '#A0A09A', ...(isMobile ? { fontSize: 11.5 } : {}) }}>
+            The Nash equilibrium shifts to (G0, G0) when competitive pressure exceeds ~3.5% {', '}
             at current simulation parameters (P3 Paris). The threshold varies with the velocity cost of
             governance and the time horizon of the firm.
           </div>
@@ -256,17 +258,17 @@ export default function DNASH_Game() {
       </div>
 
       {/* Bottom note */}
-      <div style={S.bottomNote}>
+      <div style={isMobile ? { ...S.bottomNote, fontSize: 12 } : S.bottomNote}>
         <strong>The tragedy of the cognitive commons:</strong>{' '}
-        Each firm's rational choice destroys the collective resource {'\u2014'} cognitive diversity across
+        Each firm's rational choice destroys the collective resource {': '} cognitive diversity across
         the market. Under pressure, governance becomes a competitive disadvantage.
         The market will not self-correct. This is the structural argument for regulation:
         not because firms are irresponsible, but because the Nash equilibrium is at the wrong point.{' '}
         The failure lies in market structure, not intentions. Regulation that internalises the tail risk externality is the only mechanism that shifts the equilibrium without requiring any firm to act against its own interest.
       </div>
 
-      <div style={S.disclaimer}>
-        Payoffs derived from simulation outputs (P3 Paris). Market share effects assumed {'\u2014'} not simulated.
+      <div style={isMobile ? { ...S.disclaimer, fontSize: 11, textAlign: 'left' } : S.disclaimer}>
+        Payoffs derived from simulation outputs (P3 Paris). Market share effects assumed {', '} not simulated.
         Competitive pressure threshold (~3.5%) varies with velocity cost and time horizon.
       </div>
     </GraphCard>

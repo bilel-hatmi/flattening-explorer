@@ -3,6 +3,7 @@ import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { useProfile } from '../../context/ProfileContext';
 import { useCSV } from '../../hooks/useCSV';
+import useIsMobile from '../../hooks/useIsMobile';
 
 /* -- All 8 profiles ------------------------------------------------------- */
 const PROFILES = [
@@ -31,36 +32,36 @@ const LPOS = {
 /* -- Tooltip notes (v5 values) ------------------------------------------- */
 const NOTES = {
   P1: {
-    G1: 'Passive guardrails: 2,124 → 1,858 (−12%). Professional services culture limits passive governance adoption.',
+    G1: 'Passive scaffold: 2,124 → 1,858 (−13%). Professional services culture limits passive governance adoption.',
     G2: 'Active governance: −31% vs G0. Scaffold counterproductive (−3%). Stack diversification is the primary lever.',
   },
   P2: {
-    G1: 'Passive guardrails: tail risk 1,668 → 1,331 (−20%). Structural advantage already present.',
+    G1: 'Passive scaffold: tail risk 1,668 → 1,331 (−20%). Structural advantage already present.',
     G2: 'Active governance: −38% vs G0. Global recruitment + diversified stack.',
   },
   P3: {
-    G1: 'Passive guardrails: −19% vs G0. Elite national pipeline limits the gain.',
-    G2: 'Active governance: −36% vs G0. Still 22% above London — structural, not failure.',
+    G1: 'Passive scaffold: −19% vs G0. Elite national pipeline limits the gain.',
+    G2: 'Active governance: −36% vs G0. Still 22% above London: structural, not failure.',
   },
   P4: {
-    G1: 'Passive guardrails: 2,254 → 2,009 (−11%). Legal compliance culture resists light-touch guardrails.',
+    G1: 'Passive scaffold: 2,254 → 2,009 (−11%). Legal compliance culture resists light-touch guardrails.',
     G2: 'Active governance: −29% vs G0. Scaffold counterproductive (−8%). Highest absolute tail risk.',
   },
   P5: {
-    G1: 'Passive guardrails: −21% tail risk. Output drops less than G2.',
+    G1: 'Passive scaffold: −8% tail risk. Output drops less than G2.',
     G2: 'Scaffold counterproductive: velocity cost > risk gain. Benefit = −36% (efficiency ratio). Grounds Nash argument.',
   },
   P6: {
-    G1: 'Passive guardrails: minimal gain. Singapore already has the best structural profile.',
+    G1: 'Passive scaffold: minimal gain. Singapore already has the best structural profile.',
     G2: 'Active governance: excess tail risk near zero. Safest profile. Scaffold benefit +40% (efficiency ratio).',
   },
   P7: {
-    G1: 'Passive guardrails nearly ineffective. Low-skill profile needs active intervention.',
-    G2: 'Active governance: −24% vs G0. Scaffold benefit −26% (efficiency ratio) — governance counterproductive.',
+    G1: 'Passive scaffold nearly ineffective. Low-skill profile needs active intervention.',
+    G2: 'Active governance: −22% vs G0. Scaffold benefit −26% (efficiency ratio): governance counterproductive.',
   },
   P8: {
-    G1: 'Passive guardrails almost no effect. National exam pipeline resists governance.',
-    G2: 'Active governance: −20% vs G0. Still highest risk. Scaffold benefit −6%. No market signal — invisible.',
+    G1: 'Passive scaffold almost no effect. National exam pipeline resists governance.',
+    G2: 'Active governance: −27% vs G0. Still highest risk. Scaffold benefit −6%. No market signal: invisible.',
   },
 };
 
@@ -100,12 +101,12 @@ function makeTicks(lo, hi, step) {
 }
 
 const SCENARIO_NOTES = {
-  G1: 'Short arrows show passive guardrails capture 30\u201350% of the tail reduction achievable under active governance.',
-  G2: 'Active governance moves profiles significantly — especially Singapore (P6) and London (P2).',
+  G1: 'Short arrows show the passive scaffold captures 30\u201350% of the tail reduction achievable under active governance.',
+  G2: 'Active governance moves profiles the most for London (P2) and Paris (P3).',
 };
 
 const GOVERNED_LABELS = {
-  G1: 'With passive guardrails (G1)',
+  G1: 'With passive scaffold (G1)',
   G2: 'With active governance (G2)',
 };
 
@@ -120,7 +121,9 @@ const styles = {
   toggleBtn: {
     padding: '7px 18px',
     borderRadius: 6,
-    border: '0.5px solid rgba(0,0,0,0.14)',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(0,0,0,0.14)',
     background: 'transparent',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontSize: 12,
@@ -146,7 +149,8 @@ const styles = {
     gap: 5,
     padding: '4px 10px',
     borderRadius: 5,
-    border: '0.5px solid',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     fontSize: 10,
     fontWeight: 600,
@@ -206,6 +210,7 @@ const styles = {
 
 /* -- Component ----------------------------------------------------------- */
 export default function C4_Scatter() {
+  const isMobile = useIsMobile();
   const { profileId } = useProfile();
   const [scenario, setScenario] = useState('G1');
   const [tooltip, setTooltip] = useState(null);
@@ -279,7 +284,7 @@ export default function C4_Scatter() {
     if (!d) return;
     const hiddenPct = Math.round((d.actual.x - d.perceived.x) / d.perceived.x * 100);
     const govGain   = Math.round((d.actual.x - d[scenario].x) / d.actual.x * 100);
-    const scLabel   = scenario === 'G1' ? 'G1 guardrails' : 'G2 governance';
+    const scLabel   = scenario === 'G1' ? 'G1 scaffold' : 'G2 governance';
     setTooltip({
       x: e.clientX, y: e.clientY,
       profile, perceived: d.perceived.x, actual: d.actual.x,
@@ -306,10 +311,14 @@ export default function C4_Scatter() {
 
   if (loading || !DATA) return <GraphSkeleton id="c4-scatter" height={460} />;
 
+  const _vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const _vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+  // Clamp into the viewport so the tooltip never overflows on a narrow (phone) screen,
+  // where it is now reachable by tap.
   const ttLeft = tooltip
-    ? (tooltip.x + 250 > (typeof window !== 'undefined' ? window.innerWidth : 1200) ? tooltip.x - 254 : tooltip.x + 14)
+    ? Math.max(6, Math.min(tooltip.x + 250 > _vw ? tooltip.x - 254 : tooltip.x + 14, _vw - 246))
     : 0;
-  const ttTop = tooltip ? tooltip.y - 10 : 0;
+  const ttTop = tooltip ? Math.max(6, Math.min(tooltip.y - 10, _vh - 175)) : 0;
 
   /* P2/P3 bracket annotation — dynamic gap */
   const p2data = DATA.P2, p3data = DATA.P3;
@@ -325,25 +334,29 @@ export default function C4_Scatter() {
   return (
     <GraphCard
       id="c4-scatter"
-      title={'What dashboards hide \u2014 actual vs perceived tail risk'}
+      title={'What dashboards hide: actual vs perceived tail risk'}
       subtitle="Open circles mark what dashboards report; filled circles show actual exposure under unmanaged AI. The systematic gap between them is invisible to management. Arrows trace where governance moves each profile."
       footnote={'P99\u00d7\u03b8 = worst-case loss \u00d7 throughput multiplier. Output = productivity. 8 profiles, v5 Monte Carlo simulation. Open circles show what dashboards report, performance measured on normal quarters only, risk measured against the pre-AI baseline; both overstate performance and understate risk.'}
     >
       {/* G1 / G2 Toggle */}
-      <div style={styles.controls}>
+      <div style={{ ...styles.controls, ...(isMobile ? { gap: 8, marginBottom: 10 } : {}) }}>
         {['G1', 'G2'].map(sc => (
           <button
             key={sc}
-            style={{ ...styles.toggleBtn, ...(scenario === sc ? styles.toggleBtnActive : {}) }}
+            style={{
+              ...styles.toggleBtn,
+              ...(scenario === sc ? styles.toggleBtnActive : {}),
+              ...(isMobile ? { flex: 1, padding: '11px 10px', fontSize: 12, lineHeight: 1.2 } : {}),
+            }}
             onClick={() => setScenario(sc)}
           >
-            {sc === 'G1' ? 'Passive guardrails (G1)' : 'Active governance (G2)'}
+            {sc === 'G1' ? 'Passive scaffold (G1)' : 'Active governance (G2)'}
           </button>
         ))}
       </div>
 
       {/* Profile filter buttons */}
-      <div style={styles.profileFilter}>
+      <div style={{ ...styles.profileFilter, ...(isMobile ? { gap: 8, marginBottom: 12 } : {}) }}>
         {PROFILES.map(p => {
           const active = visibleProfiles.has(p.id);
           return (
@@ -354,6 +367,7 @@ export default function C4_Scatter() {
                 borderColor: active ? p.color : 'rgba(0,0,0,0.10)',
                 background: active ? rgba(p.color, 0.10) : 'transparent',
                 color: active ? p.color : '#A0A09A',
+                ...(isMobile ? { fontSize: 11, padding: '8px 11px' } : {}),
               }}
               onClick={() => toggleProfile(p.id)}
             >
@@ -368,35 +382,35 @@ export default function C4_Scatter() {
       </div>
 
       {/* Scenario note */}
-      <div style={styles.scNote}>{SCENARIO_NOTES[scenario]}</div>
+      <div style={{ ...styles.scNote, ...(isMobile ? { fontSize: 11, minHeight: 0, marginBottom: 12 } : {}) }}>{SCENARIO_NOTES[scenario]}</div>
 
       {/* Legend */}
-      <div style={styles.legendRow}>
-        <div style={styles.legItem}>
+      <div style={{ ...styles.legendRow, ...(isMobile ? { flexDirection: 'column', gap: 8, marginBottom: 12 } : {}) }}>
+        <div style={{ ...styles.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <svg width="18" height="18" viewBox="0 0 18 18">
             <circle cx="9" cy="9" r="7" fill="none" stroke="#888" strokeWidth="2" />
           </svg>
-          {'Perceived position \u2014 normal quarters only, pre-AI risk baseline'}
+          {'Perceived position: normal quarters only, pre-AI risk baseline'}
         </div>
-        <div style={styles.legItem}>
+        <div style={{ ...styles.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <svg width="18" height="18" viewBox="0 0 18 18">
             <circle cx="9" cy="9" r="7" fill="#555" stroke="white" strokeWidth="1.5" />
           </svg>
-          Actual risk — unmanaged AI (G0)
+          Actual risk: unmanaged AI (G0)
         </div>
-        <div style={styles.legItem}>
+        <div style={{ ...styles.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <svg width="18" height="18" viewBox="0 0 18 18">
             <circle cx="9" cy="9" r="6" fill="rgba(100,100,100,0.40)" stroke="white" strokeWidth="1.5" />
           </svg>
           {GOVERNED_LABELS[scenario]}
         </div>
-        <div style={styles.legItem}>
+        <div style={{ ...styles.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <svg width="34" height="12" viewBox="0 0 34 12">
             <line x1="2" y1="6" x2="32" y2="6" stroke="#888" strokeWidth="1.5" strokeDasharray="4 3" />
           </svg>
           Hidden risk (perceived → actual)
         </div>
-        <div style={styles.legItem}>
+        <div style={{ ...styles.legItem, ...(isMobile ? { fontSize: 11 } : {}) }}>
           <svg width="34" height="12" viewBox="0 0 34 12">
             <defs>
               <marker id="legend-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
@@ -411,7 +425,8 @@ export default function C4_Scatter() {
 
       {/* SVG Chart */}
       <div style={styles.chartWrap}>
-        <svg ref={svgRef} viewBox={`0 0 ${SVG_W} ${SVG_H}`} xmlns="http://www.w3.org/2000/svg" style={styles.svg}>
+        <svg ref={svgRef} viewBox={`0 0 ${SVG_W} ${SVG_H}`} xmlns="http://www.w3.org/2000/svg" style={styles.svg}
+          onClick={hideTooltip}>
           <defs>
             {PROFILES.map(p => (
               <marker key={`arr-${p.id}`} id={`arr-${p.id}`}
@@ -434,32 +449,32 @@ export default function C4_Scatter() {
           {/* Axis tick labels */}
           {xGrid.map(v => (
             <text key={`xt-${v}`} x={xPx(v)} y={PAD.t + CH + 14} textAnchor="middle"
-              fontFamily="'JetBrains Mono', monospace" fontSize="9" fill="#A0A09A">
+              fontFamily="'JetBrains Mono', monospace" fontSize={isMobile ? 15 : 9} fill="#A0A09A">
               {fmtK(v)}
             </text>
           ))}
           {yTicks.map(v => (
             <text key={`yt-${v}`} x={PAD.l - 6} y={yPx(v) + 4} textAnchor="end"
-              fontFamily="'JetBrains Mono', monospace" fontSize="9" fill="#A0A09A">
+              fontFamily="'JetBrains Mono', monospace" fontSize={isMobile ? 15 : 9} fill="#A0A09A">
               {fmtK(v)}
             </text>
           ))}
 
           {/* Axis titles */}
           <text x={PAD.l + CW / 2} y={PAD.t + CH + 34} textAnchor="middle"
-            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="10.5" fontWeight="600" fill="#22375A">
+            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 17 : 10.5} fontWeight="600" fill="#22375A">
             Risk-adjusted worst-case loss (P99×θ)
           </text>
           <text x={PAD.l + CW / 2} y={PAD.t + CH + 50} textAnchor="middle"
-            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="8" fill="#A0A09A">
-            {'← lower risk                                                        higher risk →'}
+            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 13 : 8} fill="#A0A09A">
+            {isMobile ? '← lower risk          higher risk →' : '← lower risk                                                        higher risk →'}
           </text>
           <text transform={`translate(13,${PAD.t + CH / 2}) rotate(-90)`} textAnchor="middle"
-            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="10.5" fontWeight="600" fill="#22375A">
+            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 17 : 10.5} fontWeight="600" fill="#22375A">
             Productivity output
           </text>
           <text transform={`translate(4,${PAD.t + CH / 2 + 14}) rotate(-90)`} textAnchor="middle"
-            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="8" fill="#A0A09A">
+            fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 13 : 8} fill="#A0A09A">
             {'higher is better ↑'}
           </text>
 
@@ -496,11 +511,12 @@ export default function C4_Scatter() {
                 <circle cx={ax} cy={ay} r={isHighlighted && profileId ? 14 : 10}
                   fill={rgba(p.color, 0.88)} stroke="#fff" strokeWidth="2"
                   style={{ cursor: 'pointer' }}
+                  onClick={(e) => { e.stopPropagation(); showTooltip(e, p, 'actual'); }}
                   onMouseEnter={(e) => showTooltip(e, p, 'actual')}
                   onMouseMove={moveTooltip}
                   onMouseLeave={hideTooltip} />
                 <text x={ax} y={ay + 4} textAnchor="middle"
-                  fontFamily="'JetBrains Mono', monospace" fontSize="8" fontWeight="700" fill="#fff"
+                  fontFamily="'JetBrains Mono', monospace" fontSize={isMobile ? 12 : 8} fontWeight="700" fill="#fff"
                   style={{ pointerEvents: 'none' }}>
                   {p.num}
                 </text>
@@ -509,6 +525,7 @@ export default function C4_Scatter() {
                 <circle cx={px} cy={py} r="8.5"
                   fill="#fff" stroke={rgba(p.color, 0.80)} strokeWidth="2"
                   style={{ cursor: 'pointer' }}
+                  onClick={(e) => { e.stopPropagation(); showTooltip(e, p, 'perceived'); }}
                   onMouseEnter={(e) => showTooltip(e, p, 'perceived')}
                   onMouseMove={moveTooltip}
                   onMouseLeave={hideTooltip} />
@@ -527,9 +544,11 @@ export default function C4_Scatter() {
               <line x1={p3ax} y1={annY - 3} x2={p3ax} y2={annY + 3}
                 stroke="rgba(34,55,90,0.22)" strokeWidth="1" />
               <text x={(p2ax + p3ax) / 2} y={annY + 12} textAnchor="middle"
-                fontFamily="'Plus Jakarta Sans', sans-serif" fontSize="9" fontWeight="600"
+                fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 13 : 9} fontWeight="600"
                 fill="rgba(34,55,90,0.60)">
-                {`Same sector, same talent. Paris +${parisLondonGap}% worst-case loss vs London.`}
+                {isMobile
+                  ? `Paris +${parisLondonGap}% loss vs London`
+                  : `Same sector, same talent. Paris +${parisLondonGap}% worst-case loss vs London.`}
               </text>
             </>
           )}
@@ -543,13 +562,13 @@ export default function C4_Scatter() {
             {tooltip.profile.label}
           </div>
           <div style={{ ...styles.ttRow, color: rgba(tooltip.profile.color, 0.70) }}>
-            {'Perceived: P99×θ '}{tooltip.perceived.toLocaleString()}
+            {'Perceived: P99×θ '}{tooltip.perceived.toLocaleString('en-GB')}
           </div>
           <div style={{ ...styles.ttRow, color: tooltip.profile.color, fontWeight: 600 }}>
-            Actual (G0): {tooltip.actual.toLocaleString()} (+{tooltip.hiddenPct}% hidden)
+            Actual (G0): {tooltip.actual.toLocaleString('en-GB')} (+{tooltip.hiddenPct}% hidden)
           </div>
           <div style={{ ...styles.ttRow, color: 'rgba(80,80,80,0.80)' }}>
-            With {tooltip.scLabel}: {tooltip.governed.toLocaleString()} (-{tooltip.govGain}% vs G0)
+            With {tooltip.scLabel}: {tooltip.governed.toLocaleString('en-GB')} (-{tooltip.govGain}% vs G0)
           </div>
           <div style={styles.ttNote}>{tooltip.note}</div>
         </div>

@@ -3,6 +3,7 @@ import GraphCard from '../ui/GraphCard';
 import { useProfile } from '../../context/ProfileContext';
 import { PROFILES } from '../../data/v5_reference';
 import { usePyodide } from '../../hooks/usePyodide';
+import useIsMobile from '../../hooks/useIsMobile';
 
 /* -- CONSTANTS ------------------------------------------------------------ */
 
@@ -374,6 +375,7 @@ const styles = {
 /* -- COMPONENT ------------------------------------------------------------ */
 
 export default function B1_CorrelationGrid() {
+  const isMobile = useIsMobile();
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentSeed, setCurrentSeed] = useState(42);
   const [engineSource, setEngineSource] = useState('local'); // 'local' | 'pyodide'
@@ -545,35 +547,44 @@ export default function B1_CorrelationGrid() {
   const goodErrorPct = totalCells > 0 ? Math.round((goodTotal / totalCells) * 100) : 0;
   const badErrorPct  = totalCells > 0 ? Math.round((badTotal  / totalCells) * 100) : 0;
 
-  const goodSublabel = piGoodStr + ' \u2014 AI in-distribution for all decision types, ' + goodErrorPct + '% error rate';
-  const badSublabel  = piBadStr + ' \u2014 ' + nHot + ' out of 10 decision types outside AI training data';
-  const goodNote = 'In a normal quarter, AI covers all decision types. Errors occur at ~' + goodErrorPct + '% but remain independent \u2014 each agent fails on different decisions. No column clustering (' + (goodSys === 0 ? 'zero' : goodSys) + ' systemic column' + (goodSys !== 1 ? 's' : '') + ').';
-  const badNote  = 'In a crisis quarter, ' + nHot + " out of 10 decision types fall outside the AI\u2019s training data. Every agent using the same model fails on the same decisions \u2014 " + badSys + ' column' + (badSys !== 1 ? 's' : '') + ' show systemic failure (>' + systThreshold + ' agents simultaneously).';
+  // Mobile-bumped legibility variants (desktop branch untouched)
+  const mGridSublabel  = isMobile ? { ...styles.gridSublabel, fontSize: 11 } : styles.gridSublabel;
+  const mCounterDesc   = isMobile ? { ...styles.counterDesc, fontSize: 11 } : styles.counterDesc;
+  const mMechNote      = isMobile ? { fontSize: 11.5 } : {};
+  const mInsightExtra  = isMobile ? { fontSize: 12 } : {};
+  const mLegItem       = isMobile ? { ...styles.legItem, fontSize: 11 } : styles.legItem;
+  const mLegendNote    = isMobile ? { ...styles.legendNote, fontSize: 10, marginLeft: 0, flexBasis: '100%' } : styles.legendNote;
+
+  const goodSublabel = piGoodStr + ': AI in-distribution for all decision types, ' + goodErrorPct + '% error rate';
+  const badSublabel  = piBadStr + ': ' + nHot + ' out of 10 decision types outside AI training data';
+  const goodNote = 'In a normal quarter, AI covers all decision types. Errors occur at ~' + goodErrorPct + '% but remain independent: each agent fails on different decisions. No column clustering (' + (goodSys === 0 ? 'zero' : goodSys) + ' systemic column' + (goodSys !== 1 ? 's' : '') + ').';
+  const badNote  = 'In a crisis quarter, ' + nHot + " out of 10 decision types fall outside the AI\u2019s training data. Every agent using the same model fails on the same decisions: " + badSys + ' column' + (badSys !== 1 ? 's' : '') + ' show systemic failure (>' + systThreshold + ' agents simultaneously).';
 
   return (
     <GraphCard
       id="B1"
-      title="Same number of errors — radically different risk"
+      title="Scattered errors absorb, clustered errors cascade"
       subtitle={
-        `${nAgents} agents \u00d7 10 decision types${profile ? ` \u2014 ${profile.name} (${profile.city})` : ''}. Both grids have roughly the same total error rate. ` +
-        'The difference is structure, not quantity. When errors scatter randomly, the organisation absorbs them. ' +
-        'When they cluster by column, every agent fails on the same decisions simultaneously \u2014 and the tail explodes.'
+        `${nAgents} agents \u00d7 10 decision types${profile ? ` \u00b7 ${profile.name} (${profile.city})` : ''}. In a normal quarter, errors stay scattered and independent, so the organisation absorbs them. ` +
+        'In a crisis quarter they concentrate in the same decision columns: every agent fails together, and the tail grows far faster than the error count alone would suggest. ' +
+        'Correlation, not just the error count, is what makes the tail explode.'
       }
     >
       {/* Single replay button */}
-      <div style={styles.controls}>
+      <div style={{ ...styles.controls, ...(isMobile ? { gap: 10, marginBottom: 18 } : {}) }}>
         <button
           style={{
             ...styles.replayBtn,
             ...(isAnimating ? { opacity: 0.5, cursor: 'default' } : {}),
+            ...(isMobile ? { padding: '11px 16px', fontSize: 12, minHeight: 40 } : {}),
           }}
           onClick={handleReplay}
           disabled={isAnimating}
         >
-          {isAnimating ? '\u23f3 Simulating...' : '\u21bb Replay \u2014 new random instance'}
+          {isAnimating ? '\u23f3 Simulating...' : '\u21bb Replay \u00b7 new random instance'}
         </button>
         <span style={{
-          fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
+          fontSize: isMobile ? 11 : 9, fontFamily: "'JetBrains Mono', monospace",
           color: engineSource === 'pyodide' ? '#4A7C59' : '#A0A09A',
           marginLeft: 8,
         }}>
@@ -582,13 +593,13 @@ export default function B1_CorrelationGrid() {
       </div>
 
       {/* Two-panel grid layout — both always visible */}
-      <div style={styles.gridsRow}>
+      <div style={{ ...styles.gridsRow, ...(isMobile ? { gridTemplateColumns: '1fr', gap: 28 } : {}) }}>
         {/* LEFT PANEL — Normal quarter */}
         <div style={styles.gridPanel}>
           <div style={styles.gridHeader}>
             <div>
-              <div style={styles.gridLabel}>Normal quarter {'\—'} errors scattered</div>
-              <div style={styles.gridSublabel}>{goodSublabel}</div>
+              <div style={styles.gridLabel}>Normal quarter: errors scattered</div>
+              <div style={mGridSublabel}>{goodSublabel}</div>
             </div>
           </div>
           <div style={{ position: 'relative' }}>
@@ -597,7 +608,7 @@ export default function B1_CorrelationGrid() {
           {/* Left decision axis — no hot columns */}
           <div style={styles.decisionAxis}>
             {Array.from({ length: N_DECISIONS }, (_, d) => (
-              <div key={d} style={styles.decisionLabel}>
+              <div key={d} style={{ ...styles.decisionLabel, ...(isMobile ? { fontSize: 11 } : {}) }}>
                 d{d + 1}
               </div>
             ))}
@@ -605,38 +616,38 @@ export default function B1_CorrelationGrid() {
           {/* Left counters */}
           <div style={styles.gridCounters}>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>Total errors</span>
+              <span style={mCounterDesc}>Total errors</span>
               <span style={{ ...styles.counterVal, color: '#22375A' }}>
                 {goodTotal} / {totalCells}  ({Math.round((goodTotal / totalCells) * 100)}%)
               </span>
             </div>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>
+              <span style={mCounterDesc}>
                 Systemic failures (&gt;{systThreshold} agents on same decision)
               </span>
               <span style={{ ...styles.counterVal, color: '#4A7C59' }}>
                 {goodSys === 0
-                  ? '0 \— no systemic failure'
-                  : `${goodSys} \— systemic risk`}
+                  ? '0 · no systemic failure'
+                  : `${goodSys} · systemic risk`}
               </span>
             </div>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>Correlation index (c_excess)</span>
+              <span style={mCounterDesc}>Mean error correlation</span>
               <span style={{ ...styles.counterVal, color: '#22375A' }}>
                 {cExcessGood.toFixed(3)}
               </span>
             </div>
           </div>
           {/* Left mechanism note */}
-          <div style={{ ...styles.mechanismNote, ...styles.mechanismNoteGood }}>{goodNote}</div>
+          <div style={{ ...styles.mechanismNote, ...styles.mechanismNoteGood, ...mMechNote }}>{goodNote}</div>
         </div>
 
         {/* RIGHT PANEL — Crisis quarter */}
         <div style={styles.gridPanel}>
           <div style={styles.gridHeader}>
             <div>
-              <div style={styles.gridLabel}>Crisis quarter {'\—'} errors correlated</div>
-              <div style={styles.gridSublabel}>{badSublabel}</div>
+              <div style={styles.gridLabel}>Crisis quarter: errors correlated</div>
+              <div style={mGridSublabel}>{badSublabel}</div>
             </div>
           </div>
           <div style={{ position: 'relative' }}>
@@ -652,6 +663,7 @@ export default function B1_CorrelationGrid() {
                   style={{
                     ...styles.decisionLabel,
                     ...(isHot ? styles.decisionLabelHot : {}),
+                    ...(isMobile ? { fontSize: 11 } : {}),
                   }}
                 >
                   d{d + 1}
@@ -662,13 +674,13 @@ export default function B1_CorrelationGrid() {
           {/* Right counters */}
           <div style={styles.gridCounters}>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>Total errors</span>
+              <span style={mCounterDesc}>Total errors</span>
               <span style={{ ...styles.counterVal, color: '#22375A' }}>
                 {badTotal} / {totalCells}  ({Math.round((badTotal / totalCells) * 100)}%)
               </span>
             </div>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>
+              <span style={mCounterDesc}>
                 Systemic failures (&gt;{systThreshold} agents on same decision)
               </span>
               <span
@@ -678,12 +690,12 @@ export default function B1_CorrelationGrid() {
                 }}
               >
                 {badSys === 0
-                  ? '0 \— no systemic failure'
-                  : `${badSys} \— systemic risk`}
+                  ? '0 · no systemic failure'
+                  : `${badSys} · systemic risk`}
               </span>
             </div>
             <div style={styles.counterLine}>
-              <span style={styles.counterDesc}>Correlation index (c_excess)</span>
+              <span style={mCounterDesc}>Mean error correlation</span>
               <span
                 style={{
                   ...styles.counterVal,
@@ -695,41 +707,41 @@ export default function B1_CorrelationGrid() {
             </div>
           </div>
           {/* Right mechanism note */}
-          <div style={{ ...styles.mechanismNote, ...styles.mechanismNoteBad }}>{badNote}</div>
+          <div style={{ ...styles.mechanismNote, ...styles.mechanismNoteBad, ...mMechNote }}>{badNote}</div>
         </div>
       </div>
 
       {/* Insight pills */}
-      <div style={styles.insightRow}>
-        <div style={styles.insightGood}>
+      <div style={{ ...styles.insightRow, ...(isMobile ? { gridTemplateColumns: '1fr', gap: 10 } : {}) }}>
+        <div style={{ ...styles.insightGood, ...mInsightExtra }}>
           <span style={styles.insightIcon}>{'\◎'}</span>
           <span>
-            Errors are <strong>independent</strong> {'\—'} agents fail on different decisions.
+            Errors are <strong>independent</strong>: agents fail on different decisions.
             Each error is offset by another agent{'\’'}s correct answer.
             Collective judgment stays robust.
           </span>
         </div>
-        <div style={styles.insightBad}>
+        <div style={{ ...styles.insightBad, ...mInsightExtra }}>
           <span style={styles.insightIcon}>{'\▓'}</span>
           <span>
-            Errors are <strong>correlated by column</strong> {'\—'} the same decision types fail
-            across nearly all {nAgents} agents. Nothing cancels out.
-            This is what drives the tail risk in the model.
+            Errors are <strong>correlated by column</strong>: the same decision types fail
+            across nearly all {nAgents} agents. Because the mistakes coincide, nothing cancels out,
+            and this is what drives the tail risk in the model.
           </span>
         </div>
       </div>
 
       {/* Legend */}
-      <div style={styles.legendStrip}>
-        <div style={styles.legItem}>
+      <div style={{ ...styles.legendStrip, ...(isMobile ? { flexWrap: 'wrap', gap: 12, rowGap: 8 } : {}) }}>
+        <div style={mLegItem}>
           <span style={{ ...styles.legSwatch, background: C_OK }} />
           Correct decision
         </div>
-        <div style={styles.legItem}>
+        <div style={mLegItem}>
           <span style={{ ...styles.legSwatch, background: C_ERR }} />
           Error
         </div>
-        <span style={styles.legendNote}>
+        <span style={mLegendNote}>
           Columns = decision types (d1{'\–'}d10) {'\·'} Rows = agents (1{'\–'}{nAgents})
         </span>
       </div>

@@ -5,6 +5,7 @@ import { useProfile } from '../../context/ProfileContext';
 import GraphCard from '../ui/GraphCard';
 import GraphSkeleton from '../ui/GraphSkeleton';
 import { fmt, hexToRgba as rgba } from '../../utils/helpers';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── SVG layout ──────────────────────────────────────────────────────────────
 const SVG_W = 680, SVG_H = 210;
@@ -35,6 +36,7 @@ function diamond(cx, cy, r) {
 }
 
 export default function C5_Slope() {
+  const isMobile = useIsMobile();
   const { profileId } = useProfile();
   const { data, loading } = useCSV('sweep_profiles_v3_b030.csv');
   const [tooltip, setTooltip] = useState(null);
@@ -70,14 +72,14 @@ export default function C5_Slope() {
     });
   }, []);
 
-  if (loading) return <GraphCard title={'Governance is regressive — it helps most where it is needed least'}><GraphSkeleton /></GraphCard>;
+  if (loading) return <GraphCard title={'Governance is regressive: it helps most where it is needed least'}><GraphSkeleton /></GraphCard>;
 
   const showTooltip = (e, p) => {
     const g0g1 = Math.round((1 - p.p99_G1 / p.p99_G0) * 100);
     const g0g2 = Math.round((1 - p.p99_G2 / p.p99_G0) * 100);
     setTooltip({
       x: e.clientX, y: e.clientY,
-      name: `${p.name} — ${p.city}`,
+      name: `${p.name} · ${p.city}`,
       color: p.color,
       g0: fmt(p.p99_G0), g1: fmt(p.p99_G1), g2: fmt(p.p99_G2),
       dg1: `-${g0g1}%`, dg2: `-${g0g2}%`,
@@ -91,20 +93,20 @@ export default function C5_Slope() {
   return (
     <GraphCard
       id="c5"
-      title={'Governance is regressive — it helps most where it is needed least'}
-      subtitle={'Eight organisational profiles traced through three governance states. Dashed segments show passive guardrails (G0\u2192G1, nearly flat); solid segments show active governance (G1\u2192G2, variable slope). Steeper solid segments indicate greater governance benefit.'}
+      title={'Governance is regressive: it helps most where it is needed least'}
+      subtitle={'Eight organisational profiles traced through three governance states. Dashed segments show the passive scaffold (G0\u2192G1, nearly flat); solid segments show active governance (G1\u2192G2, variable slope). Steeper solid segments indicate greater governance benefit.'}
     >
       {/* Line type legend */}
-      <div style={{ display: 'flex', gap: 16, marginBottom: 8, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#73726C' }}>
+      <div style={{ display: 'flex', gap: isMobile ? 8 : 16, marginBottom: 8, flexWrap: 'wrap', ...(isMobile ? { flexDirection: 'column' } : {}) }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: isMobile ? 11 : 10, color: '#73726C' }}>
           <svg width="40" height="10"><line x1="0" y1="5" x2="40" y2="5" stroke="#888" strokeWidth="1.5" strokeDasharray="5 3" /></svg>
-          G0→G1 (passive guardrails — dashed)
+          G0→G1 (passive scaffold, dashed)
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#73726C' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: isMobile ? 11 : 10, color: '#73726C' }}>
           <svg width="40" height="10"><line x1="0" y1="5" x2="40" y2="5" stroke="#888" strokeWidth="2.4" /></svg>
-          G1→G2 (active governance — solid)
+          G1→G2 (active governance, solid)
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#73726C' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: isMobile ? 11 : 10, color: '#73726C' }}>
           <svg width="14" height="14">
             <path d={diamond(7, 7, 5)} fill="rgba(120,120,120,0.55)" stroke="white" strokeWidth="1.5" />
           </svg>
@@ -113,7 +115,7 @@ export default function C5_Slope() {
       </div>
 
       {/* Profile toggle buttons */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 8 : 5, marginBottom: 12 }}>
         {profiles.map(p => {
           const active = visibleProfiles.has(p.id);
           return (
@@ -122,19 +124,19 @@ export default function C5_Slope() {
               onClick={() => toggleProfile(p.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
-                padding: '4px 10px', borderRadius: 5,
+                padding: isMobile ? '9px 11px' : '4px 10px', borderRadius: 5,
                 border: `0.5px solid ${active ? p.color : 'rgba(0,0,0,0.10)'}`,
                 background: active ? rgba(p.color, 0.10) : 'transparent',
                 color: active ? p.color : '#A0A09A',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 10, fontWeight: 600, cursor: 'pointer',
+                fontSize: isMobile ? 11 : 10, fontWeight: 600, cursor: 'pointer',
               }}
             >
               <span style={{
                 display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
                 background: active ? p.color : '#C0BFB9',
               }} />
-              {p.name} — {p.city}
+              {p.name} · {p.city}
             </button>
           );
         })}
@@ -148,7 +150,7 @@ export default function C5_Slope() {
               <line x1={X_G0 - 10} y1={yPx(v)} x2={X_G2 + 10} y2={yPx(v)}
                 stroke="rgba(0,0,0,0.05)" strokeWidth={1} strokeDasharray="2 4" />
               <text x={X_G0 - 14} y={yPx(v) + 4} textAnchor="end"
-                fontFamily="'JetBrains Mono', monospace" fontSize={8.5} fill="#A0A09A">
+                fontFamily="'JetBrains Mono', monospace" fontSize={isMobile ? 14 : 8.5} fill="#A0A09A">
                 {(v / 1000).toFixed(1)}k
               </text>
             </g>
@@ -161,12 +163,12 @@ export default function C5_Slope() {
           ))}
 
           {/* Column headers */}
-          <text x={X_G0} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={11} fontWeight={600} fill="#B5403F">Unmanaged AI</text>
-          <text x={X_G0} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={8.5} fill="#A0A09A">(G0)</text>
-          <text x={X_G1} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={11} fontWeight={600} fill="#C49A3C">Passive guardrails</text>
-          <text x={X_G1} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={8.5} fill="#A0A09A">(G1)</text>
-          <text x={X_G2} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={11} fontWeight={600} fill="#4A7C59">Active governance</text>
-          <text x={X_G2} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={8.5} fill="#A0A09A">(G2)</text>
+          <text x={X_G0} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 14 : 11} fontWeight={600} fill="#B5403F">{isMobile ? 'Unmanaged' : 'Unmanaged AI'}</text>
+          <text x={X_G0} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 12 : 8.5} fill="#A0A09A">(G0)</text>
+          <text x={X_G1} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 14 : 11} fontWeight={600} fill="#C49A3C">{isMobile ? 'Passive' : 'Passive scaffold'}</text>
+          <text x={X_G1} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 12 : 8.5} fill="#A0A09A">(G1)</text>
+          <text x={X_G2} y={PAD.t - 18} textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 14 : 11} fontWeight={600} fill="#4A7C59">{isMobile ? 'Active' : 'Active governance'}</text>
+          <text x={X_G2} y={PAD.t - 6}  textAnchor="middle" fontFamily="'Plus Jakarta Sans', sans-serif" fontSize={isMobile ? 12 : 8.5} fill="#A0A09A">(G2)</text>
 
           {/* Dashed lines G0→G1 */}
           {visible.map((p) => {
@@ -196,13 +198,13 @@ export default function C5_Slope() {
               <g key={`m-${p.id}`} opacity={hl ? 1 : 0.5}>
                 <circle cx={X_G0} cy={yPx(p.p99_G0)} r={6}
                   fill={rgba(p.color, 0.88)} stroke="white" strokeWidth={1.5}
-                  cursor="pointer" onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
+                  cursor="pointer" onClick={(e) => showTooltip(e, p)} onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
                 <path d={diamond(X_G1, cy1, 5)}
                   fill={rgba(p.color, 0.50)} stroke="white" strokeWidth={1.5}
-                  cursor="pointer" onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
+                  cursor="pointer" onClick={(e) => showTooltip(e, p)} onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
                 <circle cx={X_G2} cy={yPx(g2vis)} r={6}
                   fill={rgba(p.color, 0.88)} stroke="white" strokeWidth={1.5}
-                  cursor="pointer" onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
+                  cursor="pointer" onClick={(e) => showTooltip(e, p)} onMouseEnter={(e) => showTooltip(e, p)} onMouseLeave={() => setTooltip(null)} />
               </g>
             );
           })}
@@ -210,14 +212,14 @@ export default function C5_Slope() {
       </div>
 
       {/* Profile legend — 4 columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '5px 16px', marginBottom: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr', gap: isMobile ? '8px 12px' : '5px 16px', marginBottom: 14 }}>
         {profiles.map((p) => (
           <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <svg width="12" height="12"><circle cx="6" cy="6" r="4.5" fill={p.color} stroke="white" strokeWidth="1.2" /></svg>
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, fontWeight: 600, color: '#22375A' }}>
-              {p.name} — {p.city}
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: isMobile ? 11 : 9, fontWeight: 600, color: '#22375A' }}>
+              {p.name} · {p.city}
             </span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8.5, color: SCAFFOLD_COLOR(p.scaffold), marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 11 : 8.5, color: SCAFFOLD_COLOR(p.scaffold), marginLeft: 'auto', whiteSpace: 'nowrap' }}>
               {SCAFFOLD_FMT(p.scaffold)}
             </span>
           </div>
@@ -228,16 +230,18 @@ export default function C5_Slope() {
       <div style={{
         background: 'rgba(34,55,90,0.04)', borderLeft: '2px solid rgba(34,55,90,0.20)',
         borderRadius: '0 6px 6px 0', padding: '9px 14px',
-        fontSize: 10, color: '#22375A', lineHeight: 1.6,
+        fontSize: isMobile ? 11 : 10, color: '#22375A', lineHeight: 1.6,
       }}>
-        The regressivity paradox: Singapore (P6), already the safest, gains the most from governance.
-        Seoul (P8), the most exposed, gains the least — and still finishes above Singapore after governance.
+        The regressivity paradox: London (P2), already the safest, gains the most from governance.
+        Seoul (P8), the most exposed, still finishes far above London even after governance.
       </div>
 
       {/* Tooltip (actual data values, not visual adjustment) */}
       {tooltip && (
         <div style={{
-          position: 'fixed', left: tooltip.x + 14, top: tooltip.y - 10,
+          position: 'fixed',
+          left: Math.max(6, Math.min(tooltip.x + 14, window.innerWidth - 246)),
+          top: Math.max(6, Math.min(tooltip.y - 10, window.innerHeight - 175)),
           background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)', borderRadius: 8,
           padding: '10px 13px', pointerEvents: 'none', zIndex: 100, maxWidth: 240, lineHeight: 1.5,
         }}>

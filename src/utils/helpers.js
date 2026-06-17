@@ -12,7 +12,7 @@ export function hexToRgba(hex, a) {
 
 /** Format number with locale-aware thousands separator */
 export function fmt(n) {
-  return Math.round(n).toLocaleString();
+  return Math.round(n).toLocaleString('en-GB');
 }
 
 /** Build KDE (kernel density estimate) from histogram bins */

@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import GraphCard from '../ui/GraphCard';
 import Toggle from '../ui/Toggle';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // ── Vite + Leaflet icon fix ───────────────────────────────────────────────────
 delete L.Icon.Default.prototype._getIconUrl;
@@ -20,8 +21,9 @@ const CITIES = [
   { id:'P3', name:'Paris',      sector:'Strategy consulting',  lat:48.85,  lng:2.35,    p99G0:2041, p99G2:1303, beta:4.0, alpha:0.90, permanentLabel:false },
   { id:'P4', name:'Brussels',   sector:'Corporate legal',      lat:50.85,  lng:4.35,    p99G0:2254, p99G2:1610, beta:3.0, alpha:0.90, permanentLabel:false },
   { id:'P6', name:'Singapore',  sector:'Creative agency',      lat:1.35,   lng:103.82,  p99G0:1845, p99G2:1340, beta:1.5, alpha:0.30, permanentLabel:true  },
-  { id:'P7', name:'Bangalore',  sector:'Back-office ops',      lat:12.97,  lng:77.59,   p99G0:2310, p99G2:1810, beta:2.2, alpha:0.70, permanentLabel:false },
+  { id:'P7', name:'Bangalore',  sector:'Back-office ops',      lat:12.97,  lng:77.59,   p99G0:2310, p99G2:1810, beta:2.0, alpha:0.70, permanentLabel:false },
   { id:'P8', name:'Seoul',      sector:'Central admin',        lat:37.57,  lng:126.98,  p99G0:2318, p99G2:1701, beta:4.5, alpha:0.95, permanentLabel:false },
+  { id:'P5', name:'San Francisco', sector:'Tech startup',      lat:37.77,  lng:-122.42, p99G0:2154, p99G2:1668, beta:2.5, alpha:0.60, permanentLabel:false },
   // Americas
   { id:'C1', name:'New York',   sector:'Investment banking',   lat:40.71,  lng:-74.01,  p99G0:2050, p99G2:1420, beta:2.2, alpha:0.65, permanentLabel:false },
   { id:'C2', name:'S\u00e3o Paulo', sector:'Finance',          lat:-23.55, lng:-46.63,  p99G0:1900, p99G2:1480, beta:2.3, alpha:0.55, permanentLabel:true  },
@@ -36,33 +38,32 @@ const CITIES = [
   { id:'C9',  name:'Amsterdam', sector:'Asset management',     lat:52.37,  lng:4.90,    p99G0:1820, p99G2:1240, beta:1.8, alpha:0.45, permanentLabel:false },
   { id:'C10', name:'Stockholm', sector:'Tech consulting',      lat:59.33,  lng:18.07,   p99G0:1780, p99G2:1190, beta:1.7, alpha:0.40, permanentLabel:false },
   { id:'C11', name:'Nairobi',   sector:'Development finance',  lat:-1.29,  lng:36.82,   p99G0:1750, p99G2:1210, beta:2.1, alpha:0.50, permanentLabel:true  },
-  { id:'C12', name:'Chicago',   sector:'Derivatives trading',  lat:41.88,  lng:-87.63,  p99G0:2080, p99G2:1460, beta:2.2, alpha:0.68, permanentLabel:false },
   { id:'C13', name:'Zurich',    sector:'Private banking',      lat:47.38,  lng:8.54,    p99G0:1900, p99G2:1310, beta:2.8, alpha:0.55, permanentLabel:false },
 ];
 
 // ── Country beta — objects with label ────────────────────────────────────────
 // Names must match GeoJSON ADMIN field from datasets/geo-countries
 const COUNTRY_BETA = {
-  'France':                    { beta: 4.2, label: 'Very high \u2014 grandes \u00e9coles' },
-  'Japan':                     { beta: 4.2, label: 'Very high \u2014 national exam' },
-  'China':                     { beta: 4.1, label: 'Very high \u2014 gaokao pipeline' },
-  'South Korea':               { beta: 4.5, label: 'Very high \u2014 suneung pipeline' },
-  'Germany':                   { beta: 3.5, label: 'High \u2014 national exam system' },
-  'Belgium':                   { beta: 3.0, label: 'High \u2014 national system' },
-  'Spain':                     { beta: 2.7, label: 'Medium-high \u2014 national system' },
-  'Italy':                     { beta: 2.6, label: 'Medium-high \u2014 national system' },
-  'Switzerland':               { beta: 2.8, label: 'Medium-high \u2014 cantonal system' },
-  'United States of America':  { beta: 2.2, label: 'Medium \u2014 mixed pipeline' },
-  'Brazil':                    { beta: 2.3, label: 'Medium \u2014 mixed pipeline' },
-  'India':                     { beta: 2.3, label: 'Medium \u2014 national university' },
-  'Kenya':                     { beta: 2.1, label: 'Medium \u2014 mixed pipeline' },
-  'Canada':                    { beta: 2.0, label: 'Medium \u2014 mixed pipeline' },
-  'United Arab Emirates':      { beta: 2.0, label: 'Medium \u2014 mixed pipeline' },
-  'United Kingdom':            { beta: 1.5, label: 'Low \u2014 international hub' },
-  'Singapore':                 { beta: 1.5, label: 'Low \u2014 international hub' },
-  'Netherlands':               { beta: 1.8, label: 'Low \u2014 international hub' },
-  'Sweden':                    { beta: 1.7, label: 'Low \u2014 international hub' },
-  'Australia':                 { beta: 1.8, label: 'Low \u2014 diverse pipeline' },
+  'France':                    { beta: 4.2, label: 'Very high: grandes \u00e9coles' },
+  'Japan':                     { beta: 4.2, label: 'Very high: national exam' },
+  'China':                     { beta: 4.1, label: 'Very high: gaokao pipeline' },
+  'South Korea':               { beta: 4.5, label: 'Very high: suneung pipeline' },
+  'Germany':                   { beta: 3.5, label: 'High: national exam system' },
+  'Belgium':                   { beta: 3.0, label: 'High: national system' },
+  'Spain':                     { beta: 2.7, label: 'Medium-high: national system' },
+  'Italy':                     { beta: 2.6, label: 'Medium-high: national system' },
+  'Switzerland':               { beta: 2.8, label: 'Medium-high: cantonal system' },
+  'United States of America':  { beta: 2.2, label: 'Medium: mixed pipeline' },
+  'Brazil':                    { beta: 2.3, label: 'Medium: mixed pipeline' },
+  'India':                     { beta: 2.3, label: 'Medium: national university' },
+  'Kenya':                     { beta: 2.1, label: 'Medium: mixed pipeline' },
+  'Canada':                    { beta: 2.0, label: 'Medium: mixed pipeline' },
+  'United Arab Emirates':      { beta: 2.0, label: 'Medium: mixed pipeline' },
+  'United Kingdom':            { beta: 1.5, label: 'Low: international hub' },
+  'Singapore':                 { beta: 1.5, label: 'Low: international hub' },
+  'Netherlands':               { beta: 1.8, label: 'Low: international hub' },
+  'Sweden':                    { beta: 1.7, label: 'Low: international hub' },
+  'Australia':                 { beta: 1.8, label: 'Low: diverse pipeline' },
 };
 
 function getBetaForCountry(name) {
@@ -71,11 +72,11 @@ function getBetaForCountry(name) {
 
 // ── Beta palette — teal→navy ─────────────────────────────────────────────────
 const BETA_PALETTE = [
-  { max: 1.9, fill: '#9FE1CB', label: 'Low (Beta 1.5\u20131.9) \u2014 UK, Singapore, Netherlands' },
-  { max: 2.4, fill: '#619EA8', label: 'Medium-low (Beta 2.0\u20132.4) \u2014 USA, Brazil, India' },
-  { max: 2.9, fill: '#3A6E80', label: 'Medium-high (Beta 2.5\u20132.9) \u2014 Spain, Italy' },
-  { max: 3.9, fill: '#22375A', label: 'High (Beta 3.0\u20133.9) \u2014 Germany, Belgium' },
-  { max: 99,  fill: '#0F1F35', label: 'Very high (Beta \u22654.0) \u2014 France, S.\u00a0Korea, Japan, China' },
+  { max: 1.9, fill: '#9FE1CB', label: 'Low (Beta 1.5\u20131.9): UK, Singapore, Netherlands' },
+  { max: 2.4, fill: '#619EA8', label: 'Medium-low (Beta 2.0\u20132.4): USA, Brazil, India' },
+  { max: 2.9, fill: '#3A6E80', label: 'Medium-high (Beta 2.5\u20132.9): Spain, Italy' },
+  { max: 3.9, fill: '#22375A', label: 'High (Beta 3.0\u20133.9): Germany, Belgium' },
+  { max: 99,  fill: '#0F1F35', label: 'Very high (Beta \u22654.0): France, S.\u00a0Korea, Japan, China' },
 ];
 
 function betaFill(betaValue) {
@@ -104,6 +105,9 @@ const EUROPE_ZOOM   = 4.5;
 const WORLD_CENTER  = [20, 10];
 const WORLD_ZOOM    = 2;
 const GEOJSON_URL   = 'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson';
+
+// All 20 city coordinates — used to frame the default view so every city is visible on load
+const ALL_CITY_LATLNGS = CITIES.map(c => [c.lat, c.lng]);
 
 // ── Toggle options ────────────────────────────────────────────────────────────
 const TOGGLE_OPTIONS = [
@@ -188,6 +192,7 @@ const styles = {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function D3_GeoMap() {
+  const isMobile       = useIsMobile();
   const mapRef         = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef     = useRef([]);
@@ -196,7 +201,7 @@ export default function D3_GeoMap() {
   const tooltipRef     = useRef(null);
 
   const [scenario,  setScenario]  = useState('G0');
-  const [worldView, setWorldView] = useState(false);
+  const [worldView, setWorldView] = useState(true);
 
   // ── Initialize Leaflet map ────────────────────────────────────────────────
   useEffect(() => {
@@ -217,13 +222,22 @@ export default function D3_GeoMap() {
       maxZoom: 8, minZoom: 2,
     }).addTo(map);
 
+    // Default view frames all 20 cities (not just Europe) so the global structure is visible on load.
+    map.fitBounds(L.latLngBounds(ALL_CITY_LATLNGS), { padding: [28, 22] });
+
+    // Touch: tooltips are shown on tap (marker/country click handlers below).
+    // Dismiss them when the user pans or zooms, since touch fires no 'mouseout'.
+    map.on('movestart', hideTip);
+
     // ── Tooltip helpers — use tooltipRef.current directly ─────────────────
     function positionTip(leafletEvent) {
       const tip = tooltipRef.current; if (!tip) return;
       const ev = leafletEvent.originalEvent || leafletEvent;
       let left = ev.clientX + 16;
-      const top = ev.clientY - 10;
       if (left + 250 > window.innerWidth) left = ev.clientX - 254;
+      // Clamp into the viewport (tooltip is now tap-reachable on phones).
+      left = Math.max(6, Math.min(left, window.innerWidth - 246));
+      const top = Math.max(6, Math.min(ev.clientY - 10, window.innerHeight - 175));
       tip.style.left = left + 'px';
       tip.style.top  = top  + 'px';
     }
@@ -241,9 +255,9 @@ export default function D3_GeoMap() {
         <div style="font-size:10px;color:#888780;margin-bottom:7px;font-family:'Plus Jakarta Sans',sans-serif">${city.sector} \u00b7 Beta(${city.beta},${city.beta})</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;font-size:10px;">
           <div style="color:#888780;font-family:'Plus Jakarta Sans',sans-serif">P99\u00d7\u03b8 G0</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#B5403F">${city.p99G0.toLocaleString()}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#B5403F">${city.p99G0.toLocaleString('en-GB')}</div>
           <div style="color:#888780;font-family:'Plus Jakarta Sans',sans-serif">P99\u00d7\u03b8 G2</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#4A7C59">${city.p99G2.toLocaleString()}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#4A7C59">${city.p99G2.toLocaleString('en-GB')}</div>
           <div style="color:#888780;font-family:'Plus Jakarta Sans',sans-serif">Governance gain</div>
           <div style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#22375A">\u2212${delta}%</div>
           <div style="color:#888780;font-family:'Plus Jakarta Sans',sans-serif">Alpha (stack)</div>
@@ -308,6 +322,11 @@ export default function D3_GeoMap() {
               layer.setStyle({ fillOpacity: 0.65 });
               hideTip();
             });
+            // Touch: tap a country to reveal its tooltip.
+            layer.on('click', (e) => {
+              layer.setStyle({ fillOpacity: 0.85 });
+              showCountryTip(e, n, info);
+            });
           },
         }).addTo(map);
       })
@@ -336,6 +355,8 @@ export default function D3_GeoMap() {
       marker.on('mouseover', (e) => showCityTip(e, city));
       marker.on('mousemove', (e) => positionTip(e));
       marker.on('mouseout',  () => hideTip());
+      // Touch: tap a city to reveal its tooltip.
+      marker.on('click',     (e) => showCityTip(e, city));
 
       markers.push(marker);
       animRadiiRef.current[i] = r;
@@ -426,47 +447,47 @@ export default function D3_GeoMap() {
   return (
     <GraphCard
       id="D3"
-      title={'Twenty cities \u2014 one structural map'}
+      title={'Twenty cities: one structural map'}
       subtitle={
         'Circle size encodes P99\u00d7\u03b8 tail risk. ' +
-        'Background shading encodes national labour market cognitive homogeneity (Beta parameter) ' +
-        '\u2014 a structural driver, not a country risk score. ' +
+        'Background shading encodes national labour market cognitive homogeneity (Beta parameter), ' +
+        'a structural driver, not a country risk score. ' +
         'The map is a labour market and procurement map wearing geographic clothing.'
       }
     >
       {/* Controls row */}
-      <div style={styles.controls}>
+      <div style={isMobile ? { ...styles.controls, gap: 10 } : styles.controls}>
         <Toggle
           options={TOGGLE_OPTIONS}
           value={scenario}
           onChange={handleScenario}
         />
         <button
-          style={styles.viewBtn}
+          style={isMobile ? { ...styles.viewBtn, padding: '11px 18px', fontSize: 12.5, marginLeft: 0 } : styles.viewBtn}
           onClick={handleViewToggle}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(97,158,168,0.18)'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(97,158,168,0.08)'; }}
         >
           {worldView ? 'Europe view' : 'World view'}
         </button>
-        <span style={styles.ctrlNote}>
+        <span style={isMobile ? { ...styles.ctrlNote, marginLeft: 0, fontSize: 11.5, flexBasis: '100%' } : styles.ctrlNote}>
           {scenario === 'G0'
-            ? 'Circle area \u221d P99\u00d7\u03b8 \u2014 unmanaged AI. Hover city or country for detail.'
-            : 'Circles shrink under governance \u2014 London and Singapore move most'}
+            ? 'Circle area \u221d P99\u00d7\u03b8, unmanaged AI. Hover city or country for detail.'
+            : 'Circles shrink under governance: London and Paris move most'}
         </span>
       </div>
 
       {/* Leaflet map container */}
-      <div ref={mapRef} style={styles.mapContainer} />
+      <div ref={mapRef} style={isMobile ? { ...styles.mapContainer, height: 320 } : styles.mapContainer} />
 
       {/* Legend */}
-      <div style={styles.legendsRow}>
+      <div style={isMobile ? { ...styles.legendsRow, flexDirection: 'column', gap: 16 } : styles.legendsRow}>
         <div style={styles.legendBlock}>
-          <div style={styles.legendTitle}>
-            {'Background \u2014 labour market homogeneity (Beta)'}
+          <div style={isMobile ? { ...styles.legendTitle, fontSize: 11 } : styles.legendTitle}>
+            {'Background: labour market homogeneity (Beta)'}
           </div>
           {BETA_PALETTE.map((tier) => (
-            <div key={tier.max} style={styles.legItem}>
+            <div key={tier.max} style={isMobile ? { ...styles.legItem, fontSize: 11 } : styles.legItem}>
               <div style={{ ...styles.legSwatch, background: tier.fill }} />
               {tier.label}
             </div>
@@ -474,18 +495,18 @@ export default function D3_GeoMap() {
         </div>
 
         <div style={styles.legendBlock}>
-          <div style={styles.legendTitle}>
-            {'Circle size \u2014 P99\u00d7\u03b8'}
+          <div style={isMobile ? { ...styles.legendTitle, fontSize: 11 } : styles.legendTitle}>
+            {'Circle size: P99\u00d7\u03b8'}
           </div>
           {[
-            { p99: 1668, label: '1,668 \u2014 London (lowest)' },
-            { p99: 2041, label: '2,041 \u2014 Paris' },
-            { p99: 2318, label: '2,318 \u2014 Seoul (highest)' },
+            { p99: 1668, label: '1,668: London (lowest)' },
+            { p99: 2041, label: '2,041: Paris' },
+            { p99: 2318, label: '2,318: Seoul (highest)' },
           ].map(({ p99, label }) => {
             const r = radius(p99);
             const d = Math.round(r * 2);
             return (
-              <div key={p99} style={styles.legItem}>
+              <div key={p99} style={isMobile ? { ...styles.legItem, fontSize: 11 } : styles.legItem}>
                 <div style={styles.legCircleWrap}>
                   <div style={{
                     width: d, height: d, borderRadius: '50%',
@@ -500,27 +521,27 @@ export default function D3_GeoMap() {
       </div>
 
       {/* Background footnote */}
-      <div style={styles.mapFootnote}>
+      <div style={isMobile ? { ...styles.mapFootnote, fontSize: 11 } : styles.mapFootnote}>
         <span style={styles.footnoteStrong}>
           Background shading encodes national labour market cognitive homogeneity (Beta parameter)
         </span>
-        {' \u2014 one of five structural risk drivers. It is NOT a country-level AI risk index. '}
+        {', one of five structural risk drivers. It is NOT a country-level AI risk index. '}
         Darker background = more homogeneous labour market = higher conformism pressure, all else equal.
       </div>
 
       {/* Bottom note — PROTECTED FORMULATION */}
-      <div style={styles.bottomNote}>
+      <div style={isMobile ? { ...styles.bottomNote, fontSize: 12 } : styles.bottomNote}>
         <span style={styles.bottomNoteStrong}>What the map reveals: </span>
         The high-risk cluster (Seoul, Brussels, Frankfurt) shares dark
-        backgrounds \u2014 homogeneous labour markets \u2014 combined with concentrated AI
+        backgrounds, homogeneous labour markets, combined with concentrated AI
         stacks. London and Singapore sit in the low-risk zone: their diverse labour
         markets and architectural choices produce similar outcomes from opposite
         structural positions.{' '}
         The map is a labour market and procurement map wearing geographic clothing.
       </div>
 
-      <div style={styles.disclaimer}>
-        v5 simulation. Circles sized by \u221aP99\u00d7\u03b8. 8 confirmed profiles + 12 supplementary.
+      <div style={isMobile ? { ...styles.disclaimer, fontSize: 11, textAlign: 'left' } : styles.disclaimer}>
+        v5 simulation. Circles sized by √P99×θ. 8 confirmed profiles + 12 supplementary.
       </div>
 
       {/* Floating tooltip — fixed position */}
