@@ -4,7 +4,7 @@ const LINKS = {
   cv:         '/docs/cv.pdf',
   cartesia:   '/docs/cartesia.pdf',
   essayShort: '/docs/essay_prize.pdf',
-  essayLong:  '/docs/essay_full.pdf',
+  poster:     '/docs/poster.pdf',
 };
 
 // ── Styles ───────────────────────────────────────────────────────────────────
@@ -97,7 +97,33 @@ const S = {
   },
 };
 
-function DocCard({ href, icon, title, desc, badge, full }) {
+function DocCard({ href, icon, title, desc, badge, full, comingSoon }) {
+  const body = (
+    <>
+      <div style={S.docIcon}>{icon}</div>
+      <div style={S.docTitle}>{title}</div>
+      <div style={S.docDesc}>{desc}</div>
+      {badge && (
+        <div style={{ ...S.docBadge, ...(comingSoon ? { color: '#C49A3C', fontWeight: 600 } : {}) }}>
+          {badge}
+        </div>
+      )}
+    </>
+  );
+
+  // Not yet published (e.g. detailed article still being written): render a
+  // muted, non-clickable card instead of a download link.
+  if (comingSoon) {
+    return (
+      <div
+        style={{ ...S.docCard, ...(full ? S.docCardFull : {}), cursor: 'default', opacity: 0.72 }}
+        aria-disabled="true"
+      >
+        {body}
+      </div>
+    );
+  }
+
   return (
     <a
       href={href}
@@ -107,10 +133,7 @@ function DocCard({ href, icon, title, desc, badge, full }) {
       onMouseEnter={e => { e.currentTarget.style.border = '0.5px solid rgba(97,158,168,0.40)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
       onMouseLeave={e => { e.currentTarget.style.border = '0.5px solid rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'none'; }}
     >
-      <div style={S.docIcon}>{icon}</div>
-      <div style={S.docTitle}>{title}</div>
-      <div style={S.docDesc}>{desc}</div>
-      {badge && <div style={S.docBadge}>{badge}</div>}
+      {body}
     </a>
   );
 }
@@ -184,11 +207,18 @@ export default function Author() {
           badge="PDF"
         />
         <DocCard
-          href={LINKS.essayLong}
+          href={LINKS.poster}
+          icon={'\ud83d\uddbc\ufe0f'}
+          title="Poster"
+          desc="The Flattening on a single A0 board: the bimodal loss, the correlation cascade, and the governance results at a glance."
+          badge="PDF"
+        />
+        <DocCard
           icon={'\ud83d\udcd6'}
           title="Full essay"
-          desc="Extended version with complete derivations, all validation results, and the systemic policy argument."
-          badge="PDF"
+          desc="Extended version with complete derivations, all validation results, and the systemic policy argument. Currently being written."
+          badge="In progress"
+          comingSoon
         />
         <DocCard
           href={LINKS.cv}
