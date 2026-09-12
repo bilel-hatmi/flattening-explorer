@@ -18,6 +18,14 @@
   --card-border: rgba(0, 0, 0, 0.08);
   --card-radius: 12px;
 
+  /* Personal-site tokens (the 18 graph files keep their inline hex values) */
+  --text-muted: #888780;
+  --text-faint: #A0A09A;
+  --rule: rgba(0, 0, 0, 0.06);
+  --teal-tint: rgba(97, 158, 168, 0.06);
+  --teal-line: rgba(97, 158, 168, 0.20);
+  --nav-h: 44px;
+
   --font-title: 'Instrument Serif', serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../context/ProfileContext';
+import { fl } from '../routes';
 import { QUESTIONS } from '../data/questionnaire';
 import { PROFILES } from '../data/v5_reference';
 
@@ -139,7 +140,7 @@ export default function QuestionnairePage() {
         <div style={{ marginTop: 24 }}>
           <button
             style={S.startBtn(canStart)}
-            onClick={() => canStart && navigate('/explore')}
+            onClick={() => canStart && navigate(fl('/explore'))}
             disabled={!canStart}
           >
             {canStart ? 'Start exploring' : `Answer ${4 - answeredCount} more question${4 - answeredCount > 1 ? 's' : ''}`}

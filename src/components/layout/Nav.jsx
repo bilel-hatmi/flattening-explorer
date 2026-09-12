@@ -1,5 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import useIsMobile from '../../hooks/useIsMobile';
+import { fl, FLATTENING_BASE } from '../../routes';
+import { SITE_META } from '../../content/site';
 
 const ExploreIcon = ({ opacity }) => (
   <svg width={14} height={14} viewBox="0 0 14 14" fill="none" style={{ opacity }}>
@@ -26,9 +28,9 @@ const AboutIcon = ({ opacity }) => (
 const NAV_ICONS = { Explore: ExploreIcon, Model: ModelIcon, About: AboutIcon };
 
 const NAV_ITEMS = [
-  { label: 'Explore', route: '/explore' },
-  { label: 'Model',   route: '/model' },
-  { label: 'About',   route: '/about' },
+  { label: 'Explore', route: fl('/explore') },
+  { label: 'Model',   route: fl('/model') },
+  { label: 'About',   route: fl('/about') },
 ];
 
 export default function Nav() {
@@ -44,14 +46,31 @@ export default function Nav() {
       fontFamily: "'Plus Jakarta Sans', sans-serif",
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 2 : 4 }}>
+        {/* Back to the personal site. The explorer is a sub-site: one bar, one way out. */}
+        <button
+          onClick={() => navigate('/')}
+          aria-label={`Back to ${SITE_META.name}`}
+          title={`Back to ${SITE_META.name}`}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer', color: '#FFFFFF',
+            fontFamily: 'inherit', fontSize: 12, fontWeight: 500, opacity: 0.65,
+            padding: isMobile ? '6px 8px 6px 0' : '6px 10px 6px 0', marginRight: isMobile ? 2 : 6,
+            display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', transition: 'opacity 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = '0.95'; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '0.65'; }}
+        >
+          <span aria-hidden="true">{'←'}</span>
+          {!isMobile && SITE_META.name}
+        </button>
         <span
           style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 15 : 17, fontWeight: 400, color: '#FFFFFF', marginRight: isMobile ? 10 : 24, cursor: 'pointer', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}
-          onClick={() => navigate('/')}
+          onClick={() => navigate(FLATTENING_BASE)}
         >
           The Flattening
         </span>
         {NAV_ITEMS.map(item => {
-          const active = location.pathname === item.route || (item.route === '/explore' && location.pathname.startsWith('/explore'));
+          const active = location.pathname === item.route || (item.route === fl('/explore') && location.pathname.startsWith(fl('/explore')));
           const Icon = NAV_ICONS[item.label];
           return (
             <button key={item.label} onClick={() => navigate(item.route)} style={{

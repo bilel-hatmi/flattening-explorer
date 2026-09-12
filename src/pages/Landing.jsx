@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useIsMobile from '../hooks/useIsMobile';
+import { fl } from '../routes';
 
 const COUNTERS = [
   { label: 'Average loss', value: '-38%', color: '#4A7C59', description: 'Expected loss falls with AI adoption' },
@@ -60,7 +61,7 @@ export default function Landing() {
       </div>
 
       <button
-        onClick={() => navigate('/questionnaire')}
+        onClick={() => navigate(fl('/questionnaire'))}
         style={{
           padding: '14px 40px', borderRadius: 8, border: 'none',
           background: '#22375A', color: '#FFFFFF', fontSize: 16, fontWeight: 600,
