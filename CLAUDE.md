@@ -1,8 +1,13 @@
-# CLAUDE.md — The Flattening Explorer
+# CLAUDE.md — Site personnel de Bilel Hatmi + The Flattening Explorer
 ## Mémoire permanente du projet pour Claude Code
 
 > **Lire ce fichier en entier avant chaque session.**
 > En cas de conflit entre ce fichier et un autre fichier du repo, ce fichier prévaut.
+
+> **Depuis le 2026-09-12, ce repo héberge deux choses dans une seule app Vite :**
+> le **site personnel** à la racine (`/`, `/projects`, `/journey`, `/notes`, `/documents`)
+> et **The Flattening Explorer** sous **`/flattening/*`**. Les sections 4 à 11 ci-dessous
+> décrivent l'explorer et restent valables telles quelles ; la section **1-bis** décrit le site.
 
 ---
 
@@ -66,15 +71,57 @@ L'app est une longue page narrative en scroll (4 actes) + un onglet Lab séparé
 
 ```
 Frontend    : Vite + React 18 + React Router v6
-Charts      : Recharts (line charts simples), Canvas 2D (histogrammes), SVG custom (scatter, slope)
+Charts      : Canvas 2D (histogrammes), SVG custom (scatter, slope) — pas de Recharts (retiré le 2026-09-12, jamais importé)
 Map         : Leaflet.js v1.9 + CartoDB tiles + Natural Earth GeoJSON
 Simulations : Pyodide (Python en WebAssembly, Web Worker)
-Styling     : CSS modules (pas de Tailwind — trop lourd pour les graphes custom)
-Déploiement : Vercel (static SPA, zéro serverless functions)
+Styling     : styles inline + src/index.css (variables CSS) — pas de Tailwind, pas de CSS modules
+Markdown    : react-markdown + remark-gfm + remark-math + rehype-katex (site perso seulement, chunk lazy)
+Déploiement : Vercel (static SPA, vercel.json = rewrite SPA obligatoire, zéro serverless functions)
 Node        : >= 18
 ```
 
 **Ne jamais proposer Next.js, SSR, ou une API backend.** L'app est entièrement statique côté client.
+
+---
+
+## 1-bis. LE SITE PERSONNEL (depuis le 2026-09-12)
+
+**Ce que c'est.** La racine est le site de Bilel Hatmi ; l'explorer est un sous-site. Décisions
+prises avec Bilel : une seule app, même repo, même projet Vercel ; anglais seulement ; sections
+Projects (pages dédiées), Journey (frise), Documents, Notes (Markdown) ; squelette avec
+placeholders d'abord, rédaction ensuite ; pas de domaine pour l'instant.
+
+**Deux layout routes, une barre de 44 px chacune — jamais deux barres empilées.**
+- `/` … → `components/site/SiteLayout.jsx` (SiteNav « Bilel Hatmi » + page + Footer)
+- `/flattening/*` → `components/layout/FlatteningLayout.jsx` (ProfileProvider + `currentAct` +
+  `Nav.jsx` avec un « ← Bilel Hatmi » à gauche de la marque). `ExploreOutlet` lit l'acte via
+  `useOutletContext()` et rend `ScrollSections` inchangé.
+- Le sous-arbre `/flattening` est chargé en **`React.lazy`** : les 18 graphes, Leaflet et KaTeX
+  ne partent jamais avec la page d'accueil (index ≈ 206 kB au lieu de 943 kB).
+
+**Chemins réservés à la racine : `/explore`, `/questionnaire`, `/model`, `/about`** — ce sont des
+redirections vers `/flattening/...` (le QR du poster et les premiers liens les utilisaient). Le
+site perso ne doit jamais les réutiliser.
+
+**Règle de route : jamais de littéral `'/explore'` dans le code de l'explorer.** Toujours
+`fl('/explore')` depuis `src/routes.js` (`FLATTENING_BASE`, `fl()`, `SITE`).
+
+**Tout le texte du site perso vit dans `src/content/`, jamais dans le JSX :**
+- `site.js` (identité, bio, liens, carte Flattening de l'accueil), `projects.js` (+ prose longue
+  dans `content/projects/<slug>.md`), `journey.js`, `documents.js` (source unique, aussi lue par
+  `/flattening/about`), `notes/*.md` (frontmatter `title/date/summary/tags/draft`, chargées par
+  `import.meta.glob`, slug = nom de fichier sans le préfixe de date).
+- Les placeholders sont balisés **`[TODO: …]`** : `grep -rn "TODO" src/content` liste ce qui
+  reste à écrire.
+
+**Composants du site (`components/site/`) : couleurs en `var(--navy)` etc.** (tokens dans
+`index.css`, dont `--text-muted --text-faint --rule --teal-tint --teal-line --nav-h`). Les 18
+fichiers de graphes gardent leurs hex inline — **ne pas les toucher pour ça**.
+
+**Vérification avant tout déploiement :** `npm run build` propre ; `/`, `/flattening`,
+questionnaire → explore, Lab (Pyodide « ready » + une simulation), `/model`, `/about` ; les
+quatre redirections ; un rafraîchissement dur sur `/flattening/explore` ; 375 px : les deux
+barres tiennent sur une ligne. Déploiement : `vercel --prod` (projet `flattening-app`).
 
 ---
 
@@ -85,8 +132,11 @@ flattening-explorer/
 ├── CLAUDE.md                    ← ce fichier
 ├── package.json
 ├── vite.config.js
-├── index.html
+├── vercel.json                  ← rewrite SPA (sans lui, /flattening/explore en accès direct = 404)
+├── index.html                   ← <title>Bilel Hatmi</title>, meta OG, favicon.svg
 ├── public/
+│   ├── favicon.svg                  ← monogramme navy (logo.png reste pour CartesIA)
+│   ├── docs/                        ← PDF servis tels quels (essai, poster, CV, CartesIA)
 │   ├── flattening_pyodide.py        ← simulation Python (charger via fetch dans le worker)
 │   └── data/                        ← CSV servis statiquement (fetch lazy)
 │       ├── histograms_by_profile_b030.csv
@@ -102,7 +152,15 @@ flattening-explorer/
 │       └── exhibit_2_frontier.csv
 ├── src/
 │   ├── main.jsx
-│   ├── App.jsx
+│   ├── App.jsx                  ← deux layout routes + redirections legacy + React.lazy du sous-site
+│   ├── routes.js                ← FLATTENING_BASE, fl(), SITE — seule source des chemins
+│   ├── content/                 ← TOUT le texte du site perso (voir §1-bis)
+│   │   ├── site.js · projects.js · journey.js · documents.js
+│   │   ├── projects/<slug>.md   ← prose longue des pages projet
+│   │   └── notes/*.md + index.js
+│   ├── pages/site/              ← Home, Projects, ProjectPage, Journey, Documents, Notes, NotePage, NotFound
+│   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Section, Tag, Timeline, Prose
+│   ├── utils/frontmatter.js     ← parseur frontmatter maison (pas de gray-matter : Buffer)
 │   ├── data/
 │   │   ├── profiles.js          ← constantes des 8 profils (couleurs, labels, paramètres)
 │   │   ├── v5_reference.js      ← valeurs numériques v5 (NE JAMAIS MODIFIER MANUELLEMENT)
@@ -137,7 +195,8 @@ flattening-explorer/
 │   │   │   ├── Slider.jsx       ← slider custom
 │   │   │   └── Tooltip.jsx      ← tooltip flottant standard
 │   │   └── layout/
-│   │       ├── Nav.jsx
+│   │       ├── FlatteningLayout.jsx ← ProfileProvider + currentAct + Nav + Outlet (+ ExploreOutlet)
+│   │       ├── Nav.jsx              ← barre de l'explorer, routes via fl()
 │   │       └── ScrollSections.jsx
 │   ├── sections/
 │   │   ├── ActA.jsx
@@ -233,6 +292,11 @@ const COLORS = {
 // - Corps/labels : Plus Jakarta Sans
 // - Chiffres/axes : JetBrains Mono
 ```
+
+**Tokens supplémentaires du site perso (`index.css`) :** `--text-muted #888780`,
+`--text-faint #A0A09A`, `--rule rgba(0,0,0,0.06)`, `--teal-tint rgba(97,158,168,0.06)`,
+`--teal-line rgba(97,158,168,0.20)`, `--nav-h 44px`. Les nouveaux composants les utilisent en
+`var(--…)` ; les graphes gardent leurs hex.
 
 **Règles visuelles non-négociables :**
 - Fond app : `#F5F4EF` (cream), cartes : `#FFFFFF`
@@ -611,10 +675,10 @@ Ne jamais commencer Phase 5 sans `model_content.md`.
 
 ### Navigation sticky
 ```
-Onglets : "The paradox | The mechanisms | The levers | The systemic picture | Lab"
-Bouton droit : "Read the essay" → lien PDF (URL dans model_content.md)
-Route /lab → onglet Lab séparé (C7)
-Fond : Navy #22375A, texte blanc, hauteur 48px
+Barre de l'explorer (Nav.jsx, 44 px, navy) : "← Bilel Hatmi" | The Flattening | Explore · Model · About | Read the essay
+Sidebar desktop / bande mobile (ScrollSections.jsx) : Act I … Act IV | Lab — offsets top:44 valides (une seule barre)
+Routes : /flattening, /flattening/questionnaire, /flattening/explore, /flattening/model, /flattening/about
+Barre du site perso (SiteNav.jsx, mêmes 44 px) : Bilel Hatmi | Projects · Journey · Notes · Documents | Contact
 ```
 
 ### Structure de la page principale (scroll)
