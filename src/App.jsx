@@ -5,6 +5,12 @@ import { fl, LEGACY_FLATTENING_PATHS } from './routes';
 // Personal site
 import SiteLayout from './components/site/SiteLayout';
 import Home from './pages/site/Home';
+import Projects from './pages/site/Projects';
+import ProjectPage from './pages/site/ProjectPage';
+import Journey from './pages/site/Journey';
+import Documents from './pages/site/Documents';
+import Notes from './pages/site/Notes';
+import NotePage from './pages/site/NotePage';
 import NotFound from './pages/site/NotFound';
 
 // The Flattening explorer (sub-site under /flattening)
@@ -20,6 +26,12 @@ export default function App() {
       {/* ── Personal site ─────────────────────────────────────────── */}
       <Route element={<SiteLayout />}>
         <Route index element={<Home />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="projects/:slug" element={<ProjectPage />} />
+        <Route path="journey" element={<Journey />} />
+        <Route path="documents" element={<Documents />} />
+        <Route path="notes" element={<Notes />} />
+        <Route path="notes/:slug" element={<NotePage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
