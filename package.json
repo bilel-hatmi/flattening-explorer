@@ -10,13 +10,17 @@
     "validate:csv": "node scripts/validate_csv.js"
   },
   "dependencies": {
+    "katex": "^0.16.9",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-katex": "^3.0.1",
+    "react-markdown": "^9.1.0",
     "react-router-dom": "^6.22.0",
     "recharts": "^2.12.0",
-    "leaflet": "^1.9.4",
-    "katex": "^0.16.9",
-    "react-katex": "^3.0.1"
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",

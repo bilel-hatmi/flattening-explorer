@@ -1,11 +1,5 @@
-// ── Document links ───────────────────────────────────────────────────────────
-const LINKS = {
-  github:     'https://github.com/bilel-hatmi/flattening-explorer',
-  cv:         '/docs/cv.pdf',
-  cartesia:   '/docs/cartesia.pdf',
-  essayShort: '/docs/essay_prize.pdf',
-  poster:     '/docs/poster.pdf',
-};
+import DocCard, { DocGrid } from '../components/site/DocCard';
+import { LINKS, FLATTENING_DOCUMENTS } from '../content/documents';
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 const S = {
@@ -54,37 +48,6 @@ const S = {
     color: '#619EA8', fontWeight: 500, letterSpacing: '0.03em',
     textTransform: 'uppercase', marginBottom: 14,
   },
-  // Document cards
-  docsGrid: {
-    display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 12, marginBottom: 32,
-  },
-  docCard: {
-    background: '#FFFFFF', border: '0.5px solid rgba(0,0,0,0.08)',
-    borderRadius: 10, padding: '18px 18px 14px',
-    display: 'flex', flexDirection: 'column', gap: 6,
-    textDecoration: 'none', transition: 'border-color 0.2s, transform 0.15s',
-    cursor: 'pointer',
-  },
-  docIcon: {
-    fontSize: 20, marginBottom: 2,
-  },
-  docTitle: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13,
-    fontWeight: 600, color: '#22375A',
-  },
-  docDesc: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11,
-    color: '#888780', lineHeight: 1.4,
-  },
-  docBadge: {
-    fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
-    color: '#A0A09A', marginTop: 'auto', paddingTop: 4,
-  },
-  // Full-width card variant
-  docCardFull: {
-    gridColumn: '1 / -1',
-  },
   // Footer
   disclaimer: {
     marginTop: 48, paddingTop: 24, borderTop: '0.5px solid rgba(0,0,0,0.06)',
@@ -96,47 +59,6 @@ const S = {
     textAlign: 'center', fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
 };
-
-function DocCard({ href, icon, title, desc, badge, full, comingSoon }) {
-  const body = (
-    <>
-      <div style={S.docIcon}>{icon}</div>
-      <div style={S.docTitle}>{title}</div>
-      <div style={S.docDesc}>{desc}</div>
-      {badge && (
-        <div style={{ ...S.docBadge, ...(comingSoon ? { color: '#C49A3C', fontWeight: 600 } : {}) }}>
-          {badge}
-        </div>
-      )}
-    </>
-  );
-
-  // Not yet published (e.g. detailed article still being written): render a
-  // muted, non-clickable card instead of a download link.
-  if (comingSoon) {
-    return (
-      <div
-        style={{ ...S.docCard, ...(full ? S.docCardFull : {}), cursor: 'default', opacity: 0.72 }}
-        aria-disabled="true"
-      >
-        {body}
-      </div>
-    );
-  }
-
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ ...S.docCard, ...(full ? S.docCardFull : {}) }}
-      onMouseEnter={e => { e.currentTarget.style.border = '0.5px solid rgba(97,158,168,0.40)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.border = '0.5px solid rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'none'; }}
-    >
-      {body}
-    </a>
-  );
-}
 
 export default function Author() {
   return (
@@ -198,51 +120,9 @@ export default function Author() {
 
       {/* ── Documents ─────────────────────────────────────────────── */}
       <h2 style={S.sectionTitle}>Documents</h2>
-      <div style={S.docsGrid}>
-        <DocCard
-          href={LINKS.essayShort}
-          icon={'\ud83d\udcdd'}
-          title="Prize essay"
-          desc="The Flattening: Invisible Tail Risk in AI-Adopting Organisations. Short submission for the Cambridge–McKinsey Risk Prize 2026."
-          badge="PDF"
-        />
-        <DocCard
-          href={LINKS.poster}
-          icon={'\ud83d\uddbc\ufe0f'}
-          title="Poster"
-          desc="The Flattening on a single A0 board: the bimodal loss, the correlation cascade, and the governance results at a glance."
-          badge="PDF"
-        />
-        <DocCard
-          icon={'\ud83d\udcd6'}
-          title="Full essay"
-          desc="Extended version with complete derivations, all validation results, and the systemic policy argument. Currently being written."
-          badge="In progress"
-          comingSoon
-        />
-        <DocCard
-          href={LINKS.cv}
-          icon={'\ud83d\udcbc'}
-          title="Curriculum Vitae"
-          desc="Academic background, research experience, and professional projects."
-          badge="PDF"
-        />
-        <DocCard
-          href={LINKS.github}
-          icon={'\ud83d\udcbb'}
-          title="Source code"
-          desc="Full repository: simulation engine (Python), interactive explorer (React), and all pre-computed datasets."
-          badge="GitHub"
-        />
-        <DocCard
-          href={LINKS.cartesia}
-          icon={'\u2b21'}
-          title="CartesIA"
-          desc="Psychometric AI platform: HR assessment, mental health triage, youth orientation. Presentation document."
-          badge="PDF"
-          full
-        />
-      </div>
+      <DocGrid>
+        {FLATTENING_DOCUMENTS.map(d => <DocCard key={d.id} {...d} />)}
+      </DocGrid>
 
       {/* ── About the author ─────────────────────────────────────── */}
       <h2 style={S.sectionTitle}>About the author</h2>
