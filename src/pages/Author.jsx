@@ -1,5 +1,6 @@
 import DocCard, { DocGrid } from '../components/site/DocCard';
 import { LINKS, FLATTENING_DOCUMENTS } from '../content/documents';
+import { PERSON } from '../content/site';
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 const S = {
@@ -66,10 +67,8 @@ export default function Author() {
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <div style={S.heroSection}>
         <h1 style={S.name}>Bilel Hatmi</h1>
-        <div style={S.affiliation}>University of Cambridge</div>
-        <p style={S.role}>
-          Part III Mathematical Statistics, DPMMS. Founder of CartesIA.
-        </p>
+        <div style={S.affiliation}>{PERSON.affiliation}</div>
+        <p style={S.role}>{PERSON.role}</p>
       </div>
 
       {/* ── Bio ───────────────────────────────────────────────────── */}
@@ -127,9 +126,7 @@ export default function Author() {
       {/* ── About the author ─────────────────────────────────────── */}
       <h2 style={S.sectionTitle}>About the author</h2>
       <div style={S.bio}>
-        <p style={{ ...S.p, marginBottom: 0 }}>
-          Bilel Hatmi is a Part III student in Mathematical Statistics at the University of Cambridge (DPMMS), where his dissertation develops semiparametric methods for proximal causal inference under unmeasured confounding, supervised by Dr P. Zhao and Prof. Q. Zhao. He holds a Grande {'\u00c9'}cole degree from CentraleSup{'\u00e9'}lec (top 1% of cohort), with prior work on subjective well-being measurement over a twenty-year longitudinal panel, stochastic modelling of blood cancers at the Gustave Roussy Institute, and AI deployments in a strategy consulting context at Eleven Strategy, where productivity metrics and decision quality routinely pointed in different directions. He is the founder of CartesIA, a research project on AI-assisted psychometric measurement.
-        </p>
+        <p style={{ ...S.p, marginBottom: 0 }}>{PERSON.longBio}</p>
       </div>
 
       {/* ── Contact ───────────────────────────────────────────────── */}

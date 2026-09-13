@@ -1,7 +1,6 @@
 // ── Projects ─────────────────────────────────────────────────────────────────
 // One entry per project page (/projects/<slug>). Short fields live here; the
 // long prose lives in ./projects/<slug>.md and is picked up by filename.
-// Placeholders are tagged [TODO: …].
 
 import { FLATTENING_BASE } from '../routes';
 import { LINKS } from './documents';
@@ -16,13 +15,43 @@ function bodyFor(slug) {
 
 export const PROJECTS = [
   {
+    slug: 'srie-2026',
+    title: 'SRIE: what AI does to the people who use it',
+    kicker: 'Resident researcher and research supervisor',
+    summary:
+      'Eight-week AI-safety placements for Cambridge mathematics undergraduates. Seven students on three projects I designed: sycophancy as a set of measurable constructs, an LLM mediator whose neutrality is a property of the objective function, and an AI tutor built against cognitive surrender.',
+    period: 'July 2026 – present',
+    status: 'Ongoing',
+    group: 'current',
+    featured: true,
+    tags: ['AI safety', 'psychometrics of LLMs', 'game theory', 'education', 'supervision'],
+    links: [],
+    subprojects: [
+      {
+        id: 'Sycophancy',
+        title: 'Sycophancy as a set of constructs',
+        summary: 'Four separately caused quantities (direction, conviction, trajectory validity, dispersion), read by two instruments, behaviour and linear probes or persona vectors, across five conditions. Three students.',
+      },
+      {
+        id: 'Mediation',
+        title: 'Mediation under confidentiality constraints',
+        summary: 'An LLM mediator between two parties that reveals enough to resolve and never enough to expose. Game-theoretic model, agentic workflow, proof of concept on synthetic personas. Two students.',
+      },
+      {
+        id: 'Tutor',
+        title: 'An AI tutor against cognitive surrender',
+        summary: 'A knowledge-space model of the learner with a metacognitive component, the domain built by LLM personas, Bayesian estimation of the learner’s state, and a questioning strategy driven by information gain. Two students.',
+      },
+    ],
+  },
+  {
     slug: 'the-flattening',
     title: 'The Flattening',
-    kicker: 'Essay, model and interactive explorer',
+    kicker: 'Finalist, Cambridge–McKinsey Risk Prize 2026',
     summary:
-      'Unmanaged AI adoption makes organisations better on average and more fragile at the extremes. A Monte Carlo model, an essay and an explorer for the Cambridge–McKinsey Risk Prize 2026.',
-    period: '2026',
-    status: 'Submitted',
+      'Unmanaged AI adoption makes organisations better on average and more fragile at the extremes. An essay, a Monte Carlo model of systemic risk coupling workforce substitution, epistemic homogenisation and institutional resilience, and an interactive explorer.',
+    period: 'March – July 2026',
+    status: 'Finalist',
     group: 'current',
     featured: true,
     tags: ['AI risk', 'Monte Carlo', 'governance', 'React'],
@@ -34,92 +63,104 @@ export const PROJECTS = [
     ],
   },
   {
-    slug: 'srie-2026',
-    title: 'SRIE — supervised research internships',
-    kicker: 'Four research projects, summer 2026',
-    summary:
-      '[TODO: two sentences. What the programme is, who the students are, what the four projects have in common.]',
-    period: 'Summer 2026',
-    status: 'Ongoing',
-    group: 'current',
-    featured: true,
-    tags: ['supervision', 'psychometrics', 'LLM evaluation', 'causal inference'],
-    links: [],
-    subprojects: [
-      { id: 'P1', title: '[TODO: P1 title]', summary: 'A unified theory of behaviour and measurement. [TODO: one more sentence.]' },
-      { id: 'P2', title: '[TODO: P2 title]', summary: 'Does a trait score separate models, and does it say the same thing twice? [TODO: one more sentence.]' },
-      { id: 'P3', title: '[TODO: P3 title]', summary: 'Measuring a learner’s cognitive state to teach without deskilling. [TODO: one more sentence.]' },
-      { id: 'P4', title: '[TODO: P4 title]', summary: 'A mediator that reveals enough to resolve, never enough to expose. [TODO: one more sentence.]' },
-    ],
-  },
-  {
     slug: 'part-iii-dissertation',
-    title: 'Proximal causal inference',
-    kicker: 'Part III dissertation, University of Cambridge',
+    title: 'Proximal causal inference under unmeasured confounding',
+    kicker: 'Part III essay, University of Cambridge',
     summary:
-      'Semiparametric methods for proximal causal inference under unmeasured confounding. [TODO: one sentence on the specific contribution.]',
-    period: '2025–2026',
-    status: 'In progress',
+      'Can proxy variables replace an unmeasured confounder in practice? From identification to inference: four estimators, from a linear two-stage baseline to doubly-robust kernel methods, stress-tested by simulation and validated on two real datasets, with a tuning protocol that never sees the truth.',
+    period: '2025 – 2026',
+    status: 'Submitted May 2026',
     group: 'current',
     featured: true,
-    tags: ['causal inference', 'semiparametrics', 'statistics'],
+    tags: ['causal inference', 'semiparametrics', 'ill-posed inverse problems', 'Python'],
     links: [
-      { label: 'Dissertation (PDF)', href: null, comingSoon: true },
+      { label: 'Code on GitHub', href: LINKS.pciRepo, external: true },
+      { label: 'Essay (PDF)', href: null, comingSoon: true },
     ],
   },
   {
     slug: 'cartesia',
     title: 'CartesIA',
-    kicker: 'Psychometric AI platform',
+    kicker: 'Founder and lead researcher',
     summary:
-      'A psychometric AI platform in development across HR assessment, mental health triage and youth career orientation. Before any AI output reaches the user, a structured sequence draws out their own reasoning first.',
-    period: '2025–',
-    status: 'In development',
+      'A research project treating large language models as controlled measurement instruments for psychometrics. A protocol maps what a person says onto validated constructs of agency, autonomy and value–action alignment, through contextualised vignettes, explicit scoring rubrics and safeguards against suggestion. Three domains: mental health, youth guidance, professional development.',
+    period: '2025 – present',
+    status: 'Method documented, pre-product',
     group: 'current',
     featured: true,
-    tags: ['psychometrics', 'product', 'AI'],
+    tags: ['psychometrics', 'metacognition', 'LLMs', 'product'],
     links: [
-      { label: 'Presentation (PDF)', href: LINKS.cartesia, external: true },
+      { label: 'Partners document (PDF)', href: LINKS.cartesia, external: true },
     ],
   },
   {
     slug: 'eleven-strategy',
-    title: 'AI deployments in strategy consulting',
-    kicker: 'Eleven Strategy',
+    title: 'AI in strategy consulting',
+    kicker: 'Eleven Strategy, analyst and data scientist',
     summary:
-      'AI deployments in a strategy consulting context, where productivity metrics and decision quality routinely pointed in different directions. [TODO: dates, one concrete example.]',
-    period: '[TODO: dates]',
+      'Buy-side due diligence on B2C targets, then the firm’s own tools: AI agents for company research and CRM pre-processing, and an internal retrieval system that doubled search precision for about eighty users. The place where productivity metrics and decision quality first visibly parted ways.',
+    period: 'April – September 2025',
     status: 'Completed',
     group: 'earlier',
     featured: false,
-    tags: ['consulting', 'AI deployment'],
-    links: [],
-  },
-  {
-    slug: 'gustave-roussy',
-    title: 'Stochastic modelling of blood cancers',
-    kicker: 'Gustave Roussy Institute',
-    summary:
-      '[TODO: two sentences. The question, the model, what came out of it.]',
-    period: '[TODO: dates]',
-    status: 'Completed',
-    group: 'earlier',
-    featured: false,
-    tags: ['stochastic processes', 'oncology'],
+    tags: ['consulting', 'RAG', 'AI agents'],
     links: [],
   },
   {
     slug: 'well-being-panel',
-    title: 'Subjective well-being over twenty years',
-    kicker: 'Longitudinal panel study',
+    title: 'Measuring subjective well-being over twenty years',
+    kicker: 'Elements Impact, Boussole project',
     summary:
-      'Measurement of subjective well-being over a twenty-year longitudinal panel. [TODO: dataset, method, one finding.]',
-    period: '[TODO: dates]',
+      'Turning subjective well-being indicators into operational variables and predictive targets, then training and stress-testing supervised models on a twenty-year longitudinal panel of more than a thousand people. Supervised by Emmanuelle Bioud (PhD, cognitive science).',
+    period: 'June – September 2023',
     status: 'Completed',
     group: 'earlier',
     featured: false,
-    tags: ['panel data', 'measurement'],
+    tags: ['panel data', 'measurement', 'well-being'],
     links: [],
+  },
+  {
+    slug: 'blood-cancers',
+    title: 'Stochastic modelling of blood cancers',
+    kicker: 'MICS Lab, CentraleSupélec, with the Gustave Roussy Institute',
+    summary:
+      'Bayesian and stochastic modelling of myeloproliferative syndromes: how mutated stem-cell clones appear and expand, and what that implies for the age at which screening pays off. The model was extended to homozygous clones arising by homologous recombination.',
+    period: 'January 2022 – July 2023',
+    status: 'Completed',
+    group: 'earlier',
+    featured: false,
+    tags: ['stochastic processes', 'Bayesian modelling', 'oncology'],
+    links: [],
+  },
+  {
+    slug: 'hawkes-processes',
+    title: 'Estimating binned Hawkes processes',
+    kicker: 'CentraleSupélec, supervised by Ioane Muni Toke',
+    summary:
+      'Self-exciting point processes observed on a grid rather than event by event. Maximum likelihood, Whittle and neural estimators compared on simulated streams and real data; likelihood with random restarts wins on clean data, Whittle survives degraded data.',
+    period: '2023',
+    status: 'Completed',
+    group: 'earlier',
+    featured: false,
+    tags: ['point processes', 'estimation', 'Python'],
+    links: [
+      { label: 'Code on GitHub', href: LINKS.hawkesRepo, external: true },
+    ],
+  },
+  {
+    slug: 'interest-rates',
+    title: 'Ho-Lee and HJM in discrete time',
+    kicker: 'CentraleSupélec, stochastic finance',
+    summary:
+      'Two term-structure models implemented and compared to price caplets: closed-form prices for zero-coupon bonds and caplets, calibration to the Black model, and a proof that the two models agree asymptotically. Packaged as a small app where you enter the parameters and read the price.',
+    period: '2023',
+    status: 'Completed',
+    group: 'earlier',
+    featured: false,
+    tags: ['stochastic calculus', 'pricing', 'Python'],
+    links: [
+      { label: 'Code on GitHub', href: LINKS.ratesRepo, external: true },
+    ],
   },
 ].map(p => ({ ...p, body: bodyFor(p.slug) }));
 
