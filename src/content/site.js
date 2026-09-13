@@ -40,7 +40,7 @@ export const PERSON = {
   ],
   // Portrait for the home hero. Drop a file in public/ and set the path;
   // the hero renders a monogram while this is null.
-  portrait: null,
+  portrait: '/portrait.jpg',
 };
 
 // The explorer, as the personal site presents it

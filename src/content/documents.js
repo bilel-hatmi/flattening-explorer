@@ -13,6 +13,8 @@ export const LINKS = {
   essayShort: '/docs/essay_prize.pdf',
   essayFull:  '/docs/essay_full.pdf',
   poster:     '/docs/poster.pdf',
+  hawkesReport: '/docs/hawkes_binned_processes.pdf',
+  bloodReport:  '/docs/blood_cancers_modelling.pdf',
 };
 
 export const DOCUMENTS = [
@@ -85,6 +87,24 @@ export const DOCUMENTS = [
     badge: 'GitHub',
   },
   {
+    id: 'hawkes-report',
+    kind: 'reports',
+    href: LINKS.hawkesReport,
+    icon: '📄',
+    title: 'Parameter Estimation of Binned Hawkes Processes',
+    desc: 'Group report, CentraleSupélec, supervised by Ioane Muni Toke. Maximum likelihood, Whittle and neural estimators for self-exciting point processes observed on a grid. 49 pages, English.',
+    badge: 'PDF',
+  },
+  {
+    id: 'blood-report',
+    kind: 'reports',
+    href: LINKS.bloodReport,
+    icon: '📄',
+    title: 'Modélisation de l’apparition et du développement de cancers du sang',
+    desc: 'Group report, CentraleSupélec with the Gustave Roussy Institute, January 2023. Stochastic model of myeloproliferative syndromes extended to homozygous clones. 24 pages, French.',
+    badge: 'PDF',
+  },
+  {
     id: 'hawkes-code',
     kind: 'code',
     href: LINKS.hawkesRepo,
@@ -119,6 +139,7 @@ export const DOCUMENT_KINDS = [
   { id: 'essay',    label: 'The Flattening' },
   { id: 'academic', label: 'Causal inference' },
   { id: 'venture',  label: 'CartesIA' },
+  { id: 'reports',  label: 'Reports' },
   { id: 'code',     label: 'Code' },
   { id: 'about',    label: 'About me' },
 ];

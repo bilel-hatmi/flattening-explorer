@@ -130,7 +130,9 @@ export const PROJECTS = [
     group: 'earlier',
     featured: false,
     tags: ['stochastic processes', 'Bayesian modelling', 'oncology'],
-    links: [],
+    links: [
+      { label: 'Report (PDF, French)', href: LINKS.bloodReport, external: true },
+    ],
   },
   {
     slug: 'hawkes-processes',
@@ -144,6 +146,7 @@ export const PROJECTS = [
     featured: false,
     tags: ['point processes', 'estimation', 'Python'],
     links: [
+      { label: 'Report (PDF)', href: LINKS.hawkesReport, external: true },
       { label: 'Code on GitHub', href: LINKS.hawkesRepo, external: true },
     ],
   },
