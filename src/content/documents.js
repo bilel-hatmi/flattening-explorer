@@ -15,6 +15,7 @@ export const LINKS = {
   poster:     '/docs/poster.pdf',
   hawkesReport: '/docs/hawkes_binned_processes.pdf',
   bloodReport:  '/docs/blood_cancers_modelling.pdf',
+  ratesReport:  '/docs/interest_rates_ho_lee_hjm.pdf',
 };
 
 export const DOCUMENTS = [
@@ -92,7 +93,7 @@ export const DOCUMENTS = [
     href: LINKS.hawkesReport,
     icon: '📄',
     title: 'Parameter Estimation of Binned Hawkes Processes',
-    desc: 'Group report, CentraleSupélec, supervised by Ioane Muni Toke. Maximum likelihood, Whittle and neural estimators for self-exciting point processes observed on a grid. 49 pages, English.',
+    desc: 'Group report, CentraleSupélec, February–June 2023, supervised by Ioane Muni Toke. Maximum likelihood, Whittle and neural estimators for self-exciting point processes observed on a grid. 49 pages, English.',
     badge: 'PDF',
   },
   {
@@ -101,7 +102,16 @@ export const DOCUMENTS = [
     href: LINKS.bloodReport,
     icon: '📄',
     title: 'Modélisation de l’apparition et du développement de cancers du sang',
-    desc: 'Group report, CentraleSupélec with the Gustave Roussy Institute, January 2023. Stochastic model of myeloproliferative syndromes extended to homozygous clones. 24 pages, French.',
+    desc: 'Group report, CentraleSupélec with the Gustave Roussy Institute, September 2022–January 2023. Stochastic model of myeloproliferative syndromes extended to homozygous clones. 24 pages, French.',
+    badge: 'PDF',
+  },
+  {
+    id: 'rates-report',
+    kind: 'reports',
+    href: LINKS.ratesReport,
+    icon: '📄',
+    title: 'Modélisation stochastique de taux d’intérêts en temps discret',
+    desc: 'Group report, CentraleSupélec, February–June 2023. Ho-Lee and HJM in discrete time: zero-coupon and caplet pricing, calibration to the Black model, asymptotic equivalence of the two models. 14 pages, French.',
     badge: 'PDF',
   },
   {

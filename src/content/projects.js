@@ -125,7 +125,7 @@ export const PROJECTS = [
     kicker: 'MICS Lab, CentraleSupélec, with the Gustave Roussy Institute',
     summary:
       'Bayesian and stochastic modelling of myeloproliferative syndromes: how mutated stem-cell clones appear and expand, and what that implies for the age at which screening pays off. The model was extended to homozygous clones arising by homologous recombination.',
-    period: 'January 2022 – July 2023',
+    period: 'September 2022 – January 2023',
     status: 'Completed',
     group: 'earlier',
     featured: false,
@@ -140,7 +140,7 @@ export const PROJECTS = [
     kicker: 'CentraleSupélec, supervised by Ioane Muni Toke',
     summary:
       'Self-exciting point processes observed on a grid rather than event by event. Maximum likelihood, Whittle and neural estimators compared on simulated streams and real data; likelihood with random restarts wins on clean data, Whittle survives degraded data.',
-    period: '2023',
+    period: 'February – June 2023',
     status: 'Completed',
     group: 'earlier',
     featured: false,
@@ -156,12 +156,13 @@ export const PROJECTS = [
     kicker: 'CentraleSupélec, stochastic finance',
     summary:
       'Two term-structure models implemented and compared to price caplets: closed-form prices for zero-coupon bonds and caplets, calibration to the Black model, and a proof that the two models agree asymptotically. Packaged as a small app where you enter the parameters and read the price.',
-    period: '2023',
+    period: 'February – June 2023',
     status: 'Completed',
     group: 'earlier',
     featured: false,
     tags: ['stochastic calculus', 'pricing', 'Python'],
     links: [
+      { label: 'Report (PDF, French)', href: LINKS.ratesReport, external: true },
       { label: 'Code on GitHub', href: LINKS.ratesRepo, external: true },
     ],
   },
