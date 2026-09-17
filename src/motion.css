@@ -72,6 +72,19 @@
 .btn-lift { transition: transform 0.18s ease, box-shadow 0.2s ease, background 0.2s ease; }
 .btn-lift:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -16px rgba(34, 55, 90, 0.5); text-decoration: none; }
 
+/* Links inside cards never underline; the badge in a card breathes on hover */
+.lift:hover, .lift:hover * { text-decoration: none; }
+.badge { transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.lift:hover .badge { transform: scale(1.06); }
+
+/* Links in running text: a hairline that darkens on hover */
+.prose a { text-decoration: none; border-bottom: 1px solid var(--teal-line); transition: border-color 0.15s ease, color 0.15s ease; }
+.prose a:hover { text-decoration: none; border-bottom-color: var(--teal); }
+
+/* Keyboard focus and text selection in the site's colours */
+:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+::selection { background: rgba(97, 158, 168, 0.28); color: var(--navy); }
+
 /* Sections anchored below the sticky bar */
 [id] { scroll-margin-top: calc(var(--nav-h) + 16px); }
 

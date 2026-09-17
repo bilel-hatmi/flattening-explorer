@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import Icon from './Icon';
-import { PERSON, FLATTENING } from '../../content/site';
-import { SITE } from '../../routes';
+import { PERSON, FLATTENING, NAV_LINKS } from '../../content/site';
 
 const link = { display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)' };
 
@@ -30,12 +29,19 @@ export default function Footer() {
               <Icon name={l.icon} size={14} /> {l.label}
             </a>
           ))}
-          <Link to={FLATTENING.to} style={link}><Icon name="risk" size={14} /> {FLATTENING.title}</Link>
-          <Link to={SITE.documents} style={link}><Icon name="documents" size={14} /> Documents</Link>
         </div>
       </div>
-      <div style={{ maxWidth: 960, margin: '12px auto 0', color: 'var(--text-faint)', fontSize: 11 }}>
-        {'©'} {year} {PERSON.name}. No analytics, no cookies, no user data collected.
+      <div style={{
+        maxWidth: 960, margin: '14px auto 0', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 12,
+        paddingTop: 14, borderTop: '0.5px solid var(--rule)',
+      }}>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {NAV_LINKS.map(l => <Link key={l.to} to={l.to} style={link}>{l.label}</Link>)}
+          <Link to={FLATTENING.to} style={link}><Icon name="risk" size={13} /> {FLATTENING.title}</Link>
+        </div>
+        <div style={{ color: 'var(--text-faint)', fontSize: 11 }}>
+          {'©'} {year} {PERSON.name}. No analytics, no cookies, no user data collected.
+        </div>
       </div>
     </footer>
   );

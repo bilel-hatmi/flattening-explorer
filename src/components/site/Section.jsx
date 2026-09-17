@@ -1,9 +1,20 @@
-// Page section: an optional kicker and a serif title above the content.
-// Mirrors the section title style of the explorer's About page.
+import useIsMobile from '../../hooks/useIsMobile';
+import roman from '../../utils/roman';
 
-export default function Section({ id, title, kicker, aside, children, style, first }) {
+// Page section: an optional kicker, a serif title (with a roman numeral when
+// `num` is given) and the content. `panel` frames the section in a white
+// card with a teal rule, the same on every page that uses it.
+
+export default function Section({ id, title, kicker, num, aside, panel, children, style, first }) {
+  const isMobile = useIsMobile();
+  const box = panel ? {
+    background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', borderLeft: '3px solid var(--teal)',
+    borderRadius: 14, padding: isMobile ? '22px 20px 20px' : '30px 34px 28px',
+    boxShadow: '0 20px 44px -36px rgba(34,55,90,0.35)',
+  } : {};
+
   return (
-    <section id={id} style={{ marginTop: first ? 0 : 56, ...style }}>
+    <section id={id} style={{ marginTop: first ? 0 : (panel ? 28 : 56), ...box, ...style }}>
       {(title || kicker) && (
         <header style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16, marginBottom: 18, flexWrap: 'wrap' }}>
           <div>
@@ -16,8 +27,9 @@ export default function Section({ id, title, kicker, aside, children, style, fir
               </div>
             )}
             {title && (
-              <h2 style={{ fontFamily: 'var(--font-title)', fontSize: 26, color: 'var(--navy)', lineHeight: 1.15 }}>
-                {title}
+              <h2 style={{ display: 'flex', alignItems: 'baseline', gap: 14, fontFamily: 'var(--font-title)', fontSize: 26, color: 'var(--navy)', lineHeight: 1.15, margin: 0 }}>
+                {num != null && <Numeral n={num} />}
+                <span>{title}</span>
               </h2>
             )}
           </div>
@@ -26,6 +38,33 @@ export default function Section({ id, title, kicker, aside, children, style, fir
       )}
       {children}
     </section>
+  );
+}
+
+// Roman numeral in the mono face, teal: the site's section marker.
+export function Numeral({ n, style }) {
+  return (
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--teal)', letterSpacing: '0.08em', ...style }}>
+      {roman(n)}
+    </span>
+  );
+}
+
+// "On this page": anchors to the numbered sections, under the page header.
+export function SectionNav({ items, style }) {
+  const isMobile = useIsMobile();
+  return (
+    <nav aria-label="On this page" style={{
+      display: 'flex', flexWrap: 'wrap', gap: isMobile ? '8px 14px' : '8px 22px', marginTop: -18, marginBottom: 40,
+      fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.02em', ...style,
+    }}>
+      {items.map((s, i) => (
+        <a key={s.id} href={`#${s.id}`} style={{ color: 'var(--text-muted)' }}>
+          <span style={{ color: 'var(--teal)', letterSpacing: '0.08em' }}>{roman(i + 1)}</span>{'  '}{s.title}
+          {s.count != null && <span style={{ color: 'var(--text-faint)' }}>{' ('}{s.count}{')'}</span>}
+        </a>
+      ))}
+    </nav>
   );
 }
 

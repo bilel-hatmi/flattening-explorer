@@ -238,7 +238,7 @@ export function IconBadge({ name, img, size = 36, tone = 'teal', style }) {
   const color = tone === 'navy' ? 'var(--navy)' : tone === 'purple' ? '#8E6BBF' : 'var(--teal)';
   if (img) {
     return (
-      <span style={{
+      <span className="badge" style={{
         width: size, height: size, borderRadius: '50%', background: '#FFFFFF', border: '0.5px solid var(--card-border)',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', ...style,
       }}>
@@ -247,7 +247,7 @@ export function IconBadge({ name, img, size = 36, tone = 'teal', style }) {
     );
   }
   return (
-    <span style={{
+    <span className="badge" style={{
       width: size, height: size, borderRadius: '50%', background: tint, display: 'inline-flex',
       alignItems: 'center', justifyContent: 'center', flexShrink: 0, color, ...style,
     }}>

@@ -123,6 +123,17 @@ site perso ne doit jamais les réutiliser.
   est l'explorer, les deux PDF et le code),
   `journey.js` (frise + `NARRATIVES` + `ASIDES`), `documents.js` (source unique, aussi lue par
   `/flattening/about`).
+- **Sections numérotées en chiffres romains** : `Section num={n}` (rendu par `utils/roman.js`,
+  `Numeral`), `panel` pour le cadre blanc à filet teal (les trois sections de Research, toutes
+  pareilles : une seule mise en lumière isolée se lisait comme un oubli), `SectionNav` pour le
+  mini-sommaire « I · II · III » sous l'en-tête (Research, Projects avec comptes, Documents).
+  Journey numérote Giving back / Sport / Timeline ; « Also » reste sans numéro.
+- Pages projet : fil d'Ariane, en-tête en cascade (`.rise`), boutons avec pictos, deck, prose, encart
+  SRIE, puis **précédent / suivant** dans le même groupe (`current` / `earlier` / `paused`).
+- Accueil : hero, carte Flattening (compteurs), quatre lignes, **Milestones** (quatre entrées de
+  `journey.js` : centralesupelec, part-iii, risk-prize, srie), trois cartes de navigation, contact.
+- `index.html` porte les meta OG en URL absolue, un `canonical` et un JSON-LD `Person`
+  (nom, SRIE, Cambridge, CentraleSupélec, GitHub, LinkedIn) : à tenir à jour avec `SITE_META`.
 - Les chaînes de `site.js` (bio) et `journey.js` (récits) peuvent porter des `**gras**` : rendus par
   `utils/inline.js` (`renderInline`, `stripInline` pour les endroits en texte brut).
 - `research.md` est découpé par `Research.jsx` sur ses `## ` : lede avant le premier titre, sections
@@ -194,6 +205,7 @@ flattening-explorer/
 │   ├── prose-rich.css           ← blocs HTML autorisés dans le Markdown (lead, callout, figure…)
 │   ├── motion.css               ← animations du site perso (voir §1-bis)
 │   ├── utils/inline.js          ← **gras** dans les chaînes de contenu
+│   ├── utils/roman.js           ← chiffres romains des sections
 │   ├── pages/site/              ← Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
 │   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Reveal, Section, Tag, Timeline, Prose
 │   ├── utils/frontmatter.js     ← parseur frontmatter maison (pas de gray-matter : Buffer)

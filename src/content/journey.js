@@ -54,7 +54,7 @@ export const JOURNEY = [
     place: 'Paris, France',
     kind: 'work',
     summary: 'Two buy-side due diligences, a competitive map of bike-sharing in Paris, a series of AI agents for an investment fund and a private bank, an internal retrieval system that doubled search precision for about eighty users.',
-    to: `${SITE.projects}/eleven-strategy`,
+    to: `${SITE.projects}/eleven-rag`,
   },
   {
     id: 'well-being',

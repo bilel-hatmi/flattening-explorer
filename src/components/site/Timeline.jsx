@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import useIsMobile from '../../hooks/useIsMobile';
+import Reveal from './Reveal';
 import { JOURNEY_KINDS } from '../../content/journey';
 
 // Vertical timeline. Desktop: period in a left column, a rail with coloured
 // markers, the entry on the right. Mobile: the period sits above the entry.
+// Entries reveal one after the other as the list scrolls into view.
 export default function Timeline({ entries }) {
   const isMobile = useIsMobile();
   const railX = isMobile ? 7 : 148;
@@ -14,7 +16,7 @@ export default function Timeline({ entries }) {
         position: 'absolute', top: 6, bottom: 6, left: railX, width: 1,
         background: 'var(--card-border)',
       }} />
-      {entries.map(e => {
+      {entries.map((e, i) => {
         const kind = JOURNEY_KINDS[e.kind] || JOURNEY_KINDS.research;
         const title = e.to
           ? <Link to={e.to} style={{ color: 'var(--navy)' }}>{e.title}</Link>
@@ -22,7 +24,7 @@ export default function Timeline({ entries }) {
             ? <a href={e.href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--navy)' }}>{e.title}</a>
             : e.title;
         return (
-          <li key={e.id} style={{
+          <Reveal as="li" key={e.id} delay={Math.min(i, 4) * 50} style={{
             position: 'relative', display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : '128px 1fr',
             columnGap: 40, paddingLeft: isMobile ? 28 : 0, paddingBottom: 30,
@@ -48,7 +50,7 @@ export default function Timeline({ entries }) {
                 <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-muted)', marginTop: 8 }}>{e.summary}</p>
               )}
             </div>
-          </li>
+          </Reveal>
         );
       })}
     </ol>

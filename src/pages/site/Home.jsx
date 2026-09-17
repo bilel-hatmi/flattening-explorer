@@ -9,6 +9,7 @@ import { TagRow } from '../../components/site/Tag';
 import Icon, { IconBadge } from '../../components/site/Icon';
 import { PERSON, FLATTENING, formatCounter } from '../../content/site';
 import { CURRENT_PROJECTS } from '../../content/projects';
+import { JOURNEY } from '../../content/journey';
 import { SITE } from '../../routes';
 
 // Portrait with a thin dashed ring turning slowly around it (motion.css).
@@ -63,6 +64,9 @@ function HeroField({ isMobile }) {
     </svg>
   );
 }
+
+// Four milestones from the timeline, oldest to newest.
+const MILESTONES = ['centralesupelec', 'part-iii', 'risk-prize', 'srie'].map(id => JOURNEY.find(e => e.id === id)).filter(Boolean);
 
 const btn = (primary) => ({
   display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
@@ -168,6 +172,25 @@ export default function Home() {
             </Reveal>
           ))}
         </CardGrid>
+      </Section>
+
+      {/* ── Milestones ────────────────────────────────────────────── */}
+      <Section kicker="Journey" title="Milestones"
+        aside={<Link to={SITE.journey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>The full timeline <Icon name="arrow" size={13} /></Link>}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: 12 }}>
+          {MILESTONES.map((m, i) => (
+            <Reveal key={m.id} delay={i * 80} style={{ display: 'flex' }}>
+              <Link to={m.to || SITE.journey} className="lift" style={{
+                flex: 1, display: 'flex', flexDirection: 'column', gap: 5, padding: '16px 18px', textDecoration: 'none', color: 'var(--navy)',
+                background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', borderRadius: 'var(--card-radius)', minWidth: 0,
+              }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--teal)' }}>{m.period}</span>
+                <span style={{ fontFamily: 'var(--font-title)', fontSize: 18, lineHeight: 1.2 }}>{m.title}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{m.org}</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </Section>
 
       {/* ── Where to go next ──────────────────────────────────────── */}

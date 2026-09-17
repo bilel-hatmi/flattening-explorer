@@ -32,7 +32,7 @@ export default function Journey() {
       </PageHeader>
 
       {/* ── About, in the order of the LinkedIn text ─────────────────── */}
-      <div className="prose" style={{ marginBottom: 56 }}>
+      <div className="prose rise rise-2" style={{ marginBottom: 56 }}>
         <p>{renderInline(bio.origin)}</p>
         <p>{renderInline(bio.training)}</p>
         <p>{bio.linesLead}</p>
@@ -48,25 +48,23 @@ export default function Journey() {
         <p>{bio.closing}</p>
       </div>
 
-      {/* ── Two sections of their own ─────────────────────────────────── */}
-      {NARRATIVES.map(n => (
+      {/* ── Two sections of their own, then the timeline ──────────────── */}
+      {NARRATIVES.map((n, i) => (
         <Reveal key={n.id}>
-          <Section kicker={n.kicker} title={n.title}>
+          <Section id={n.id} num={i + 1} kicker={n.kicker} title={n.title}>
             <div style={{ display: 'flex', gap: isMobile ? 14 : 22, alignItems: 'flex-start' }}>
               <IconBadge name={NARRATIVE_ICONS[n.id]} size={isMobile ? 40 : 48} tone="purple" />
               <div className="prose" style={{ minWidth: 0, fontSize: 15 }}>
-                {n.body.map((para, i) => <p key={i}>{renderInline(para)}</p>)}
+                {n.body.map((para, j) => <p key={j}>{renderInline(para)}</p>)}
               </div>
             </div>
           </Section>
         </Reveal>
       ))}
 
-      <Reveal>
-        <Section title="Timeline">
-          <Timeline entries={JOURNEY} />
-        </Section>
-      </Reveal>
+      <Section id="timeline" num={NARRATIVES.length + 1} title="Timeline">
+        <Timeline entries={JOURNEY} />
+      </Section>
 
       <Section title="Also">
         <dl style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', columnGap: 24, rowGap: 12, fontSize: 14, lineHeight: 1.6, margin: 0 }}>

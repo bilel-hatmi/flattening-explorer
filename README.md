@@ -6,9 +6,9 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 
 | Path | Page |
 |---|---|
-| `/` | Home: hero, The Flattening card with the poster schema, four lines of research, contact |
+| `/` | Home: hero, The Flattening card with the poster schema, four lines of research, milestones, contact |
 | `/research` | Vision, the risks that deserve the effort, current work |
-| `/projects`, `/projects/:slug` | Current / Earlier / Paused grids and one page per project; `/projects/eleven-strategy` redirects to `/projects/eleven-rag` |
+| `/projects`, `/projects/:slug` | Current / Earlier / Paused grids (numbered I–III) and one page per project with previous/next inside the group; `/projects/eleven-strategy` redirects to `/projects/eleven-rag` |
 | `/journey` | Bio, two narratives (giving back; sport), timeline, CV |
 | `/documents` | Essays, poster, the Part III essay, SRIE decks, reports, code |
 | `/notes/*` | Retired 2026-09-17; redirects to `/research` |
@@ -22,7 +22,7 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 Everything the personal site says lives in `src/content/`, never in components:
 
 - `site.js` — name, tagline, short and long bio, links, the Flattening card on the home page
-- `research.md` — the Research page, split on its `## ` headings (lede, then numbered sections); `research.js` holds the four current-work cards dropped at the `<!-- lines -->` marker
+- `research.md` — the Research page, split on its `## ` headings (lede, then sections numbered I, II, III in framed panels); `research.js` holds the four current-work cards dropped at the `<!-- lines -->` marker
 - `projects.js` — one entry per project with `group` (`current`, `earlier`, `paused`, `programme`) and `icon` (a name from `components/site/Icon.jsx`); long prose in `projects/<slug>.md`; the three SRIE projects are first-class current entries whose `parent` is `srie-2026` (the stream page, not listed in the grid); `deck` adds a PDF strip with a thumbnail
 - `journey.js` — timeline entries, the two narratives, the asides. Bio and narrative strings may carry `**bold**` spans (`src/utils/inline.js`)
 - `documents.js` — the document grid (also read by `/flattening/about`): `type` picks the badge icon, `action` the link text, `secondary` a second link, `logo` an image
