@@ -123,6 +123,22 @@ site perso ne doit jamais les réutiliser.
   est l'explorer, les deux PDF et le code),
   `journey.js` (frise + `NARRATIVES` + `ASIDES`), `documents.js` (source unique, aussi lue par
   `/flattening/about`).
+- Les chaînes de `site.js` (bio) et `journey.js` (récits) peuvent porter des `**gras**` : rendus par
+  `utils/inline.js` (`renderInline`, `stripInline` pour les endroits en texte brut).
+- `research.md` est découpé par `Research.jsx` sur ses `## ` : lede avant le premier titre, sections
+  numérotées (la première, Vision, dans un panneau blanc à filet teal), le marqueur `<!-- lines -->`
+  dans « Current work » reçoit les quatre cartes de `research.js` (icône, titre, texte, tag, lien).
+- `documents.js` : `type` (essay/poster/deck/report/code/cv) choisit le badge, `action` le texte du
+  lien (« Read the essay », « Open the deck »…), `secondary` un second lien, `logo` une image.
+- Animations dans `src/motion.css` (importé par SiteLayout) + `hooks/useReveal.js`
+  (`useReveal`, `useCountUp`) + `components/site/Reveal.jsx` : entrée du hero en cascade
+  (`.rise-n`), champ de lignes derrière l'intro (`.hero-field`), anneau du portrait, révélation au
+  défilement (`.reveal[data-in]`), compteurs de la carte Flattening, fondu de page (`.page-enter`),
+  relief au survol (`.lift`, `.btn-lift`). Tout est coupé sous `prefers-reduced-motion`. Transforms
+  et opacité seulement.
+- `Icon.jsx` porte aussi les marques GitHub et LinkedIn (chemins pleins, Simple Icons) et les
+  pictos utilitaires (mail, cv, pdf, code, poster, external, arrow, pin) ; `IconBadge img=` met un
+  logo dans le disque (CartesIA : `public/img/cartesia_mark.png`, tête seule tirée de `logo.png`).
 - Les fichiers Markdown peuvent contenir quelques blocs HTML (rendus par `rehype-raw`, stylés
   dans `src/prose-rich.css`) : `<p class="lead">`, `<aside class="callout">`,
   `<blockquote class="pull">`, `<figure class="wide">` + `<figcaption>`, `<div class="stats">`,
@@ -173,11 +189,13 @@ flattening-explorer/
 │   ├── App.jsx                  ← deux layout routes + redirections legacy + React.lazy du sous-site
 │   ├── routes.js                ← FLATTENING_BASE, fl(), SITE — seule source des chemins
 │   ├── content/                 ← TOUT le texte du site perso (voir §1-bis)
-│   │   ├── site.js · research.md · projects.js · journey.js · documents.js
+│   │   ├── site.js · research.md · research.js · projects.js · journey.js · documents.js
 │   │   └── projects/<slug>.md   ← prose longue des pages projet (srie-* , eleven-rag/agents, …)
 │   ├── prose-rich.css           ← blocs HTML autorisés dans le Markdown (lead, callout, figure…)
+│   ├── motion.css               ← animations du site perso (voir §1-bis)
+│   ├── utils/inline.js          ← **gras** dans les chaînes de contenu
 │   ├── pages/site/              ← Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
-│   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Section, Tag, Timeline, Prose
+│   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Reveal, Section, Tag, Timeline, Prose
 │   ├── utils/frontmatter.js     ← parseur frontmatter maison (pas de gray-matter : Buffer)
 │   ├── data/
 │   │   ├── profiles.js          ← constantes des 8 profils (couleurs, labels, paramètres)

@@ -22,10 +22,10 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 Everything the personal site says lives in `src/content/`, never in components:
 
 - `site.js` — name, tagline, short and long bio, links, the Flattening card on the home page
-- `research.md` — the Research page (vision, risks, current work)
+- `research.md` — the Research page, split on its `## ` headings (lede, then numbered sections); `research.js` holds the four current-work cards dropped at the `<!-- lines -->` marker
 - `projects.js` — one entry per project with `group` (`current`, `earlier`, `paused`, `programme`) and `icon` (a name from `components/site/Icon.jsx`); long prose in `projects/<slug>.md`; the three SRIE projects are first-class current entries whose `parent` is `srie-2026` (the stream page, not listed in the grid); `deck` adds a PDF strip with a thumbnail
-- `journey.js` — timeline entries, the two narratives, the asides
-- `documents.js` — the document grid (also read by `/flattening/about`)
+- `journey.js` — timeline entries, the two narratives, the asides. Bio and narrative strings may carry `**bold**` spans (`src/utils/inline.js`)
+- `documents.js` — the document grid (also read by `/flattening/about`): `type` picks the badge icon, `action` the link text, `secondary` a second link, `logo` an image
 
 Markdown files may use a few HTML blocks, rendered through `rehype-raw` and styled in `src/prose-rich.css`: `<p class="lead">`, `<aside class="callout">`, `<blockquote class="pull">`, `<figure class="wide">` with `<figcaption>`, `<div class="stats">`, `<div class="cards3">`, `<dl class="work">`, `<dl class="levers">`, `<div class="projects3">`, `<p class="sources">`, `<span class="tag">`.
 
@@ -76,8 +76,9 @@ src/
 ├── routes.js                  # FLATTENING_BASE, fl(), SITE — the only source of paths
 ├── content/                   # All personal-site copy (see above)
 ├── prose-rich.css             # HTML blocks allowed inside the Markdown content
+├── motion.css                 # Entrances, scroll reveals, hero field, hover depth (off under reduced motion)
 ├── pages/site/                # Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
-├── components/site/           # SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Section, Tag, Timeline, Prose
+├── components/site/           # SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Reveal, Section, Tag, Timeline, Prose
 ├── components/
 │   ├── graphs/                # 18 interactive visualisations (A1–DNASH)
 │   ├── layout/                # FlatteningLayout, Nav, ScrollSections (sidebar + acts)
