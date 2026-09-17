@@ -15,7 +15,7 @@ The language model is treated as a measurement technology, not as an interpretiv
 Three application contexts were developed: mental health (triage support, never diagnosis), youth guidance, and professional development. Surveillance is excluded by design and the person's autonomy is the central constraint.
 
 <aside class="callout">
-<strong>Three questions cannot be answered from inside the project</strong>, which is why it sought academic partners: whether the profiles are stable over time, whether they correlate with existing validated measures, and whether the procedure biases what it claims to observe.
+<strong>The project cannot answer three questions from inside</strong>, which is why it sought academic partners: whether the profiles are stable over time, whether they correlate with existing validated measures, and whether the procedure biases what it claims to observe.
 </aside>
 
 ## Where it stands

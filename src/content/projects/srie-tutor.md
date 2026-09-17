@@ -22,7 +22,7 @@ Bastani et al. ran a second arm of the same experiment, and the cost disappeared
 </dl>
 
 <aside class="callout">
-The project's worth reaches beyond education. Personalisation is the near case of a general problem: wherever a formal object is too costly for a human to steer, a language model can become the hand that works it, with the structure saying where to look and the model carrying the language. Education receives one to two per cent of AI venture capital, and the scaffolding has stayed at pilot scale: the one tutor that raised training performance by 127% ran on prompt engineering alone.
+Education is only the nearest case. Personalisation is one instance of a general problem: wherever a formal object is too costly for a human to steer, a language model can become the hand that works it, with the structure saying where to look and the model carrying the language. Education receives one to two per cent of AI venture capital, and the scaffolding has stayed at pilot scale: the one tutor that raised training performance by 127% ran on prompt engineering alone.
 </aside>
 
 ## Where it stands

@@ -8,7 +8,7 @@
 
 Readers rate the tone an answer strikes rather than the argument it makes, so an answer that softens a sharp claim and hedges a firm one leaves critics nothing to attack; it is hard to fault and just as hard to use, since a straight answer beats a shrug. Sycophancy, as the usual benchmarks measure it, is the reader's verdict on being agreed with, recorded as if it were a property of the answer; when a benchmark certifies that agreement as neutral and preference tuning optimises the metric, the result is sycophancy.
 
-The cue holds between people and breaks on a model: neither the cue nor the human account behind it carries over. The usual word names sycophancy as one trait and so assumes one cause, whereas here there may be several, each traced back to the stage that produced it and counted.
+The tone cue holds between people and breaks on a model: neither the cue nor the human account behind it carries over. The usual word names sycophancy as one trait and so assumes one cause, whereas here there may be several, each traced back to the stage that produced it and counted.
 
 ## Four quantities, each with its own cause
 
@@ -19,7 +19,7 @@ The cue holds between people and breaks on a model: neither the cue nor the huma
 <dt>Directional entropy</dt><dd>The dispersion of answers across a population of prompts. Training teams that reduce variance deliberately converge the model on one safe answer, and narrow the views people meet.</dd>
 </dl>
 
-Conviction, the confidence with which an answer is held, is tracked alongside these four as an auxiliary construct: it decouples from actual validity under safety tuning. Named as one profile, how the four move together stays untested, and that is the project's hypothesis: whether they form a coherent structure, and whether regimes can be identified that hold a model at a preferable equilibrium.
+Conviction, the confidence with which an answer is held, is tracked alongside these four as an auxiliary construct: it decouples from actual validity under safety tuning. The four are usually named as one profile, but how they move together stays untested, and that is the project's hypothesis: whether they form a coherent structure, and whether regimes can be identified that hold a model at a preferable equilibrium.
 
 ## Two instruments across five conditions
 
