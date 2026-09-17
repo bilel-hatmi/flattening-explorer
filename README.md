@@ -6,11 +6,12 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 
 | Path | Page |
 |---|---|
-| `/` | Home: hero, The Flattening card, featured projects, latest notes, contact |
-| `/projects`, `/projects/:slug` | Project grid and one page per project |
-| `/journey` | Timeline + CV |
-| `/documents` | Essays, poster, presentations, code |
-| `/notes`, `/notes/:slug` | Markdown notes (GFM + KaTeX) |
+| `/` | Home: hero, The Flattening card, the three SRIE projects, current work, contact |
+| `/research` | Vision, the risks that deserve the effort, current work |
+| `/projects`, `/projects/:slug` | Project grid and one page per project (SRIE has an overview and three sub-pages with the project decks) |
+| `/journey` | Bio, two narratives (giving back; sport), timeline, CV |
+| `/documents` | Essays, poster, the Part III essay, SRIE decks, reports, code |
+| `/notes/*` | Retired 2026-09-17; redirects to `/research` |
 | `/flattening` | The Flattening landing |
 | `/flattening/questionnaire` → `/flattening/explore` | Profile questionnaire, then the four acts and the Lab |
 | `/flattening/model`, `/flattening/about` | Model calibration; project page and documents |
@@ -20,23 +21,13 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 
 Everything the personal site says lives in `src/content/`, never in components:
 
-- `site.js` — name, bio, links, the Flattening card on the home page
-- `projects.js` — one entry per project; long prose in `projects/<slug>.md`
-- `journey.js` — timeline entries
+- `site.js` — name, tagline, short and long bio, links, the Flattening card on the home page
+- `research.md` — the Research page (vision, risks, current work)
+- `projects.js` — one entry per project; long prose in `projects/<slug>.md`; `parent`/`children` nest the three SRIE projects under `srie-2026`; `deck` adds a PDF strip with a thumbnail
+- `journey.js` — timeline entries, the two narratives, the asides
 - `documents.js` — the document grid (also read by `/flattening/about`)
-- `notes/YYYY-MM-DD-slug.md` — a note per file, with frontmatter:
 
-  ```markdown
-  ---
-  title: A title
-  date: 2026-09-12
-  summary: One sentence shown in the list.
-  tags: [causal inference]
-  draft: true        # hidden in production builds
-  ---
-  ```
-
-Placeholders are tagged `[TODO: …]`; `grep -rn "TODO" src/content` lists what is left to write.
+Markdown files may use a few HTML blocks, rendered through `rehype-raw` and styled in `src/prose-rich.css`: `<p class="lead">`, `<aside class="callout">`, `<blockquote class="pull">`, `<figure class="wide">` with `<figcaption>`, `<div class="stats">`, `<div class="cards3">`, `<dl class="work">`, `<dl class="levers">`, `<div class="projects3">`, `<p class="sources">`, `<span class="tag">`.
 
 ## What The Flattening shows
 
@@ -84,7 +75,8 @@ src/
 ├── App.jsx                    # Two layout routes, legacy redirects, lazy explorer
 ├── routes.js                  # FLATTENING_BASE, fl(), SITE — the only source of paths
 ├── content/                   # All personal-site copy (see above)
-├── pages/site/                # Home, Projects, ProjectPage, Journey, Documents, Notes, NotePage, NotFound
+├── prose-rich.css             # HTML blocks allowed inside the Markdown content
+├── pages/site/                # Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
 ├── components/site/           # SiteLayout, SiteNav, Footer, Card, DocCard, Section, Tag, Timeline, Prose
 ├── components/
 │   ├── graphs/                # 18 interactive visualisations (A1–DNASH)

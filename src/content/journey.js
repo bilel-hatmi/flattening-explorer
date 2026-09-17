@@ -139,7 +139,7 @@ export const NARRATIVES = [
     title: 'Where I come from, and what I owe',
     body: [
       'My primary and secondary schooling took place in Seine-Saint-Denis, in La Courneuve, a deprived area. Having reached studies of high quality thanks to the Cordées de la Réussite, the CentraleSupélec Foundation and CapPrépa, I have always wanted to make altruism and teaching a central value, in gratitude for what I received along the way.',
-      'That is what OSER was for, from my first year at CentraleSupélec: tutoring sessions in secondary schools, on general knowledge and orientation, against the self-censorship that keeps pupils from applying; then, as VP Carnets de France, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city. Teaching followed the same line: a year as a teaching assistant in probability and partial differential equations, a mathematics course co-organised for international students, and today the supervision of seven undergraduates at SRIE.',
+      'OSER, from my first year at CentraleSupélec, gave that a form: tutoring sessions in secondary schools, on general knowledge and orientation, against the self-censorship that keeps pupils from applying; then, as VP Carnets de France, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city. Teaching followed the same line: a year as a teaching assistant in probability and partial differential equations, a mathematics course co-organised for international students, and today the supervision of seven undergraduates at SRIE.',
     ],
   },
   {
@@ -148,7 +148,7 @@ export const NARRATIVES = [
     title: 'Discipline, and a taste for the challenge',
     body: [
       'I owe much of my discipline and my sense of the challenge to badminton, played at a highly competitive level when I was young: a regional-level player before the classes préparatoires.',
-      'I carried that experience into the presidency of the CentraleSupélec badminton club. Fifty players recruited from 250 applicants; a team led to the French University Badminton Championships; competition registrations with the French University Sports Federation, grant applications for transport and accommodation, equipment and a budget to oversee. At Cambridge, the university badminton club.',
+      'I carried that experience into the presidency of the CentraleSupélec badminton club: I recruited fifty players from 250 applicants, led the team to the French University Badminton Championships, handled the competition registrations with the French University Sports Federation and the grant applications for transport and accommodation, and oversaw the equipment and the budget. At Cambridge I joined the university badminton club.',
     ],
   },
 ];

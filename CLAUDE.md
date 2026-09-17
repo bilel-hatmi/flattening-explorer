@@ -88,8 +88,12 @@ Node        : >= 18
 
 **Ce que c'est.** La racine est le site de Bilel Hatmi ; l'explorer est un sous-site. Décisions
 prises avec Bilel : une seule app, même repo, même projet Vercel ; anglais seulement ; sections
-Projects (pages dédiées), Journey (frise), Documents, Notes (Markdown) ; squelette avec
-placeholders d'abord, rédaction ensuite ; pas de domaine pour l'instant.
+Research (vision, puis travaux en cours), Projects (pages dédiées, SRIE en trois sous-pages avec
+les decks), Journey (deux récits + frise), Documents ; pas de domaine pour l'instant. **Notes a
+été retirée le 2026-09-17** (`/notes/*` redirige vers `/research`). Le contenu est rempli depuis
+le CV v8, le cahier rempli par Bilel (17 sept.), la banque de réponses de candidature, les decks
+SRIE et le post Risk Prize ; le mémoire Part III est publié en version publique
+(`public/docs/part_iii_essay_pci.pdf`, nom de l'auteur sur la page de titre).
 
 **Deux layout routes, une barre de 44 px chacune — jamais deux barres empilées.**
 - `/` … → `components/site/SiteLayout.jsx` (SiteNav « Bilel Hatmi » + page + Footer)
@@ -107,12 +111,19 @@ site perso ne doit jamais les réutiliser.
 `fl('/explore')` depuis `src/routes.js` (`FLATTENING_BASE`, `fl()`, `SITE`).
 
 **Tout le texte du site perso vit dans `src/content/`, jamais dans le JSX :**
-- `site.js` (identité, bio, liens, carte Flattening de l'accueil), `projects.js` (+ prose longue
-  dans `content/projects/<slug>.md`), `journey.js`, `documents.js` (source unique, aussi lue par
-  `/flattening/about`), `notes/*.md` (frontmatter `title/date/summary/tags/draft`, chargées par
-  `import.meta.glob`, slug = nom de fichier sans le préfixe de date).
-- Les placeholders sont balisés **`[TODO: …]`** : `grep -rn "TODO" src/content` liste ce qui
-  reste à écrire.
+- `site.js` (identité, accroche, bio courte et longue, liens, carte Flattening de l'accueil),
+  `research.md` (page Research), `projects.js` (+ prose longue dans `content/projects/<slug>.md` ;
+  champs `parent`/`children` pour les sous-pages SRIE, `deck` pour le PDF et sa vignette),
+  `journey.js` (frise + `NARRATIVES` + `ASIDES`), `documents.js` (source unique, aussi lue par
+  `/flattening/about`).
+- Les fichiers Markdown peuvent contenir quelques blocs HTML (rendus par `rehype-raw`, stylés
+  dans `src/prose-rich.css`) : `<p class="lead">`, `<aside class="callout">`,
+  `<blockquote class="pull">`, `<figure class="wide">` + `<figcaption>`, `<div class="stats">`,
+  `<div class="cards3">`, `<dl class="work">`, `<dl class="levers">`, `<div class="projects3">`,
+  `<p class="sources">`, `<span class="tag">`. Pas d'autre HTML.
+- Les textes ont passé le skill `humanizer-formal` (mode génération : exemplaires d'abord, puis
+  détection par quatre agents et validation) le 2026-09-17 ; les passages verbatim de Bilel
+  (vision, risques lisses, post Risk Prize) ne se réécrivent pas.
 
 **Composants du site (`components/site/`) : couleurs en `var(--navy)` etc.** (tokens dans
 `index.css`, dont `--text-muted --text-faint --rule --teal-tint --teal-line --nav-h`). Les 18
@@ -155,10 +166,10 @@ flattening-explorer/
 │   ├── App.jsx                  ← deux layout routes + redirections legacy + React.lazy du sous-site
 │   ├── routes.js                ← FLATTENING_BASE, fl(), SITE — seule source des chemins
 │   ├── content/                 ← TOUT le texte du site perso (voir §1-bis)
-│   │   ├── site.js · projects.js · journey.js · documents.js
-│   │   ├── projects/<slug>.md   ← prose longue des pages projet
-│   │   └── notes/*.md + index.js
-│   ├── pages/site/              ← Home, Projects, ProjectPage, Journey, Documents, Notes, NotePage, NotFound
+│   │   ├── site.js · research.md · projects.js · journey.js · documents.js
+│   │   └── projects/<slug>.md   ← prose longue des pages projet (SRIE : srie-2026 + 3 sous-pages)
+│   ├── prose-rich.css           ← blocs HTML autorisés dans le Markdown (lead, callout, figure…)
+│   ├── pages/site/              ← Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
 │   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Section, Tag, Timeline, Prose
 │   ├── utils/frontmatter.js     ← parseur frontmatter maison (pas de gray-matter : Buffer)
 │   ├── data/
@@ -678,7 +689,7 @@ Ne jamais commencer Phase 5 sans `model_content.md`.
 Barre de l'explorer (Nav.jsx, 44 px, navy) : "← Bilel Hatmi" | The Flattening | Explore · Model · About | Read the essay
 Sidebar desktop / bande mobile (ScrollSections.jsx) : Act I … Act IV | Lab — offsets top:44 valides (une seule barre)
 Routes : /flattening, /flattening/questionnaire, /flattening/explore, /flattening/model, /flattening/about
-Barre du site perso (SiteNav.jsx, mêmes 44 px) : Bilel Hatmi | Projects · Journey · Notes · Documents | Contact
+Barre du site perso (SiteNav.jsx, mêmes 44 px) : Bilel Hatmi | Research · Projects · Journey · Documents | Contact
 ```
 
 ### Structure de la page principale (scroll)

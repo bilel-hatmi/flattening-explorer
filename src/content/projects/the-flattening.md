@@ -3,10 +3,10 @@
 # The opening section is the Risk Prize post (LinkedIn, July 2026), kept as written.
 ---
 
-<p class="lead">Unmanaged AI adoption makes organisations better on average while making them more fragile at the extremes. Productivity gains show up on dashboards. Tail risk accumulates elsewhere, hidden by the same metrics that report the improvement.</p>
+<p class="lead">In the model, unmanaged AI adoption makes organisations better on average and more fragile at the extremes. Productivity gains show up on dashboards, while tail risk accumulates elsewhere, hidden by the same metrics that report the improvement.</p>
 
 <aside class="callout">
-<strong>The question.</strong> What does AI adoption do to firms of different sizes, working in different domains, along three axes at once: cognitive diversity, productivity, and losses? The essay builds a Monte Carlo model of an organisation making quarterly decisions with and without AI, under three governance regimes, and reads the three axes off the same simulation.
+<strong>The question the essay asks:</strong> what does AI adoption do to firms of different sizes, working in different domains, along three axes at once, cognitive diversity, productivity and losses? It builds a Monte Carlo model of an organisation making quarterly decisions with and without AI, under three governance regimes, and reads the three axes off the same simulation.
 </aside>
 
 ## Nine people, one toy name
@@ -23,25 +23,25 @@ Everyone becomes individually excellent, and excellent in the same way. When the
 
 In a market, lost diversity becomes a fragility no single player has any reason to fix alone. And the correlation does not stop at the office walls. Picture millions of retail investors asking the same model what to buy, or PE funds running the same AI diligence on the same deals. 2008 was a market that lost its diversity. We may be rebuilding that condition, one prompt at a time.
 
-## What the model does
+## Inside the model
 
 <figure class="wide">
 <a href="/img/flattening/schema.svg" target="_blank" rel="noopener"><img src="/img/flattening/schema.svg" alt="Mechanism of the model: inputs (talent, hiring filter, governance levers, stack concentration, crisis regime), mechanisms (cognitive diversity, peer conformism, cognitive surrender, skill erosion, shared AI error, error selection), outputs (expected loss, tail risk, throughput, reported output)" /></a>
 <figcaption>The mechanism, as drawn on the poster. Inputs on the left, the four channels in the middle, the two outputs that dashboards see and the two they do not on the right. Click to open at full size.</figcaption>
 </figure>
 
-Four channels carry the effect, and each has its own empirical anchor.
+The effect travels through four channels, and each has its own empirical anchor.
 
 1. **The filter narrows minds.** One algorithm screens every CV with one logic, so atypical profiles drop out, and internal promotion keeps compounding the sameness. In the model, expressed cognitive diversity falls by 29% over five years (hiring and promotion homophily: Rivera, 2012).
 2. **Surrender becomes the default.** Under productivity pressure, deferring is efficient and spreads as a habit: time pressure triples blind surrender, and even when the AI is wrong, 79.8% follow it (Shaw & Nave, 2026).
 3. **One shared error.** In-domain, on routine cases inside the AI's reliable frontier, it is right about 92% of the time. A crisis, 8% of quarters, pushes work out of that frontier, where it is right about 55% of the time, so everyone errs together (the jagged frontier: Dell'Acqua, 2026; shared-error factor: Vasicek, 2002).
-4. **The masking dashboard.** Errors now line up, so losses stop averaging out and pile into a few extreme quarters. A single speed-up lifts the output you see, +54%, while hiding the risk you do not, P99 × θ at +95%.
+4. **The masking dashboard.** Errors now line up, so losses stop averaging out and pile into a few extreme quarters. A single speed-up θ, the AI throughput gain per worker, lifts the output you see, +54%, while hiding the risk you do not: the tail scaled by the same gain, P99 × θ, at +95%.
 
 <div class="stats">
 <div><span class="num success">−38%</span><span class="lab">expected loss</span></div>
 <div><span class="num success">+54%</span><span class="lab">reported output</span></div>
-<div><span class="num danger">+56%</span><span class="lab">worst quarter in a hundred</span></div>
-<div><span class="num danger">×1.96</span><span class="lab">true tail against the dashboard's</span></div>
+<div><span class="num danger">+56%</span><span class="lab">P99 quarterly loss</span></div>
+<div><span class="num danger">×1.96</span><span class="lab">true P99 against the dashboard's</span></div>
 </div>
 
 <figure>
@@ -54,7 +54,7 @@ Four channels carry the effect, and each has its own empirical anchor.
 <figcaption><strong>The damage compounds for years.</strong> Left unmanaged, people think alike (diversity −29%), skills fade (−17%) and errors correlate (+44%). After five years the loss is built in; active governance holds it flat.</figcaption>
 </figure>
 
-## What moves the tail, and what does not
+## The drivers of the tail, and the levers
 
 <figure>
 <img src="/img/flattening/fig3_levers.png" alt="Tornado chart: stack concentration, talent quality and cognitive homogeneity each add 11 to 14% to the P99 loss; deskilling rate and domain exposure barely move it" />
@@ -66,7 +66,7 @@ Four channels carry the effect, and each has its own empirical anchor.
 <figcaption><strong>Governance helps, unevenly.</strong> Active oversight lowers every profile's risk, but regressively: it helps least the firms most exposed, whose elite judgment is exactly what AI erodes fastest.</figcaption>
 </figure>
 
-The lever that works best is structurally simple: the person records an independent position before seeing the AI's output. Formed before the consultation, that judgment is the one thing the model cannot homogenise.
+The most effective lever in the model is a sequence: the person records an independent position before seeing the AI's output. A position formed before the consultation is out of the model's reach, so it cannot be homogenised by it.
 
 <dl class="levers">
 <dt>Stack diversification <span>Procurement</span></dt><dd>A different model at each layer. Tail −10 to −15%.</dd>
@@ -91,7 +91,7 @@ I work at the abstract end of Part III statistics, but I chose to aim this work 
 
 Whether we will still need human judgment in ten years is not in doubt. Whether we will still be able to exercise it is.
 
-## What is here
+## Essay, poster, explorer
 
 The prize essay, the A0 poster, and the interactive explorer, whose simulation engine runs in the browser: pick an organisational profile, follow the four acts (the paradox, its mechanisms, the governance levers, and why delay makes each of them more costly), then run your own parameter combinations in the laboratory. The essay was one of four finalists of the Cambridge–McKinsey Risk Prize 2026, at the Cambridge Centre for Risk Studies, Judge Business School.
 

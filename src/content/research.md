@@ -21,17 +21,17 @@ The productivist logic is not limited to the risk of recession: it is philosophi
 
 ## Current work
 
-My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today. Four lines carry it, and they share one requirement: a property measured in a model is a measurement only once it has been shown to be stable, to separate what it claims to separate, and to survive a change of instrument.
+The four lines below are one attempt to recentre AI on benefits that belong to human capital. I hold them to a single requirement: a property measured in a model counts as measured only once it has been shown to be stable, to separate what it claims to separate, and to survive a change of instrument.
 
 <dl class="work">
 <dt><a href="/projects/the-flattening">Cognitive homogenisation under AI</a></dt>
-<dd>A Monte Carlo model of what AI adoption does to firms of different sizes and domains, on cognitive diversity, productivity and losses. Finalist of the Cambridge–McKinsey Risk Prize 2026, with an interactive explorer.</dd>
+<dd>The Flattening models what AI adoption does to firms of different sizes and domains, on cognitive diversity, productivity and losses. Finalist of the Cambridge–McKinsey Risk Prize 2026, with an interactive explorer.</dd>
 <dt><a href="/projects/srie-sycophancy">Four structural properties of LLMs</a></dt>
 <dd>The properties that generate constructs such as sycophancy or malice: epistemic validity, procedural validity, direction, directional entropy. Read by two instruments, behaviour and the model's internals, across five conditions. Empirical phase under way at SRIE.</dd>
 <dt><a href="/projects/srie-tutor">LLMs applied to learning</a></dt>
-<dd>An adaptive tutor built on parametric structures derived from knowledge spaces, with a metacognitive component, so that the tool teaches without deskilling.</dd>
+<dd>The tutor rests on parametric structures derived from knowledge spaces, with a metacognitive component, and is meant to teach without deskilling.</dd>
 <dt><a href="/projects/srie-mediation">LLMs applied to the mediation of disputes</a></dt>
 <dd>A mediator whose neutrality is a property of the objective function, under confidentiality constraints: game theory carried over to an agentic workflow.</dd>
 </dl>
 
-The statistical ground for all four is causal: my Part III essay on <a href="/projects/part-iii-dissertation">proximal causal inference</a> developed estimators of a treatment effect when the confounder is unobserved, and a tuning protocol that never sees the truth. Steering AI requires an explanatory account, and an explanatory account is a causal one.
+The statistical ground for all four is causal. My Part III essay on <a href="/projects/part-iii-dissertation">proximal causal inference</a> developed estimators of a treatment effect when the confounder is unobserved, and a tuning protocol that calibrates them without ever seeing the truth.

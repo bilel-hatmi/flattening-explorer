@@ -8,14 +8,14 @@ The core idea is an interface that maps a person's spontaneous language onto ope
 
 ## The method
 
-The language model is treated as a measurement technology, not as an interpretive authority. The procedure runs in four steps: contextual grounding, contextualised dilemmas drawn from what the person has described, a deepening phase through follow-up questions, and an output the person can revise. Generic questionnaire items are replaced by vignettes built from the person's own situation; scoring follows explicit rubrics with uncertainty; and the sequence is designed so that the person's own reasoning is drawn out before any model output reaches them. That ordering is the same lever that reduces tail risk in *The Flattening*, applied to one person at a time.
+The language model is treated as a measurement technology, not as an interpretive authority. The procedure runs in four steps: contextual grounding, contextualised dilemmas drawn from what the person has described, a deepening phase through follow-up questions, and an output the person can revise. Generic questionnaire items are replaced by vignettes built from the person's own situation; scoring follows explicit rubrics with uncertainty; and the sequence is designed so that the person's own reasoning is drawn out before any model output reaches them. That ordering is the same lever that reduces tail risk in *The Flattening*.
 
 ## Domains and limits
 
 Three application contexts were developed: mental health (triage support, never diagnosis), youth guidance, and professional development. Surveillance is excluded by design and the person's autonomy is the central constraint.
 
 <aside class="callout">
-<strong>Three questions cannot be answered from inside the project</strong>, and they are the reason it sought academic partners: are the profiles stable over time, do they correlate with existing validated measures, and does the procedure bias what it claims to observe?
+<strong>Three questions cannot be answered from inside the project</strong>, which is why it sought academic partners: whether the profiles are stable over time, whether they correlate with existing validated measures, and whether the procedure biases what it claims to observe.
 </aside>
 
 ## Where it stands
