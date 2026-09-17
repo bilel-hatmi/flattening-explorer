@@ -88,8 +88,9 @@ Node        : >= 18
 
 **Ce que c'est.** La racine est le site de Bilel Hatmi ; l'explorer est un sous-site. Décisions
 prises avec Bilel : une seule app, même repo, même projet Vercel ; anglais seulement ; sections
-Research (vision, puis travaux en cours), Projects (pages dédiées, SRIE en trois sous-pages avec
-les decks), Journey (deux récits + frise), Documents ; pas de domaine pour l'instant. **Notes a
+Research (vision, puis travaux en cours), Projects (pages dédiées ; groupes `current` /
+`earlier` / `paused` / `programme`), Journey (bio à puces, Giving back et Sport en sections
+propres, frise), Documents ; pas de domaine pour l'instant. **Notes a
 été retirée le 2026-09-17** (`/notes/*` redirige vers `/research`). Le contenu est rempli depuis
 le CV v8, le cahier rempli par Bilel (17 sept.), la banque de réponses de candidature, les decks
 SRIE et le post Risk Prize ; le mémoire Part III est publié en version publique
@@ -113,7 +114,13 @@ site perso ne doit jamais les réutiliser.
 **Tout le texte du site perso vit dans `src/content/`, jamais dans le JSX :**
 - `site.js` (identité, accroche, bio courte et longue, liens, carte Flattening de l'accueil),
   `research.md` (page Research), `projects.js` (+ prose longue dans `content/projects/<slug>.md` ;
-  champs `parent`/`children` pour les sous-pages SRIE, `deck` pour le PDF et sa vignette),
+  champ `group` : `current` liste les cinq lignes de recherche directement, **sans carte SRIE**
+  (les trois projets SRIE sont des entrées de premier rang, kicker sans le nom SRIE) ; `srie-2026`
+  est en `programme`, accessible par un lien discret ; Eleven Strategy est scindé en `eleven-rag`
+  et `eleven-agents` (`/projects/eleven-strategy` redirige) ; CartesIA en `paused`. Champ `icon`
+  → `components/site/Icon.jsx` (icônes ligne inline + `IconBadge`), `deck` pour le PDF et sa
+  vignette. `the-flattening.md` = le post LinkedIn + le schéma du poster, rien d'autre : le reste
+  est l'explorer, les deux PDF et le code),
   `journey.js` (frise + `NARRATIVES` + `ASIDES`), `documents.js` (source unique, aussi lue par
   `/flattening/about`).
 - Les fichiers Markdown peuvent contenir quelques blocs HTML (rendus par `rehype-raw`, stylés
@@ -167,10 +174,10 @@ flattening-explorer/
 │   ├── routes.js                ← FLATTENING_BASE, fl(), SITE — seule source des chemins
 │   ├── content/                 ← TOUT le texte du site perso (voir §1-bis)
 │   │   ├── site.js · research.md · projects.js · journey.js · documents.js
-│   │   └── projects/<slug>.md   ← prose longue des pages projet (SRIE : srie-2026 + 3 sous-pages)
+│   │   └── projects/<slug>.md   ← prose longue des pages projet (srie-* , eleven-rag/agents, …)
 │   ├── prose-rich.css           ← blocs HTML autorisés dans le Markdown (lead, callout, figure…)
 │   ├── pages/site/              ← Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
-│   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Section, Tag, Timeline, Prose
+│   ├── components/site/         ← SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Section, Tag, Timeline, Prose
 │   ├── utils/frontmatter.js     ← parseur frontmatter maison (pas de gray-matter : Buffer)
 │   ├── data/
 │   │   ├── profiles.js          ← constantes des 8 profils (couleurs, labels, paramètres)

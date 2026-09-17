@@ -6,9 +6,9 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 
 | Path | Page |
 |---|---|
-| `/` | Home: hero, The Flattening card, the three SRIE projects, current work, contact |
+| `/` | Home: hero, The Flattening card with the poster schema, four lines of research, contact |
 | `/research` | Vision, the risks that deserve the effort, current work |
-| `/projects`, `/projects/:slug` | Project grid and one page per project (SRIE has an overview and three sub-pages with the project decks) |
+| `/projects`, `/projects/:slug` | Current / Earlier / Paused grids and one page per project; `/projects/eleven-strategy` redirects to `/projects/eleven-rag` |
 | `/journey` | Bio, two narratives (giving back; sport), timeline, CV |
 | `/documents` | Essays, poster, the Part III essay, SRIE decks, reports, code |
 | `/notes/*` | Retired 2026-09-17; redirects to `/research` |
@@ -23,7 +23,7 @@ Everything the personal site says lives in `src/content/`, never in components:
 
 - `site.js` — name, tagline, short and long bio, links, the Flattening card on the home page
 - `research.md` — the Research page (vision, risks, current work)
-- `projects.js` — one entry per project; long prose in `projects/<slug>.md`; `parent`/`children` nest the three SRIE projects under `srie-2026`; `deck` adds a PDF strip with a thumbnail
+- `projects.js` — one entry per project with `group` (`current`, `earlier`, `paused`, `programme`) and `icon` (a name from `components/site/Icon.jsx`); long prose in `projects/<slug>.md`; the three SRIE projects are first-class current entries whose `parent` is `srie-2026` (the stream page, not listed in the grid); `deck` adds a PDF strip with a thumbnail
 - `journey.js` — timeline entries, the two narratives, the asides
 - `documents.js` — the document grid (also read by `/flattening/about`)
 
@@ -77,7 +77,7 @@ src/
 ├── content/                   # All personal-site copy (see above)
 ├── prose-rich.css             # HTML blocks allowed inside the Markdown content
 ├── pages/site/                # Home, Research, Projects, ProjectPage, Journey, Documents, NotFound
-├── components/site/           # SiteLayout, SiteNav, Footer, Card, DocCard, Section, Tag, Timeline, Prose
+├── components/site/           # SiteLayout, SiteNav, Footer, Card, DocCard, Icon, Section, Tag, Timeline, Prose
 ├── components/
 │   ├── graphs/                # 18 interactive visualisations (A1–DNASH)
 │   ├── layout/                # FlatteningLayout, Nav, ScrollSections (sidebar + acts)
