@@ -4,8 +4,9 @@ import useIsMobile from '../../hooks/useIsMobile';
 import Card, { CardGrid } from '../../components/site/Card';
 import Section, { Page } from '../../components/site/Section';
 import { TagRow } from '../../components/site/Tag';
+import Icon from '../../components/site/Icon';
 import { PERSON, FLATTENING } from '../../content/site';
-import { FEATURED_PROJECTS, childrenOf } from '../../content/projects';
+import { CURRENT_PROJECTS } from '../../content/projects';
 import { SITE } from '../../routes';
 
 function Portrait({ size }) {
@@ -28,7 +29,7 @@ function Portrait({ size }) {
 }
 
 const btn = (primary) => ({
-  display: 'inline-block', padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+  display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
   textDecoration: 'none', whiteSpace: 'nowrap',
   ...(primary
     ? { background: 'var(--navy)', color: '#FFFFFF' }
@@ -38,8 +39,7 @@ const btn = (primary) => ({
 export default function Home() {
   useDocumentTitle(null);
   const isMobile = useIsMobile();
-  const projects = FEATURED_PROJECTS.filter(p => p.slug !== 'the-flattening');
-  const srie = childrenOf('srie-2026');
+  const current = CURRENT_PROJECTS.filter(p => p.slug !== 'the-flattening');
 
   return (
     <Page wide>
@@ -64,7 +64,7 @@ export default function Home() {
             {PERSON.shortBio}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            <Link to={SITE.research} style={btn(true)}>What I work on</Link>
+            <Link to={SITE.research} style={btn(true)}><Icon name="research" size={16} /> What I work on</Link>
             {PERSON.links.map(l => (
               <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" style={btn(false)}>{l.label}</a>
             ))}
@@ -78,12 +78,12 @@ export default function Home() {
         <Card style={{ padding: 0, gap: 0, overflow: 'hidden' }}>
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
             <Link to={`${SITE.projects}/the-flattening`} style={{
-              flex: isMobile ? 'none' : '0 0 46%', background: 'var(--navy)', display: 'block', minHeight: isMobile ? 160 : 0,
+              flex: isMobile ? 'none' : '0 0 46%', background: '#FFFFFF', display: 'flex', alignItems: 'center', padding: 12, minHeight: isMobile ? 140 : 0,
             }}>
               <img src="/img/flattening/schema.png" alt="The mechanism of The Flattening, from the poster"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', opacity: 0.96 }} />
+                style={{ width: '100%', height: 'auto', display: 'block' }} />
             </Link>
-            <div style={{ padding: isMobile ? '22px 20px' : '28px 32px', flex: 1, minWidth: 0 }}>
+            <div style={{ padding: isMobile ? '22px 20px' : '28px 32px', flex: 1, minWidth: 0, borderLeft: isMobile ? 'none' : '0.5px solid var(--rule)' }}>
               <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--navy)', marginBottom: 18 }}>{FLATTENING.summary}</p>
               <div style={{ display: 'flex', gap: 22, marginBottom: 20, flexWrap: 'wrap' }}>
                 {FLATTENING.counters.map(c => (
@@ -99,35 +99,27 @@ export default function Home() {
         </Card>
       </Section>
 
-      {/* ── SRIE ──────────────────────────────────────────────────── */}
-      <Section kicker="Since July 2026, at SRIE" title="Three projects, seven students"
-        aside={<Link to={`${SITE.projects}/srie-2026`}>The stream {'→'}</Link>}>
+      {/* ── Current work ──────────────────────────────────────────── */}
+      <Section kicker="Current work" title="Four lines of research" aside={<Link to={SITE.projects}>All projects {'→'}</Link>}>
         <CardGrid min={260}>
-          {srie.map(p => (
-            <Card key={p.slug} as="link" to={`${SITE.projects}/${p.slug}`} style={{ padding: 0, gap: 0, overflow: 'hidden' }}>
-              {p.deck && <img src={p.deck.thumb} alt="" style={{ width: '100%', display: 'block', aspectRatio: '16 / 9', objectFit: 'cover' }} />}
-              <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.03em', textTransform: 'uppercase', color: 'var(--teal)' }}>{p.kicker}</div>
-                <div style={{ fontFamily: 'var(--font-title)', fontSize: 20, lineHeight: 1.2 }}>{p.title}</div>
-                <div style={{ fontSize: 13, lineHeight: 1.55, color: 'var(--text-muted)' }}>{p.summary}</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-faint)', marginTop: 6 }}>{p.status}</div>
-              </div>
+          {current.map(p => (
+            <Card key={p.slug} as="link" to={`${SITE.projects}/${p.slug}`} icon={p.icon} kicker={p.kicker} title={p.title}
+              desc={p.summary} badge={p.status}>
+              <TagRow tags={p.tags.slice(0, 3)} style={{ marginTop: 6 }} />
             </Card>
           ))}
         </CardGrid>
       </Section>
 
-      {/* ── Other current work ────────────────────────────────────── */}
-      <Section kicker="Also" title="Current work" aside={<Link to={SITE.projects}>All projects {'→'}</Link>}>
-        <CardGrid min={280}>
-          {projects.filter(p => p.slug !== 'srie-2026').map(p => (
-            <Card key={p.slug} as="link" to={`${SITE.projects}/${p.slug}`} kicker={p.kicker} title={p.title}
-              desc={p.summary} badge={`${p.period} · ${p.status}`}>
-              <TagRow tags={p.tags.slice(0, 3)} style={{ marginTop: 6 }} />
-            </Card>
-          ))}
-          <Card as="link" to={SITE.research} kicker="Research" title="Vision, then what is under way"
-            desc="Why constructs measured in a model must rest on properties valid for the model itself, which risks deserve the effort, and how the four lines of work hold together." badge="One page" />
+      {/* ── Where to go next ──────────────────────────────────────── */}
+      <Section>
+        <CardGrid min={260}>
+          <Card as="link" to={SITE.research} icon="research" iconTone="navy" kicker="Research" title="Vision, then what is under way"
+            desc="Why constructs measured in a model must rest on properties valid for the model itself, which risks deserve the effort, and how the four lines of work hold together." />
+          <Card as="link" to={SITE.journey} icon="journey" iconTone="navy" kicker="Journey" title="Where I come from, and what I owe"
+            desc="From La Courneuve to Cambridge: the people and programmes that opened the way, giving back, sport at a competitive level, and the timeline." />
+          <Card as="link" to={SITE.documents} icon="documents" iconTone="navy" kicker="Documents" title="Essays, decks, reports, code"
+            desc="The Part III essay, the prize essay and poster, the three SRIE project decks, three CentraleSupélec reports and five repositories." />
         </CardGrid>
       </Section>
 

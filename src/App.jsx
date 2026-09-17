@@ -32,6 +32,8 @@ export default function App() {
         <Route path="documents" element={<Documents />} />
         {/* Notes was retired on 2026-09-17; old links land on Research. */}
         <Route path="notes/*" element={<Navigate to="/research" replace />} />
+        {/* The Eleven Strategy page was split into two projects on 2026-09-17. */}
+        <Route path="projects/eleven-strategy" element={<Navigate to="/projects/eleven-rag" replace />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 

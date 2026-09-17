@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { IconBadge } from './Icon';
 
 // White flat card, the site's basic container. Generalises GraphCard (graphs)
 // and DocCard (documents): same border, radius and hover as those two.
@@ -12,7 +13,7 @@ const BORDER = '0.5px solid var(--card-border)';
 const BORDER_HOVER = '0.5px solid rgba(97,158,168,0.40)';
 
 export default function Card({
-  as = 'div', to, href, title, kicker, desc, badge, full, muted, children, style, ...rest
+  as = 'div', to, href, title, kicker, desc, badge, full, muted, icon, iconTone, children, style, ...rest
 }) {
   const interactive = !muted && (as === 'a' || as === 'link');
 
@@ -34,6 +35,7 @@ export default function Card({
 
   const body = (
     <>
+      {icon && <div style={{ marginBottom: 4 }}><IconBadge name={icon} tone={iconTone} /></div>}
       {kicker && <div style={S.kicker}>{kicker}</div>}
       {title && <div style={S.title}>{title}</div>}
       {desc && <div style={S.desc}>{desc}</div>}

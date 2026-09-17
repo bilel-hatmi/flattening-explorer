@@ -30,13 +30,24 @@ export const PERSON = {
   // Home hero: the opening of the LinkedIn About, in English
   shortBio:
     'An early-career independent researcher (CentraleSupélec, Cambridge) studying the dynamics of AI on the technical side as much as on the governance side. My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today.',
-  // Journey page header: the full About, in the order Bilel asked for
-  longBio: [
-    'I am an early-career independent researcher (CentraleSupélec, Cambridge) studying the dynamics of AI on the technical side as much as on the governance side. My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today.',
-    'That attachment was born at Elements Impact, where I worked on the mathematical modelling of well-being, and it was tested in the field at Eleven Strategy, where as an AI consultant I dealt with the problems companies meet when they adopt AI. A year of statistics at Cambridge gave me the full modelling toolkit I wanted: my dissertation is in causal inference, the central applied field of statistics, where empirical studies still mix in a treatment of causality that is often basic, or naive. CentraleSupélec had given me the complete training of a data scientist.',
-    'My research today runs along four lines: the modelling of the cognitive homogenisation associated with AI, rewarded at the Cambridge–McKinsey Risk Prize 2026; the modelling of four structural properties of LLMs that generate constructs such as sycophancy or malice, epistemic validity, procedural validity, direction and directional entropy; the application of LLMs to learning, on parametric structures built from knowledge spaces; and the application of LLMs to the mediation of disputes under confidentiality constraints. Since July 2026 I supervise these three last projects at SRIE, with seven Cambridge mathematics undergraduates.',
-    'I am attentive to any offer or collaboration within this perimeter.',
-  ],
+  // The full About, in the order Bilel asked for. `lines` renders as a list.
+  bio: {
+    intro:
+      'I am an early-career independent researcher (CentraleSupélec, Cambridge) studying the dynamics of AI on the technical side as much as on the governance side. My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today.',
+    origin:
+      'That attachment was born at Elements Impact, where I worked on the mathematical modelling of well-being, and it met the field at Eleven Strategy: as an AI consultant, I dealt with the problems companies face when they adopt AI.',
+    training:
+      'A year of statistics at Cambridge gave me the full modelling toolkit I wanted. My dissertation is in causal inference, the central applied field of statistics, where empirical studies still mix in a treatment of causality that is often basic, or naive. CentraleSupélec had given me the complete training of a data scientist.',
+    linesLead: 'My research includes:',
+    lines: [
+      { text: 'the modelling of the cognitive homogenisation associated with AI, rewarded at the Cambridge–McKinsey Risk Prize 2026 (finalist);', to: `${SITE.projects}/the-flattening` },
+      { text: 'the modelling and study of four structural properties of LLMs, which generate the constructs attributed to them, such as sycophancy or malice: epistemic validity, procedural validity, direction, directional entropy;', to: `${SITE.projects}/srie-sycophancy` },
+      { text: 'the application of LLMs to learning, on parametric structures built from knowledge spaces;', to: `${SITE.projects}/srie-tutor` },
+      { text: 'the application of LLMs to the mediation of disputes under confidentiality constraints.', to: `${SITE.projects}/srie-mediation` },
+    ],
+    linesClose: 'Since July 2026 I supervise the last three at SRIE, with seven Cambridge mathematics undergraduates.',
+    closing: 'I am attentive to any offer or collaboration within this perimeter.',
+  },
   links: [
     { label: 'GitHub',   href: 'https://github.com/bilel-hatmi', external: true },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/bilel-hatmi', external: true },
@@ -44,6 +55,15 @@ export const PERSON = {
   ],
   portrait: '/portrait.jpg',
 };
+
+// Flat text of the bio, for places that cannot render a list.
+export const BIO_TEXT = [
+  PERSON.bio.intro,
+  PERSON.bio.origin,
+  PERSON.bio.training,
+  `${PERSON.bio.linesLead} ${PERSON.bio.lines.map(l => l.text).join(' ')} ${PERSON.bio.linesClose}`,
+  PERSON.bio.closing,
+];
 
 // The explorer, as the personal site presents it
 export const FLATTENING = {

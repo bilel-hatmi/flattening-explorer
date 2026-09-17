@@ -1,18 +1,23 @@
+import { Link } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useIsMobile from '../../hooks/useIsMobile';
 import Section, { Page, PageHeader } from '../../components/site/Section';
 import Timeline, { TimelineLegend } from '../../components/site/Timeline';
+import { IconBadge } from '../../components/site/Icon';
 import { JOURNEY, NARRATIVES, ASIDES } from '../../content/journey';
 import { PERSON } from '../../content/site';
 import { LINKS } from '../../content/documents';
 
+const NARRATIVE_ICONS = { 'giving-back': 'giving', sport: 'sport' };
+
 export default function Journey() {
   useDocumentTitle('Journey');
   const isMobile = useIsMobile();
+  const bio = PERSON.bio;
 
   return (
     <Page>
-      <PageHeader title="Journey" lede={PERSON.longBio[0]}>
+      <PageHeader title="Journey" lede={bio.intro}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginTop: 20 }}>
           <a href={LINKS.cv} target="_blank" rel="noopener noreferrer" style={{
             display: 'inline-block', padding: '9px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600,
@@ -24,27 +29,33 @@ export default function Journey() {
         </div>
       </PageHeader>
 
-      <div className="prose" style={{ marginBottom: 48 }}>
-        {PERSON.longBio.slice(1).map((para, i) => <p key={i}>{para}</p>)}
+      {/* ── About, in the order of the LinkedIn text ─────────────────── */}
+      <div className="prose" style={{ marginBottom: 56 }}>
+        <p>{bio.origin}</p>
+        <p>{bio.training}</p>
+        <p>{bio.linesLead}</p>
+        <ul>
+          {bio.lines.map(l => (
+            <li key={l.to}>{l.text.replace(/[;.]$/, '')} <Link to={l.to} style={{ whiteSpace: 'nowrap' }}>{'→'} project page</Link></li>
+          ))}
+        </ul>
+        <p>{bio.linesClose}</p>
+        <p>{bio.closing}</p>
       </div>
 
-      {/* ── Two narratives, side by side on desktop ─────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 18, marginBottom: 56 }}>
-        {NARRATIVES.map(n => (
-          <article key={n.id} style={{
-            background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', borderRadius: 'var(--card-radius)',
-            padding: '22px 24px 20px',
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--teal)', marginBottom: 6 }}>{n.kicker}</div>
-            <h2 style={{ fontFamily: 'var(--font-title)', fontSize: 24, lineHeight: 1.15, color: 'var(--navy)', marginBottom: 12 }}>{n.title}</h2>
-            {n.body.map((para, i) => (
-              <p key={i} style={{ fontSize: 14, lineHeight: 1.65, color: 'var(--navy)', marginBottom: i < n.body.length - 1 ? 10 : 0 }}>{para}</p>
-            ))}
-          </article>
-        ))}
-      </div>
+      {/* ── Two sections of their own ─────────────────────────────────── */}
+      {NARRATIVES.map(n => (
+        <Section key={n.id} kicker={n.kicker} title={n.title}>
+          <div style={{ display: 'flex', gap: isMobile ? 14 : 22, alignItems: 'flex-start' }}>
+            <IconBadge name={NARRATIVE_ICONS[n.id]} size={isMobile ? 40 : 48} tone="purple" />
+            <div className="prose" style={{ minWidth: 0, fontSize: 15 }}>
+              {n.body.map((para, i) => <p key={i}>{para}</p>)}
+            </div>
+          </div>
+        </Section>
+      ))}
 
-      <Section title="Timeline" first>
+      <Section title="Timeline">
         <Timeline entries={JOURNEY} />
       </Section>
 

@@ -1,6 +1,6 @@
 import DocCard, { DocGrid } from '../components/site/DocCard';
 import { LINKS, FLATTENING_DOCUMENTS } from '../content/documents';
-import { PERSON } from '../content/site';
+import { PERSON, BIO_TEXT } from '../content/site';
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 const S = {
@@ -126,8 +126,8 @@ export default function Author() {
       {/* ── About the author ─────────────────────────────────────── */}
       <h2 style={S.sectionTitle}>About the author</h2>
       <div style={S.bio}>
-        {PERSON.longBio.map((para, i) => (
-          <p key={i} style={{ ...S.p, marginBottom: i < PERSON.longBio.length - 1 ? 12 : 0 }}>{para}</p>
+        {BIO_TEXT.map((para, i) => (
+          <p key={i} style={{ ...S.p, marginBottom: i < BIO_TEXT.length - 1 ? 12 : 0 }}>{para}</p>
         ))}
       </div>
 
