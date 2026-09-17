@@ -1,0 +1,84 @@
+/* ─── Motion for the personal site ───
+   Entrances, scroll reveals, the hero field and hover depth. Transforms and
+   opacity only, so nothing here triggers layout. Everything is switched off
+   under prefers-reduced-motion. Imported once from SiteLayout. */
+
+@keyframes site-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes site-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes site-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes site-drift-a {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-28px, 10px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes site-drift-b {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(22px, -12px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes site-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.95; transform: scale(1.5); }
+}
+@keyframes site-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Staggered entrance for the hero (class rise-1 … rise-6) */
+.rise { animation: site-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.14s; }
+.rise-3 { animation-delay: 0.23s; }
+.rise-4 { animation-delay: 0.32s; }
+.rise-5 { animation-delay: 0.41s; }
+.rise-6 { animation-delay: 0.50s; }
+.scale-in { animation: site-scale-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Scroll reveal: Reveal.jsx toggles data-in when the block enters the viewport */
+.reveal {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal[data-in="true"] { opacity: 1; transform: none; }
+
+/* Route change: the new page fades in */
+.page-enter { animation: site-fade 0.35s ease both; }
+
+/* The hero field: contour lines drifting slowly behind the introduction */
+.hero-field path { transform-box: fill-box; transform-origin: center; animation: site-drift-a 20s ease-in-out infinite; }
+.hero-field path.f-b { animation-name: site-drift-b; animation-duration: 26s; }
+.hero-field path.f-c { animation-duration: 32s; animation-delay: -8s; }
+.hero-field circle { transform-box: fill-box; transform-origin: center; animation: site-pulse 5.5s ease-in-out infinite; }
+.hero-field circle.d-2 { animation-delay: -1.3s; }
+.hero-field circle.d-3 { animation-delay: -2.6s; }
+.hero-field circle.d-4 { animation-delay: -3.9s; }
+.hero-field circle.d-5 { animation-delay: -4.7s; }
+
+/* A thin dashed ring turning slowly around the portrait */
+.portrait-ring { animation: site-spin 70s linear infinite; transform-origin: center; }
+
+/* Hover depth for cards and buttons */
+.lift { transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.25s ease, border-color 0.2s ease, background 0.2s ease; }
+.lift:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -22px rgba(34, 55, 90, 0.45); }
+.btn-lift { transition: transform 0.18s ease, box-shadow 0.2s ease, background 0.2s ease; }
+.btn-lift:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -16px rgba(34, 55, 90, 0.5); text-decoration: none; }
+
+/* Sections anchored below the sticky bar */
+[id] { scroll-margin-top: calc(var(--nav-h) + 16px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .scale-in, .page-enter, .portrait-ring, .hero-field path, .hero-field circle {
+    animation: none !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .lift, .btn-lift, .lift:hover, .btn-lift:hover { transition: none; transform: none; }
+}

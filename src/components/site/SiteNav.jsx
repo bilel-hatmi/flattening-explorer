@@ -1,4 +1,5 @@
 import { NavLink, Link } from 'react-router-dom';
+import Icon from './Icon';
 import useIsMobile from '../../hooks/useIsMobile';
 import { SITE_META, NAV_LINKS, PERSON } from '../../content/site';
 import { SITE } from '../../routes';
@@ -54,8 +55,9 @@ export default function SiteNav() {
         padding: isMobile ? '5px 9px' : '5px 14px',
         border: '1px solid rgba(255,255,255,0.20)', borderRadius: 5,
         textDecoration: 'none', opacity: 0.8, whiteSpace: 'nowrap', flexShrink: 0,
+        display: 'inline-flex', alignItems: 'center', gap: 6,
       }}>
-        Contact
+        <Icon name="mail" size={13} /> Contact
       </a>
     </nav>
   );

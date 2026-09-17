@@ -7,13 +7,15 @@ import { IconBadge } from './Icon';
 //   as: 'div' (default) | 'a' (href, opens in a new tab) | 'link' (to, in-app)
 //
 // Pass `title`/`kicker`/`desc`/`badge` for the standard header, or children
-// for anything else. `muted` renders a non-interactive, faded card.
+// for anything else. `icon` (a name from Icon.jsx) or `logo` (an image path)
+// puts a badge above the kicker. `muted` renders a non-interactive, faded
+// card. Hover depth comes from motion.css (.lift).
 
 const BORDER = '0.5px solid var(--card-border)';
 const BORDER_HOVER = '0.5px solid rgba(97,158,168,0.40)';
 
 export default function Card({
-  as = 'div', to, href, title, kicker, desc, badge, full, muted, icon, iconTone, children, style, ...rest
+  as = 'div', to, href, title, kicker, desc, badge, full, muted, icon, iconTone, logo, children, style, className = '', ...rest
 }) {
   const interactive = !muted && (as === 'a' || as === 'link');
 
@@ -21,21 +23,25 @@ export default function Card({
     background: 'var(--card-bg)', border: BORDER, borderRadius: 'var(--card-radius)',
     padding: '18px 20px 16px', display: 'flex', flexDirection: 'column', gap: 6,
     color: 'var(--navy)', textDecoration: 'none', minWidth: 0,
-    transition: 'border-color 0.2s, transform 0.15s',
     cursor: interactive ? 'pointer' : 'default',
     ...(full ? { gridColumn: '1 / -1' } : {}),
     ...(muted ? { opacity: 0.72 } : {}),
     ...style,
   };
+  const cls = `${interactive ? 'lift' : ''} ${className}`.trim() || undefined;
 
   const hover = interactive ? {
-    onMouseEnter: e => { e.currentTarget.style.border = BORDER_HOVER; e.currentTarget.style.transform = 'translateY(-1px)'; },
-    onMouseLeave: e => { e.currentTarget.style.border = BORDER; e.currentTarget.style.transform = 'none'; },
+    onMouseEnter: e => { e.currentTarget.style.border = BORDER_HOVER; },
+    onMouseLeave: e => { e.currentTarget.style.border = BORDER; },
   } : {};
 
   const body = (
     <>
-      {icon && <div style={{ marginBottom: 4 }}><IconBadge name={icon} tone={iconTone} /></div>}
+      {(logo || icon) && (
+        <div style={{ marginBottom: 4 }}>
+          {logo ? <IconBadge img={logo} /> : <IconBadge name={icon} tone={iconTone} />}
+        </div>
+      )}
       {kicker && <div style={S.kicker}>{kicker}</div>}
       {title && <div style={S.title}>{title}</div>}
       {desc && <div style={S.desc}>{desc}</div>}
@@ -45,12 +51,12 @@ export default function Card({
   );
 
   if (as === 'link' && !muted) {
-    return <Link to={to} style={base} {...hover} {...rest}>{body}</Link>;
+    return <Link to={to} style={base} className={cls} {...hover} {...rest}>{body}</Link>;
   }
   if (as === 'a' && !muted) {
-    return <a href={href} target="_blank" rel="noopener noreferrer" style={base} {...hover} {...rest}>{body}</a>;
+    return <a href={href} target="_blank" rel="noopener noreferrer" style={base} className={cls} {...hover} {...rest}>{body}</a>;
   }
-  return <div style={base} aria-disabled={muted || undefined} {...rest}>{body}</div>;
+  return <div style={base} className={cls} aria-disabled={muted || undefined} {...rest}>{body}</div>;
 }
 
 const S = {

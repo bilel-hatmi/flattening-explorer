@@ -8,7 +8,7 @@ import { SITE } from '../../routes';
 
 function ProjectCard({ p, tone }) {
   return (
-    <Card as="link" to={`${SITE.projects}/${p.slug}`} icon={p.icon} iconTone={tone} kicker={p.kicker} title={p.title}
+    <Card as="link" to={`${SITE.projects}/${p.slug}`} icon={p.icon} iconTone={tone} logo={p.logo} kicker={p.kicker} title={p.title}
       desc={p.summary} badge={`${p.period} · ${p.status}`}>
       <TagRow tags={p.tags.slice(0, 4)} style={{ marginTop: 6 }} />
     </Card>

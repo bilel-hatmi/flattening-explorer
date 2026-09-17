@@ -1,66 +1,75 @@
-// Document card, extracted verbatim from the explorer's former /about page so
-// that page and the site's /documents render the same thing from one source.
+import Icon, { IconBadge } from './Icon';
 
-const S = {
-  card: {
-    background: '#FFFFFF', border: '0.5px solid rgba(0,0,0,0.08)',
-    borderRadius: 10, padding: '18px 18px 14px',
-    display: 'flex', flexDirection: 'column', gap: 6,
-    textDecoration: 'none', transition: 'border-color 0.2s, transform 0.15s',
-    cursor: 'pointer',
-  },
-  icon: { fontSize: 20, marginBottom: 2 },
-  title: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13,
-    fontWeight: 600, color: '#22375A',
-  },
-  desc: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 11,
-    color: '#888780', lineHeight: 1.4,
-  },
-  badge: {
-    fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
-    color: '#A0A09A', marginTop: 'auto', paddingTop: 4,
-  },
-  full: { gridColumn: '1 / -1' },
-};
+// Document card, shared by /documents and the explorer's /flattening/about.
+// One row: a badge for the document type on the left (or a logo), the title
+// and description, then the action ("Read the essay", "Open the deck"…). The
+// format label sits in the top-right corner of every card, so the labels line
+// up across a grid whatever the length of the text.
 
-export default function DocCard({ href, icon, title, desc, badge, full, comingSoon }) {
+const TYPE_ICON = { essay: 'documents', poster: 'poster', deck: 'deck', report: 'documents', code: 'github', cv: 'cv', pdf: 'pdf' };
+const isExternal = href => href && /^https?:\/\//.test(href);
+
+const BORDER = '0.5px solid var(--card-border)';
+const BORDER_HOVER = '0.5px solid rgba(97,158,168,0.40)';
+
+function Action({ label, href, muted, asSpan }) {
+  const style = {
+    display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600,
+    color: muted ? 'var(--text-muted)' : 'var(--teal)', textDecoration: 'none',
+  };
+  const glyph = <Icon name={isExternal(href) ? 'external' : 'arrow'} size={14} />;
+  if (asSpan) return <span style={style}>{label} {glyph}</span>;
+  return <a href={href} target="_blank" rel="noopener noreferrer" style={style}>{label} {glyph}</a>;
+}
+
+export default function DocCard({ href, type = 'pdf', logo, title, desc, badge, action, secondary, full, comingSoon }) {
+  const glyph = logo
+    ? <IconBadge img={logo} size={42} />
+    : <IconBadge name={TYPE_ICON[type] || 'documents'} size={42} tone={type === 'code' ? 'navy' : 'teal'} />;
+
+  const card = {
+    position: 'relative', background: 'var(--card-bg)', border: BORDER, borderRadius: 'var(--card-radius)',
+    padding: '18px 18px 16px', display: 'flex', gap: 14, alignItems: 'flex-start',
+    textDecoration: 'none', color: 'var(--navy)', minWidth: 0,
+    ...(full ? { gridColumn: '1 / -1' } : {}),
+  };
+  const pill = {
+    position: 'absolute', top: 14, right: 14, fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 500,
+    padding: '2px 8px', borderRadius: 4, background: 'rgba(34,55,90,0.05)', whiteSpace: 'nowrap',
+    color: comingSoon ? 'var(--warning)' : 'var(--text-muted)',
+  };
+  const hover = {
+    onMouseEnter: e => { e.currentTarget.style.border = BORDER_HOVER; },
+    onMouseLeave: e => { e.currentTarget.style.border = BORDER; },
+  };
+
   const body = (
     <>
-      <div style={S.icon}>{icon}</div>
-      <div style={S.title}>{title}</div>
-      <div style={S.desc}>{desc}</div>
-      {badge && (
-        <div style={{ ...S.badge, ...(comingSoon ? { color: '#C49A3C', fontWeight: 600 } : {}) }}>
-          {badge}
-        </div>
-      )}
+      {glyph}
+      <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', paddingRight: badge ? 64 : 0 }}>
+        <div style={{ fontFamily: 'var(--font-title)', fontSize: 18, lineHeight: 1.25 }}>{title}</div>
+        <div style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--text-muted)', marginTop: 4 }}>{desc}</div>
+        {!comingSoon && action && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, marginTop: 12 }}>
+            <Action label={action} href={href} asSpan={!secondary} />
+            {secondary && <Action label={secondary.label} href={secondary.href} muted />}
+          </div>
+        )}
+      </div>
+      {badge && <span style={pill}>{badge}</span>}
     </>
   );
 
-  // Not yet published (e.g. detailed article still being written): render a
-  // muted, non-clickable card instead of a download link.
+  // Not yet published: a muted, non-clickable card.
   if (comingSoon) {
-    return (
-      <div
-        style={{ ...S.card, ...(full ? S.full : {}), cursor: 'default', opacity: 0.72 }}
-        aria-disabled="true"
-      >
-        {body}
-      </div>
-    );
+    return <div style={{ ...card, opacity: 0.7 }} aria-disabled="true">{body}</div>;
   }
-
+  // Two actions: the card itself is not a link (no nested anchors).
+  if (secondary) {
+    return <div style={card} className="lift" {...hover}>{body}</div>;
+  }
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ ...S.card, ...(full ? S.full : {}) }}
-      onMouseEnter={e => { e.currentTarget.style.border = '0.5px solid rgba(97,158,168,0.40)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.border = '0.5px solid rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'none'; }}
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" style={card} className="lift" {...hover}>
       {body}
     </a>
   );

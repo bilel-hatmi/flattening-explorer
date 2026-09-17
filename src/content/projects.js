@@ -213,6 +213,7 @@ export const PROJECTS = [
   {
     slug: 'cartesia',
     icon: 'introspection',
+    logo: '/img/cartesia_mark.png',
     title: 'CartesIA',
     kicker: 'Founder and lead researcher',
     summary:

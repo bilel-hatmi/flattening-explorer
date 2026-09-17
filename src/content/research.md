@@ -1,9 +1,11 @@
 ---
 # /research — Vision first, then what is under way. The vision text is Bilel's own
-# (applications bank, September 2026); the current-work list follows his LinkedIn About.
+# (applications bank, September 2026). Research.jsx splits this file on its "## "
+# headings: the block before the first heading is the lede; inside "Current work",
+# the <!-- lines --> marker is where the four project cards (research.js) go.
 ---
 
-<p class="lead">I want to make my trajectory a bridge, to develop a vision still little expressed in AI safety.</p>
+I want to make my trajectory a bridge, to develop a vision still little expressed in AI safety.
 
 ## Vision
 
@@ -11,7 +13,7 @@ Today, empirical research defines the constructs or personality traits of LLMs b
 
 The regimes that emerge from these structures invite a decentralised view of AI, steerable parametrically to fit different contexts: education, where the preservation of metacognitive skills should become a norm; health, where the procedural validity of AI should be maximised; the general user, whom it matters to confront with the cognitive diversity of the human species. These are not performance criteria but trade-offs, meant to adapt the use of AI to heterogeneous spheres.
 
-### The risks that deserve the effort
+## The risks that deserve the effort
 
 I think the most catastrophic risks are those whose dynamics are the smoothest. For the most spectacular risks (misuse for bio or cyber weapons, a misaligned system causing irreversible harm, the loss of oversight over a critical system), counter-reaction and public outrage will allow coordinated action and, at the level of governance, compromises hitherto unthinkable, as Covid showed: the world, for all its protocolar heaviness, revealed a surprising agility.
 
@@ -23,15 +25,6 @@ The productivist logic is not limited to the risk of recession: it is philosophi
 
 The four lines below are one attempt to recentre AI on benefits that belong to human capital. I hold them to a single requirement: a property measured in a model counts as measured only once it has been shown to be stable, to separate what it claims to separate, and to survive a change of instrument.
 
-<dl class="work">
-<dt><a href="/projects/the-flattening">Cognitive homogenisation under AI</a></dt>
-<dd>The Flattening models what AI adoption does to firms of different sizes and domains, on cognitive diversity, productivity and losses. Finalist of the Cambridge–McKinsey Risk Prize 2026, with an interactive explorer.</dd>
-<dt><a href="/projects/srie-sycophancy">Four structural properties of LLMs</a></dt>
-<dd>The properties that generate constructs such as sycophancy or malice: epistemic validity, procedural validity, direction, directional entropy. Read by two instruments, behaviour and the model's internals, across five conditions. Empirical phase under way at SRIE.</dd>
-<dt><a href="/projects/srie-tutor">LLMs applied to learning</a></dt>
-<dd>The tutor rests on parametric structures derived from knowledge spaces, with a metacognitive component, and is meant to teach without deskilling.</dd>
-<dt><a href="/projects/srie-mediation">LLMs applied to the mediation of disputes</a></dt>
-<dd>A mediator whose neutrality is a property of the objective function, under confidentiality constraints: game theory carried over to an agentic workflow.</dd>
-</dl>
+<!-- lines -->
 
 The statistical ground for all four is causal. My Part III essay on <a href="/projects/part-iii-dissertation">proximal causal inference</a> developed estimators of a treatment effect when the confounder is unobserved, and a tuning protocol that calibrates them without ever seeing the truth.

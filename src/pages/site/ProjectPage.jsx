@@ -11,7 +11,7 @@ import { SITE } from '../../routes';
 
 const isExternal = href => href && /^https?:\/\//.test(href);
 
-const LINK_ICONS = { explorer: 'risk', pdf: 'documents', code: 'agents' };
+const LINK_ICONS = { explorer: 'risk', pdf: 'pdf', code: 'github', deck: 'deck' };
 
 function ProjectLink({ l, primary }) {
   const style = {
@@ -21,15 +21,15 @@ function ProjectLink({ l, primary }) {
       ? { background: 'var(--navy)', color: '#FFFFFF' }
       : { background: 'var(--teal-tint)', border: '0.5px solid var(--teal-line)', color: 'var(--navy)' }),
   };
-  const kind = /pdf/i.test(l.label) ? 'pdf' : /code|github/i.test(l.label) ? 'code' : /explorer/i.test(l.label) ? 'explorer' : null;
+  const kind = /deck/i.test(l.label) ? 'deck' : /pdf/i.test(l.label) ? 'pdf' : /code|github/i.test(l.label) ? 'code' : /explorer/i.test(l.label) ? 'explorer' : null;
   const glyph = kind ? <Icon name={LINK_ICONS[kind]} size={15} /> : null;
   if (l.comingSoon || !l.href) {
     return <span style={{ ...style, opacity: 0.6, cursor: 'default' }}>{glyph}{l.label} <span style={{ color: 'var(--warning)', fontFamily: 'var(--font-mono)', fontSize: 10 }}>soon</span></span>;
   }
   if (l.external || isExternal(l.href) || l.href.startsWith('/docs/')) {
-    return <a href={l.href} target="_blank" rel="noopener noreferrer" style={style}>{glyph}{l.label} {'↗'}</a>;
+    return <a href={l.href} target="_blank" rel="noopener noreferrer" style={style} className="btn-lift">{glyph}{l.label} {'↗'}</a>;
   }
-  return <Link to={l.href} style={style}>{glyph}{l.label} {'→'}</Link>;
+  return <Link to={l.href} style={style} className="btn-lift">{glyph}{l.label} {'→'}</Link>;
 }
 
 // Deck strip: the first slide as a thumbnail, the PDF as the link.
@@ -68,7 +68,9 @@ export default function ProjectPage() {
       </div>
 
       <div style={{ display: 'flex', gap: isMobile ? 14 : 22, alignItems: 'flex-start' }}>
-        {p.icon && <IconBadge name={p.icon} size={isMobile ? 44 : 56} tone={p.group === 'paused' ? 'purple' : p.group === 'earlier' ? 'navy' : 'teal'} />}
+        {p.logo
+          ? <IconBadge img={p.logo} size={isMobile ? 44 : 56} />
+          : p.icon && <IconBadge name={p.icon} size={isMobile ? 44 : 56} tone={p.group === 'paused' ? 'purple' : p.group === 'earlier' ? 'navy' : 'teal'} />}
         <div style={{ minWidth: 0, flex: 1 }}>
           <PageHeader kicker={`${p.period} · ${p.status}`} title={p.title} lede={p.kicker}>
             <TagRow tags={p.tags} style={{ marginTop: 14 }} />
