@@ -1,6 +1,8 @@
 // ── Projects ─────────────────────────────────────────────────────────────────
 // One entry per project page (/projects/<slug>). Short fields live here; the
 // long prose lives in ./projects/<slug>.md and is picked up by filename.
+// `parent` nests a page under another (the three SRIE projects); `deck` and
+// `paper` add a document strip at the top of the page.
 
 import { FLATTENING_BASE } from '../routes';
 import { LINKS } from './documents';
@@ -26,35 +28,64 @@ export const PROJECTS = [
     featured: true,
     tags: ['AI safety', 'psychometrics of LLMs', 'game theory', 'education', 'supervision'],
     links: [],
-    subprojects: [
-      {
-        id: 'Sycophancy',
-        title: 'Sycophancy as a set of constructs',
-        summary: 'Four separately caused quantities (direction, conviction, trajectory validity, dispersion), read by two instruments, behaviour and linear probes or persona vectors, across five conditions. Three students.',
-      },
-      {
-        id: 'Mediation',
-        title: 'Mediation under confidentiality constraints',
-        summary: 'An LLM mediator between two parties that reveals enough to resolve and never enough to expose. Game-theoretic model, agentic workflow, proof of concept on synthetic personas. Two students.',
-      },
-      {
-        id: 'Tutor',
-        title: 'An AI tutor against cognitive surrender',
-        summary: 'A knowledge-space model of the learner with a metacognitive component, the domain built by LLM personas, Bayesian estimation of the learner’s state, and a questioning strategy driven by information gain. Two students.',
-      },
-    ],
+    children: ['srie-sycophancy', 'srie-mediation', 'srie-tutor'],
+  },
+  {
+    slug: 'srie-sycophancy',
+    parent: 'srie-2026',
+    title: 'Sycophancy as a set of constructs',
+    kicker: 'SRIE, project 1 · three students',
+    summary:
+      'Four separately caused quantities (epistemic validity, procedural validity, direction, directional entropy), read by two instruments, behaviour and the model’s internals, across five conditions. Empirical phase under way, preprint in preparation.',
+    period: '4 August – 28 September 2026',
+    status: 'Empirical phase',
+    group: 'current',
+    featured: false,
+    tags: ['psychometrics of LLMs', 'linear probes', 'generalizability theory', 'SEM'],
+    links: [],
+    deck: { href: LINKS.deckSycophancy, thumb: '/img/srie_sycophancy.jpg', label: 'Project deck (PDF, 12 slides)' },
+  },
+  {
+    slug: 'srie-mediation',
+    parent: 'srie-2026',
+    title: 'Mediation under confidentiality constraints',
+    kicker: 'SRIE, project 2 · two students',
+    summary:
+      'An LLM mediator between two parties that reveals enough to resolve and never enough to expose. Neutrality as a property of the objective function; game-theoretic model, agentic workflow, proof of concept on synthetic personas.',
+    period: '4 August – 28 September 2026',
+    status: 'Theoretical phase',
+    group: 'current',
+    featured: false,
+    tags: ['game theory', 'agentic workflows', 'AI mediation'],
+    links: [],
+    deck: { href: LINKS.deckMediation, thumb: '/img/srie_mediation.jpg', label: 'Project deck (PDF, 11 slides)' },
+  },
+  {
+    slug: 'srie-tutor',
+    parent: 'srie-2026',
+    title: 'An AI tutor against cognitive surrender',
+    kicker: 'SRIE, project 3 · two students',
+    summary:
+      'A knowledge-space model of the learner with a metacognitive component, the domain built by LLM personas, Bayesian estimation of the learner’s state, and a questioning strategy driven by information gain: a tutor that teaches without deskilling.',
+    period: '4 August – 28 September 2026',
+    status: 'Structural modelling',
+    group: 'current',
+    featured: false,
+    tags: ['AI for education', 'knowledge spaces', 'metacognition', 'Bayesian estimation'],
+    links: [],
+    deck: { href: LINKS.deckTutor, thumb: '/img/srie_tutor.jpg', label: 'Project deck (PDF, 12 slides)' },
   },
   {
     slug: 'the-flattening',
     title: 'The Flattening',
     kicker: 'Finalist, Cambridge–McKinsey Risk Prize 2026',
     summary:
-      'Unmanaged AI adoption makes organisations better on average and more fragile at the extremes. An essay, a Monte Carlo model of systemic risk coupling workforce substitution, epistemic homogenisation and institutional resilience, and an interactive explorer.',
+      'What does AI adoption do to firms of different sizes and domains, on cognitive diversity, productivity and losses? A Monte Carlo model of an organisation deciding with and without AI under three governance regimes, an essay, an A0 poster and an interactive explorer.',
     period: 'March – July 2026',
     status: 'Finalist',
     group: 'current',
     featured: true,
-    tags: ['AI risk', 'Monte Carlo', 'governance', 'React'],
+    tags: ['AI risk', 'cognitive diversity', 'Monte Carlo', 'governance', 'React'],
     links: [
       { label: 'Open the explorer', href: FLATTENING_BASE },
       { label: 'Prize essay (PDF)', href: LINKS.essayShort, external: true },
@@ -67,27 +98,27 @@ export const PROJECTS = [
     title: 'Proximal causal inference under unmeasured confounding',
     kicker: 'Part III essay, University of Cambridge',
     summary:
-      'Can proxy variables replace an unmeasured confounder in practice? From identification to inference: four estimators, from a linear two-stage baseline to doubly-robust kernel methods, stress-tested by simulation and validated on two real datasets, with a tuning protocol that never sees the truth.',
+      'Can proxy variables replace an unmeasured confounder in practice? Four estimators, from a linear two-stage baseline to doubly robust kernel methods, stress-tested by simulation and validated on two real datasets, with a tuning protocol that never sees the truth.',
     period: '2025 – 2026',
     status: 'Submitted May 2026',
     group: 'current',
     featured: true,
     tags: ['causal inference', 'semiparametrics', 'ill-posed inverse problems', 'Python'],
     links: [
+      { label: 'Essay (PDF, 36 pages)', href: LINKS.essayPCI, external: true },
       { label: 'Code on GitHub', href: LINKS.pciRepo, external: true },
-      { label: 'Essay (PDF)', href: null, comingSoon: true },
     ],
   },
   {
     slug: 'cartesia',
     title: 'CartesIA',
-    kicker: 'Founder and lead researcher',
+    kicker: 'Founder and lead researcher · paused',
     summary:
-      'A research project treating large language models as controlled measurement instruments for psychometrics. A protocol maps what a person says onto validated constructs of agency, autonomy and value–action alignment, through contextualised vignettes, explicit scoring rubrics and safeguards against suggestion. Three domains: mental health, youth guidance, professional development.',
-    period: '2025 – present',
-    status: 'Method documented, pre-product',
+      'A research project treating large language models as controlled measurement instruments for psychometrics: a protocol maps what a person says onto validated constructs of agency, autonomy and value–action alignment. Three domains explored; paused for now, the method documented.',
+    period: '2025 – 2026',
+    status: 'Paused',
     group: 'current',
-    featured: true,
+    featured: false,
     tags: ['psychometrics', 'metacognition', 'LLMs', 'product'],
     links: [
       { label: 'Partners document (PDF)', href: LINKS.cartesia, external: true },
@@ -95,15 +126,15 @@ export const PROJECTS = [
   },
   {
     slug: 'eleven-strategy',
-    title: 'AI in strategy consulting',
+    title: 'AI and strategy consulting',
     kicker: 'Eleven Strategy, analyst and data scientist',
     summary:
-      'Buy-side due diligence on B2C targets, then the firm’s own tools: AI agents for company research and CRM pre-processing, and an internal retrieval system that doubled search precision for about eighty users. The place where productivity metrics and decision quality first visibly parted ways.',
+      'Four assignments: two buy-side due diligences, a competitive map of bike-sharing in Paris, a series of AI agents for an investment fund and a private bank, and an internal retrieval system that doubled search precision for about eighty users.',
     period: 'April – September 2025',
     status: 'Completed',
     group: 'earlier',
     featured: false,
-    tags: ['consulting', 'RAG', 'AI agents'],
+    tags: ['strategy consulting', 'due diligence', 'RAG', 'AI agents'],
     links: [],
   },
   {
@@ -111,13 +142,15 @@ export const PROJECTS = [
     title: 'Measuring subjective well-being over twenty years',
     kicker: 'Elements Impact, Boussole project',
     summary:
-      'Turning subjective well-being indicators into operational variables and predictive targets, then training and stress-testing supervised models on a twenty-year longitudinal panel of more than a thousand people. Supervised by Emmanuelle Bioud (PhD, cognitive science).',
+      'Estimating the impact of an entrepreneurial project on the subjective well-being of its stakeholders: a state of the art in welfare economics, supervised models on a twenty-year panel of more than a thousand people, corrective mechanisms and a benchmark. Supervised by Emmanuelle Bioud (PhD, cognitive science).',
     period: 'June – September 2023',
     status: 'Completed',
     group: 'earlier',
     featured: false,
-    tags: ['panel data', 'measurement', 'well-being'],
-    links: [],
+    tags: ['panel data', 'welfare economics', 'measurement'],
+    links: [
+      { label: 'Code on GitHub', href: LINKS.eiRepo, external: true },
+    ],
   },
   {
     slug: 'blood-cancers',
@@ -169,9 +202,13 @@ export const PROJECTS = [
 ].map(p => ({ ...p, body: bodyFor(p.slug) }));
 
 export const FEATURED_PROJECTS = PROJECTS.filter(p => p.featured);
-export const CURRENT_PROJECTS  = PROJECTS.filter(p => p.group === 'current');
+export const CURRENT_PROJECTS  = PROJECTS.filter(p => p.group === 'current' && !p.parent);
 export const EARLIER_PROJECTS  = PROJECTS.filter(p => p.group === 'earlier');
 
 export function getProject(slug) {
   return PROJECTS.find(p => p.slug === slug) || null;
+}
+
+export function childrenOf(slug) {
+  return PROJECTS.filter(p => p.parent === slug);
 }

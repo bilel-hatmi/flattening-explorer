@@ -9,9 +9,9 @@ export const fl = (path = '') => `${FLATTENING_BASE}${path}`;
 
 export const SITE = {
   home:      '/',
+  research:  '/research',
   projects:  '/projects',
   journey:   '/journey',
-  notes:     '/notes',
   documents: '/documents',
 };
 

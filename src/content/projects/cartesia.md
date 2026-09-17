@@ -2,7 +2,9 @@
 # Long prose for /projects/cartesia.
 ---
 
-CartesIA is a research project that aims to make introspection more reliable and more actionable, drawing on metacognition, decision science and psychometrics. The core idea is an interface that maps a person's spontaneous language onto operational constructs from cognitive science, then tests whether that clarification improves measurable outcomes: perceived autonomy, alignment between values and actions, self-efficacy, decision clarity, less non-clinical rumination.
+<p class="lead">CartesIA is a research project that aims to make introspection more reliable and more actionable, drawing on metacognition, decision science and psychometrics. It is paused for now: the method is documented, no prototype is deployed.</p>
+
+The core idea is an interface that maps a person's spontaneous language onto operational constructs from cognitive science, then tests whether that clarification improves measurable outcomes: perceived autonomy, alignment between values and actions, self-efficacy, decision clarity, less non-clinical rumination.
 
 ## The method
 
@@ -10,8 +12,12 @@ The language model is treated as a measurement technology, not as an interpretiv
 
 ## Domains and limits
 
-Three application contexts are under development: mental health (triage support, never diagnosis), youth guidance, and professional development. Surveillance is excluded by design and the person's autonomy is the central constraint. Three questions cannot be answered from inside the project and are the reason it seeks academic partners: are the profiles stable over time, do they correlate with existing validated measures, and does the procedure bias what it claims to observe?
+Three application contexts were developed: mental health (triage support, never diagnosis), youth guidance, and professional development. Surveillance is excluded by design and the person's autonomy is the central constraint.
+
+<aside class="callout">
+<strong>Three questions cannot be answered from inside the project</strong>, and they are the reason it sought academic partners: are the profiles stable over time, do they correlate with existing validated measures, and does the procedure bias what it claims to observe?
+</aside>
 
 ## Where it stands
 
-The method is documented and the ethical framing formalised; no prototype is deployed. A small team covers the clinical, engineering, HR and youth sides. Preliminary exchanges have taken place with researchers in cognitive science and in causal inference, without those exchanges constituting validations.
+Paused since the summer of 2026, when SRIE took the whole of my time. The method and the ethical framing are documented in the partners document linked above; preliminary exchanges took place with researchers in cognitive science and in causal inference, without those exchanges constituting validations. The measurement questions it raised are the ones I now work on at SRIE, from the model's side.

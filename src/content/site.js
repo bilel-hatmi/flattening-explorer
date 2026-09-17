@@ -1,7 +1,7 @@
 // ── Site-wide content ────────────────────────────────────────────────────────
 // Everything the personal site says about its author lives here, never in
-// JSX. English only. Sources: CV (September 2026), SRIE project brief,
-// CartesIA partners plan, the Part III essay.
+// JSX. English only. Sources: the LinkedIn About and headline Bilel wrote on
+// 17 September 2026, CV v8, the applications bank.
 
 import { SITE, FLATTENING_BASE } from '../routes';
 
@@ -10,36 +10,38 @@ export const SITE_META = {
   // Tab title suffix and OG title
   title: 'Bilel Hatmi',
   description:
-    'Applied mathematician (CentraleSupélec; Part III, Cambridge) working on the means to make AI more beneficial to society and less alienating.',
+    'AI safety researcher: psychometrics of LLMs, cognitive erosion, AI mediation. Research supervisor at SRIE; Part III Mathematical Statistics, Cambridge; CentraleSupélec.',
 };
 
 export const NAV_LINKS = [
+  { label: 'Research',  to: SITE.research },
   { label: 'Projects',  to: SITE.projects },
   { label: 'Journey',   to: SITE.journey },
-  { label: 'Notes',     to: SITE.notes },
   { label: 'Documents', to: SITE.documents },
 ];
 
 export const PERSON = {
   name: 'Bilel Hatmi',
-  tagline: 'Applied mathematician working on the means to make AI more beneficial to society and less alienating.',
+  tagline: 'AI in the service of human capital.',
   affiliation: 'SRIE · University of Cambridge',
-  role: 'Resident researcher and research supervisor at SRIE. Part III Mathematical Statistics, DPMMS. Founder of CartesIA.',
+  role: 'AI safety researcher · Research supervisor at SRIE · Cambridge Part III · CentraleSupélec',
   location: 'Cambridge, UK',
   email: 'bilelhatmi@gmail.com',
-  // Short version for the home hero (2–3 sentences)
+  // Home hero: the opening of the LinkedIn About, in English
   shortBio:
-    'My interests combine the psychometrics of AI models with AI applied to education and learning, and to conflict resolution through game theory. At SRIE, I supervise three projects I designed on these questions, with seven Cambridge mathematics undergraduates.',
-  // Long version, for the journey page
-  longBio:
-    'Bilel Hatmi is an applied mathematician trained at CentraleSupélec and at the University of Cambridge, where he completed Part III in Mathematical Statistics (DPMMS) in June 2026 with a dissertation on proximal causal inference under unmeasured confounding, supervised by Dr P. Zhao and Prof. Q. Zhao. He is a finalist of the Cambridge–McKinsey Risk Prize 2026 for The Flattening, an essay and a model on the tail risk that AI productivity gains conceal. Since July 2026 he has been a resident researcher and research supervisor at SRIE, where he runs three projects he designed for Cambridge mathematics undergraduates on what AI does to the people who use it. Earlier work covered subjective well-being measurement on a twenty-year panel (Elements Impact), stochastic modelling of blood cancers with the Gustave Roussy Institute (MICS Lab, CentraleSupélec), and AI deployments in strategy consulting (Eleven Strategy). He is the founder of CartesIA, a research project treating language models as controlled measurement instruments for psychometrics.',
+    'An early-career independent researcher (CentraleSupélec, Cambridge) studying the dynamics of AI on the technical side as much as on the governance side. My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today.',
+  // Journey page header: the full About, in the order Bilel asked for
+  longBio: [
+    'I am an early-career independent researcher (CentraleSupélec, Cambridge) studying the dynamics of AI on the technical side as much as on the governance side. My work is an attempt to recentre AI on benefits that belong to human capital, while limiting the safety drift that its uncontrolled adoption produces today.',
+    'That attachment was born at Elements Impact, where I worked on the mathematical modelling of well-being, and it was tested in the field at Eleven Strategy, where as an AI consultant I dealt with the problems companies meet when they adopt AI. A year of statistics at Cambridge gave me the full modelling toolkit I wanted: my dissertation is in causal inference, the central applied field of statistics, where empirical studies still mix in a treatment of causality that is often basic, or naive. CentraleSupélec had given me the complete training of a data scientist.',
+    'My research today runs along four lines: the modelling of the cognitive homogenisation associated with AI, rewarded at the Cambridge–McKinsey Risk Prize 2026; the modelling of four structural properties of LLMs that generate constructs such as sycophancy or malice, epistemic validity, procedural validity, direction and directional entropy; the application of LLMs to learning, on parametric structures built from knowledge spaces; and the application of LLMs to the mediation of disputes under confidentiality constraints. Since July 2026 I supervise these three last projects at SRIE, with seven Cambridge mathematics undergraduates.',
+    'I am attentive to any offer or collaboration within this perimeter.',
+  ],
   links: [
     { label: 'GitHub',   href: 'https://github.com/bilel-hatmi', external: true },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/bilel-hatmi', external: true },
     { label: 'CV',       href: '/docs/cv.pdf', external: true },
   ],
-  // Portrait for the home hero. Drop a file in public/ and set the path;
-  // the hero renders a monogram while this is null.
   portrait: '/portrait.jpg',
 };
 
@@ -48,12 +50,12 @@ export const FLATTENING = {
   title: 'The Flattening',
   kicker: 'Finalist, Cambridge–McKinsey Risk Prize 2026',
   summary:
-    'AI optimises the mean and concentrates the tail. An essay, a Monte Carlo model and an interactive explorer on how AI productivity gains conceal tail risk inside organisations: four acts of analysis and a parameter laboratory.',
+    'What does AI adoption do to firms of different sizes and domains, on cognitive diversity, productivity and losses? An essay, a Monte Carlo model and an interactive explorer: four acts of analysis and a parameter laboratory, with the simulation engine running in the browser.',
   to: FLATTENING_BASE,
   cta: 'Open the explorer',
   counters: [
-    { label: 'Average loss',     value: '−38%', tone: 'success' },
-    { label: 'Worst-case (P99)', value: '+56%',      tone: 'danger' },
-    { label: 'Output',           value: '+54%',      tone: 'success' },
+    { label: 'Expected loss',     value: '−38%', tone: 'success' },
+    { label: 'Worst quarter in 100', value: '+56%',   tone: 'danger' },
+    { label: 'Reported output',   value: '+54%',      tone: 'success' },
   ],
 };

@@ -1,0 +1,106 @@
+/* ─── Rich prose blocks for the personal site ───
+   Markdown content files may use a few HTML blocks: .lead, aside.callout,
+   blockquote.pull, figure (+ .wide), .stats, .cards3, dl.work, dl.levers,
+   .projects3, .sources, .tag. Base .prose rules live in index.css. */
+
+.prose { font-size: 15.5px; line-height: 1.72; }
+/* index.css zeroes p margins with a more specific rule than its sibling spacer; restore them here */
+div.prose p { margin: 0 0 1em; }
+div.prose p:last-child { margin-bottom: 0; }
+div.prose ul, div.prose ol { margin: 0 0 1.2em; }
+div.prose li + li { margin-top: 0.45em; }
+.prose h2 {
+  font-size: 26px; margin-top: 2.2em; margin-bottom: 0.5em; line-height: 1.15;
+  padding-top: 0.7em; border-top: 0.5px solid var(--rule);
+}
+.prose h2:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+.prose h3 { font-size: 19px; margin-top: 1.7em; margin-bottom: 0.3em; }
+
+/* Lead paragraph: the page's first sentence, set larger and in the title face's tone */
+.prose .lead {
+  font-size: 19px; line-height: 1.5; color: var(--navy); margin-bottom: 1.4em;
+}
+.prose .lead + * { margin-top: 0; }
+
+/* Callout: a framed aside in the teal tint */
+.prose aside.callout {
+  background: var(--teal-tint); border: 0.5px solid var(--teal-line); border-left: 3px solid var(--teal);
+  border-radius: 10px; padding: 14px 18px; margin: 1.6em 0; font-size: 14.5px; line-height: 1.6;
+}
+.prose aside.callout strong { color: var(--navy); }
+
+/* Pull quote: serif, larger, hairline above and below */
+.prose blockquote.pull {
+  border: 0; border-top: 0.5px solid rgba(0, 0, 0, 0.14); border-bottom: 0.5px solid rgba(0, 0, 0, 0.14);
+  margin: 1.8em 0; padding: 1.1em 0.2em; color: var(--navy);
+  font-family: var(--font-title); font-size: 24px; line-height: 1.3;
+}
+
+/* Figures */
+.prose figure { margin: 2em 0; }
+.prose figure.wide { margin-left: -12px; margin-right: -12px; }
+.prose figure img {
+  width: 100%; height: auto; display: block; border-radius: 8px;
+  background: #FFFFFF; border: 0.5px solid var(--card-border);
+}
+.prose figure.wide img { background: var(--card-bg); padding: 8px; }
+.prose figcaption {
+  font-size: 12.5px; line-height: 1.55; color: var(--text-muted); margin-top: 8px; padding: 0 4px;
+}
+.prose figcaption strong { color: var(--navy); font-weight: 600; }
+
+/* Stat strip */
+.prose .stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 1.8em 0;
+}
+.prose .stats > div {
+  background: var(--card-bg); border: 0.5px solid var(--card-border); border-radius: 10px;
+  padding: 14px 14px 12px; text-align: center;
+}
+.prose .stats .num { display: block; font-family: var(--font-mono); font-size: 26px; font-weight: 700; line-height: 1.1; }
+.prose .stats .num.success { color: var(--success); }
+.prose .stats .num.danger { color: var(--danger); }
+.prose .stats .lab { display: block; font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.3; }
+
+/* Three cards side by side (the precedents) */
+.prose .cards3 {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 1.4em 0 1.8em;
+}
+.prose .cards3 > div {
+  background: var(--card-bg); border: 0.5px solid var(--card-border); border-radius: 10px;
+  padding: 14px 16px; font-size: 13px; line-height: 1.5; color: var(--navy);
+}
+.prose .cards3 strong { display: block; color: var(--navy); font-size: 13px; margin-bottom: 2px; }
+.prose .cards3 em { display: block; font-style: normal; font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--danger); margin-bottom: 8px; }
+
+/* Definition lists: work items and levers */
+.prose dl.work, .prose dl.levers { margin: 1.2em 0 1.6em; padding: 0; }
+.prose dl.work dt, .prose dl.levers dt {
+  font-weight: 600; color: var(--navy); margin-top: 1em; font-size: 15px;
+}
+.prose dl.work dt:first-child, .prose dl.levers dt:first-child { margin-top: 0; }
+.prose dl.work dd, .prose dl.levers dd { margin: 0.25em 0 0; color: var(--navy); font-size: 14.5px; line-height: 1.6; }
+.prose dl.levers dt span { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--teal); margin-left: 8px; }
+.prose dl.work dt a { color: var(--navy); }
+.prose dl.work dt a:hover { color: var(--teal); }
+.prose .tag {
+  display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--teal);
+  background: var(--teal-tint); border-radius: 4px; padding: 1px 7px; margin-left: 8px; vertical-align: middle;
+}
+
+/* Project cards with deck thumbnails (SRIE overview) */
+.prose .projects3 {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 1.2em 0 1.8em;
+}
+.prose .projects3 > a {
+  display: flex; flex-direction: column; gap: 6px; background: var(--card-bg);
+  border: 0.5px solid var(--card-border); border-radius: 12px; padding: 0 0 16px; overflow: hidden;
+  color: var(--navy); text-decoration: none; transition: border-color 0.2s, transform 0.15s;
+}
+.prose .projects3 > a:hover { border-color: rgba(97, 158, 168, 0.40); transform: translateY(-1px); text-decoration: none; }
+.prose .projects3 img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 8px; }
+.prose .projects3 strong { font-family: var(--font-title); font-weight: 400; font-size: 19px; line-height: 1.2; padding: 0 16px; }
+.prose .projects3 span { font-size: 13px; line-height: 1.5; color: var(--text-muted); padding: 0 16px; }
+
+/* Sources line */
+.prose .sources { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; margin-top: 2em; padding-top: 1em; border-top: 0.5px solid var(--rule); }

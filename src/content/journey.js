@@ -1,7 +1,7 @@
-// ── Journey (timeline) ───────────────────────────────────────────────────────
+// ── Journey (timeline + two narratives) ──────────────────────────────────────
 // Newest first. `kind` picks the marker colour: education, research, work,
-// venture. `to` links to a project page, `href` to an external document.
-// Dates follow the CV (September 2026).
+// venture, community. `to` links to a project page, `href` to a document.
+// Dates follow the CV (September 2026) and the LinkedIn profile.
 
 import { SITE } from '../routes';
 
@@ -33,17 +33,17 @@ export const JOURNEY = [
     org: 'University of Cambridge, DPMMS',
     place: 'Cambridge, UK',
     kind: 'education',
-    summary: 'Essay on proximal causal inference under unmeasured confounding, supervised by Dr P. Zhao and Prof. Q. Zhao, submitted May 2026. Courses in causal inference, robust statistics, modern statistical methods, information theory, advanced probability. Degree completed June 2026, after an intermission for health.',
+    summary: 'Essay on proximal causal inference under unmeasured confounding, supervised by Dr P. Zhao and Prof. Q. Zhao, submitted May 2026. Degree completed June 2026, grade 70/100, after an intermission for health in 2024. Courses in causal inference, robust statistics, modern statistical methods, information theory, advanced probability.',
     to: `${SITE.projects}/part-iii-dissertation`,
   },
   {
     id: 'cartesia',
-    period: '2025 – present',
+    period: '2025 – 2026',
     title: 'Founder and lead researcher',
     org: 'CartesIA',
     place: 'Paris and Cambridge',
     kind: 'venture',
-    summary: 'Language models as controlled measurement instruments for psychometrics. Three domains: mental health, youth guidance, professional development.',
+    summary: 'Language models as controlled measurement instruments for psychometrics. Three domains explored: mental health, youth guidance, professional development. Paused since the summer of 2026.',
     to: `${SITE.projects}/cartesia`,
   },
   {
@@ -53,7 +53,7 @@ export const JOURNEY = [
     org: 'Eleven Strategy',
     place: 'Paris, France',
     kind: 'work',
-    summary: 'Buy-side due diligence; AI agents for company research and CRM pre-processing; an internal retrieval system that doubled search precision for about eighty users.',
+    summary: 'Two buy-side due diligences, a competitive map of bike-sharing in Paris, a series of AI agents for an investment fund and a private bank, an internal retrieval system that doubled search precision for about eighty users.',
     to: `${SITE.projects}/eleven-strategy`,
   },
   {
@@ -63,17 +63,35 @@ export const JOURNEY = [
     org: 'Elements Impact',
     place: 'Paris, France',
     kind: 'research',
-    summary: 'Subjective well-being indicators turned into predictive targets; supervised models on a twenty-year longitudinal panel of more than a thousand people.',
+    summary: 'Mathematical modelling of subjective well-being: a state of the art in welfare economics, supervised models on a twenty-year longitudinal panel of more than a thousand people, corrective mechanisms and a benchmark.',
     to: `${SITE.projects}/well-being-panel`,
   },
   {
     id: 'teaching',
     period: 'Sep 2022 – Jul 2023',
-    title: 'Teaching assistant',
+    title: 'Teaching assistant in mathematics',
     org: 'CentraleSupélec',
     place: 'Paris, France',
-    kind: 'work',
-    summary: 'Probability, integration and convergence; partial differential equations. Lebesgue integration, Gaussian vectors, Fourier analysis, finite element and finite difference methods.',
+    kind: 'community',
+    summary: 'Three courses with two permanent professors and one assistant professor: probability, integration and convergence (Lebesgue integration, Gaussian vectors, convergence of random variables); partial differential equations (Fourier analysis, finite element and finite difference methods). A mathematics course co-organised for international bachelor students.',
+  },
+  {
+    id: 'badminton',
+    period: 'Apr 2022 – Jul 2023',
+    title: 'President of the badminton club',
+    org: 'Bureau des Sports, CentraleSupélec',
+    place: 'Gif-sur-Yvette, France',
+    kind: 'community',
+    summary: 'A fifty-player club recruited from 250 applicants, led to the French University Badminton Championships; registrations with the French University Sports Federation, grant applications for transport and accommodation, equipment and budget.',
+  },
+  {
+    id: 'oser',
+    period: 'Nov 2021 – Jul 2023',
+    title: 'Tutor, then VP Carnets de France',
+    org: 'OSER CentraleSupélec, Cordées de la réussite',
+    place: 'Gif-sur-Yvette, France',
+    kind: 'community',
+    summary: 'Tutoring sessions in secondary schools on general knowledge and orientation, against self-censorship. As VP Carnets de France, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city.',
   },
   {
     id: 'mics',
@@ -82,7 +100,7 @@ export const JOURNEY = [
     org: 'MICS Lab, CentraleSupélec',
     place: 'Paris, France',
     kind: 'research',
-    summary: 'Bayesian and stochastic modelling of blood cancers with the Gustave Roussy Institute; estimation of Hawkes processes.',
+    summary: 'Bayesian and stochastic modelling of blood cancers with the Gustave Roussy Institute; estimation of Hawkes processes; Ho-Lee and HJM term-structure models.',
     to: `${SITE.projects}/blood-cancers`,
   },
   {
@@ -110,11 +128,33 @@ export const JOURNEY_KINDS = {
   research:  { label: 'Research',  color: 'var(--teal)' },
   work:      { label: 'Work',      color: 'var(--warning)' },
   venture:   { label: 'Venture',   color: 'var(--success)' },
+  community: { label: 'Giving back and sport', color: '#8E6BBF' },
 };
+
+// Two narratives, in Bilel's words, shown above the timeline.
+export const NARRATIVES = [
+  {
+    id: 'giving-back',
+    kicker: 'Giving back',
+    title: 'Where I come from, and what I owe',
+    body: [
+      'My primary and secondary schooling took place in Seine-Saint-Denis, in La Courneuve, a deprived area. Having reached studies of high quality thanks to the Cordées de la Réussite, the CentraleSupélec Foundation and CapPrépa, I have always wanted to make altruism and teaching a central value, in gratitude for what I received along the way.',
+      'That is what OSER was for, from my first year at CentraleSupélec: tutoring sessions in secondary schools, on general knowledge and orientation, against the self-censorship that keeps pupils from applying; then, as VP Carnets de France, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city. Teaching followed the same line: a year as a teaching assistant in probability and partial differential equations, a mathematics course co-organised for international students, and today the supervision of seven undergraduates at SRIE.',
+    ],
+  },
+  {
+    id: 'sport',
+    kicker: 'Sport at a competitive level',
+    title: 'Discipline, and a taste for the challenge',
+    body: [
+      'I owe much of my discipline and my sense of the challenge to badminton, played at a highly competitive level when I was young: a regional-level player before the classes préparatoires.',
+      'I carried that experience into the presidency of the CentraleSupélec badminton club. Fifty players recruited from 250 applicants; a team led to the French University Badminton Championships; competition registrations with the French University Sports Federation, grant applications for transport and accommodation, equipment and a budget to oversee. At Cambridge, the university badminton club.',
+    ],
+  },
+];
 
 // Short list for the journey page, below the timeline.
 export const ASIDES = [
   { label: 'Competitions', text: 'Jane Street R3 (Europe Trading Challenge); internship offer from QRT; finalist of the CentraleSupélec eloquence contest.' },
-  { label: 'Sport', text: 'French University Badminton Championships with the CentraleSupélec team; recruited and managed a fifty-player club.' },
   { label: 'Languages', text: 'French (native), English (C1), Arabic (fluent), Spanish (basic).' },
 ];

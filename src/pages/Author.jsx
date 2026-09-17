@@ -126,7 +126,9 @@ export default function Author() {
       {/* ── About the author ─────────────────────────────────────── */}
       <h2 style={S.sectionTitle}>About the author</h2>
       <div style={S.bio}>
-        <p style={{ ...S.p, marginBottom: 0 }}>{PERSON.longBio}</p>
+        {PERSON.longBio.map((para, i) => (
+          <p key={i} style={{ ...S.p, marginBottom: i < PERSON.longBio.length - 1 ? 12 : 0 }}>{para}</p>
+        ))}
       </div>
 
       {/* ── Contact ───────────────────────────────────────────────── */}
