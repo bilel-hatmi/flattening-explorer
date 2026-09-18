@@ -12,6 +12,28 @@ import { renderInline } from '../../utils/inline';
 
 const NARRATIVE_ICONS = { 'giving-back': 'giving', sport: 'sport' };
 
+// A photograph beside a narrative: right column on desktop, full width above
+// the text on a phone. `ratio` keeps the crop the author's images were cut to.
+function NarrativeFigure({ image, isMobile }) {
+  const portrait = image.ratio === '4 / 5';
+  return (
+    <figure className="lift" style={{
+      margin: isMobile ? '0 0 18px' : '4px 0 10px 26px', float: isMobile ? 'none' : 'right', width: isMobile ? '100%' : (portrait ? 200 : 260),
+      background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', borderRadius: 'var(--card-radius)', padding: 6,
+    }}>
+      <img src={image.src} alt={image.alt} loading="lazy" style={{
+        display: 'block', width: '100%', aspectRatio: image.ratio, objectFit: 'cover', borderRadius: 8,
+        maxHeight: isMobile ? (portrait ? 420 : 260) : 'none',
+      }} />
+      {image.caption && (
+        <figcaption style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--text-muted)', padding: '8px 6px 4px', letterSpacing: '0.02em' }}>
+          {image.caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 export default function Journey() {
   useDocumentTitle('Journey');
   const isMobile = useIsMobile();
@@ -52,9 +74,11 @@ export default function Journey() {
       {NARRATIVES.map((n, i) => (
         <Reveal key={n.id}>
           <Section id={n.id} num={i + 1} kicker={n.kicker} title={n.title}>
+            {n.image && isMobile && <NarrativeFigure image={n.image} isMobile />}
             <div style={{ display: 'flex', gap: isMobile ? 14 : 22, alignItems: 'flex-start' }}>
               <IconBadge name={NARRATIVE_ICONS[n.id]} size={isMobile ? 40 : 48} tone="purple" />
-              <div className="prose" style={{ minWidth: 0, fontSize: 15 }}>
+              <div className="prose" style={{ minWidth: 0, fontSize: 15, flex: 1 }}>
+                {n.image && !isMobile && <NarrativeFigure image={n.image} />}
                 {n.body.map((para, j) => <p key={j}>{renderInline(para)}</p>)}
               </div>
             </div>
