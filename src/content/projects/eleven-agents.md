@@ -13,6 +13,4 @@
 <dd>Takes a client file from intake to the elements a banker needs to decide, without manual steps.</dd>
 </dl>
 
-Across the proofs of concept, analyst processing time fell by about half and the number of files handled per month doubled.
-
 <p class="sources"><a href="/projects/eleven-rag">The internal search engine</a> comes from the same internship.</p>
