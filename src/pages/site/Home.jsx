@@ -197,9 +197,9 @@ export default function Home() {
       <Section>
         <CardGrid min={260}>
           {[
-            { to: SITE.research, icon: 'research', kicker: 'Research', title: 'Vision, then what is under way',
+            { to: SITE.research, icon: 'research', kicker: 'Research', title: 'Vision and current work',
               desc: 'Why constructs measured in a model must rest on properties valid for the model itself, which risks deserve the effort, and how the four lines of work hold together.' },
-            { to: SITE.journey, icon: 'journey', kicker: 'Journey', title: 'Where I come from, and what I owe',
+            { to: SITE.journey, icon: 'journey', kicker: 'Journey', title: 'La Courneuve, the Cordées de la Réussite, OSER',
               desc: 'From La Courneuve to Cambridge: the people and programmes that opened the way, giving back, sport at a competitive level, and the timeline.' },
             { to: SITE.documents, icon: 'documents', kicker: 'Documents', title: 'Essays, decks, reports, code',
               desc: 'The Part III essay, the prize essay and poster, the three SRIE project decks, three CentraleSupélec reports and five repositories.' },

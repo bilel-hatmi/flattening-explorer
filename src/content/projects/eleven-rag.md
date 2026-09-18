@@ -8,4 +8,4 @@ The pipeline embeds all internal documents, with the metadata embedded separatel
 
 On that benchmark, retrieval precision doubled. About eighty people across the firm use it.
 
-<p class="sources">Same period, same firm: <a href="/projects/eleven-agents">the AI agents</a>. The strategy side of the internship, two buy-side due diligences and a competitive map of bike-sharing in Paris, is on the <a href="/journey">journey</a> page.</p>
+<p class="sources"><a href="/projects/eleven-agents">The AI agents</a> come from the same internship. Its strategy side, two buy-side due diligences and a competitive map of bike-sharing in Paris, is on the <a href="/journey">journey</a> page.</p>

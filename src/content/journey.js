@@ -91,7 +91,7 @@ export const JOURNEY = [
     org: 'OSER CentraleSupélec, Cordées de la réussite',
     place: 'Gif-sur-Yvette, France',
     kind: 'community',
-    summary: 'Tutoring sessions in secondary schools on general knowledge and orientation, against self-censorship. As VP Carnets de France, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city.',
+    summary: 'Tutoring sessions in secondary schools on general knowledge and orientation, against self-censorship. As VP Carnets de France, I led a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city.',
   },
   {
     id: 'mics',
@@ -136,7 +136,7 @@ export const NARRATIVES = [
   {
     id: 'giving-back',
     kicker: 'Giving back',
-    title: 'Where I come from, and what I owe',
+    title: 'La Courneuve, the Cordées de la Réussite, OSER',
     body: [
       'My primary and secondary schooling took place in Seine-Saint-Denis, in **La Courneuve**, a deprived area. Having reached studies of high quality thanks to the **Cordées de la Réussite, the CentraleSupélec Foundation and CapPrépa**, I have always wanted to make **altruism and teaching a central value**, in gratitude for what I received along the way.',
       '**OSER**, from my first year at CentraleSupélec, gave that a form: tutoring sessions in secondary schools, on general knowledge and orientation, against the self-censorship that keeps pupils from applying; then, as **VP Carnets de France**, a team of five to offer twenty pupils from disadvantaged areas a three-day trip to a major French city. **Teaching** followed the same line: a year as a teaching assistant in probability and partial differential equations, a mathematics course co-organised for international students, and today the supervision of seven undergraduates at **SRIE**.',
@@ -145,7 +145,7 @@ export const NARRATIVES = [
   {
     id: 'sport',
     kicker: 'Sport at a competitive level',
-    title: 'Discipline, and a taste for the challenge',
+    title: 'Badminton, from regional level to the club presidency',
     body: [
       'I owe much of my discipline and my sense of the challenge to **badminton**, played at a highly competitive level when I was young: a **regional-level player** before the classes préparatoires.',
       'I carried that experience into the **presidency of the CentraleSupélec badminton club**: I recruited **fifty players from 250 applicants**, led the team to the **French University Badminton Championships**, handled the competition registrations with the French University Sports Federation and the grant applications for transport and accommodation, and oversaw the equipment and the budget. At Cambridge I joined the university badminton club.',

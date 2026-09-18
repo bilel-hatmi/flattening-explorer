@@ -13,7 +13,7 @@ Today, empirical research defines the constructs or personality traits of LLMs b
 
 The regimes that emerge from these structures invite **a decentralised view of AI, steerable parametrically** to fit different contexts: education, where the preservation of metacognitive skills should become a norm; health, where the procedural validity of AI should be maximised; the general user, whom it matters to confront with the cognitive diversity of the human species. **These are not performance criteria but trade-offs**, meant to adapt the use of AI to heterogeneous spheres.
 
-## The risks that deserve the effort
+## The smoothest risks
 
 I think **the most catastrophic risks are those whose dynamics are the smoothest**. For the most spectacular risks (misuse for bio or cyber weapons, a misaligned system causing irreversible harm, the loss of oversight over a critical system), counter-reaction and public outrage will allow coordinated action and, at the level of governance, compromises hitherto unthinkable, as Covid showed: the world, for all its protocolar heaviness, revealed a surprising agility.
 

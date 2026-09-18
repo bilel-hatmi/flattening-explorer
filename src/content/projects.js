@@ -24,7 +24,7 @@ export const PROJECTS = [
     title: 'Sycophancy as a set of constructs',
     kicker: 'Psychometrics of LLMs · three students supervised',
     summary:
-      'Four separately caused quantities (epistemic validity, procedural validity, direction, directional entropy), read by two instruments, behaviour and the model’s internals, across five conditions. Empirical phase under way, preprint in preparation.',
+      'Four separately caused properties (epistemic validity, procedural validity, direction, directional entropy), read by two instruments, behaviour and the model’s internals, across five conditions. Empirical phase under way, preprint in preparation.',
     period: 'August – September 2026',
     status: 'Empirical phase',
     group: 'current',
@@ -90,7 +90,7 @@ export const PROJECTS = [
     title: 'Proximal causal inference under unmeasured confounding',
     kicker: 'Part III essay, University of Cambridge',
     summary:
-      'Can proxy variables replace an unmeasured confounder in practice? Four estimators, from a linear two-stage baseline to doubly robust kernel methods, stress-tested by simulation and validated on two real datasets, with a tuning protocol that never sees the truth.',
+      'Can proxy variables replace an unmeasured confounder in practice? Four estimators, from a linear two-stage baseline to doubly robust kernel methods, stress-tested by simulation and validated on two real datasets, with a blind tuning protocol.',
     period: '2025 – 2026',
     status: 'Submitted May 2026',
     group: 'current',
@@ -107,7 +107,7 @@ export const PROJECTS = [
     title: 'SRIE: the stream',
     kicker: 'Resident researcher and research supervisor',
     summary:
-      'Eight-week AI-safety placements for Cambridge mathematics undergraduates. Seven students on three projects I designed, and how the supervision runs.',
+      'Eight-week AI-safety placements for Cambridge mathematics undergraduates. Seven students on three projects I designed; weekly group and one-to-one sessions, four sprints in eight weeks.',
     period: 'July 2026 – present',
     status: 'Ongoing',
     group: 'programme',
@@ -136,7 +136,7 @@ export const PROJECTS = [
     title: 'AI agents for an investment fund and a private bank',
     kicker: 'Eleven Strategy',
     summary:
-      'A series of proofs of concept: deep research for company and market analysis, CRM management for a fund’s portfolio inside the client’s own environment, automatic processing of client files at a large private bank. Analyst processing time halved, files per month doubled.',
+      'A series of proofs of concept: deep research for company and market analysis, CRM management for a fund’s portfolio inside the client’s own environment, automatic processing of client files at a large private bank. Analyst processing time fell by about half; the files handled each month doubled.',
     period: 'April – September 2025',
     status: 'Proofs of concept',
     group: 'earlier',
@@ -182,7 +182,7 @@ export const PROJECTS = [
     title: 'Estimating binned Hawkes processes',
     kicker: 'CentraleSupélec, supervised by Ioane Muni Toke',
     summary:
-      'Self-exciting point processes observed on a grid rather than event by event. Maximum likelihood, Whittle and neural estimators compared on simulated streams and real data; likelihood with random restarts wins on clean data, Whittle survives degraded data.',
+      'Self-exciting point processes observed on a grid rather than event by event. Maximum likelihood, Whittle and neural estimators compared on simulated streams and real data; likelihood with random restarts is best on clean data, while Whittle remains usable on degraded data.',
     period: 'February – June 2023',
     status: 'Completed',
     group: 'earlier',

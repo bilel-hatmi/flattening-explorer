@@ -50,7 +50,7 @@ export default function Research() {
 
   return (
     <Page>
-      <PageHeader kicker="Vision, then what is under way" title="Research" lede={LEDE} />
+      <PageHeader kicker="Vision and current work" title="Research" lede={LEDE} />
       <SectionNav items={SECTIONS} />
       {SECTIONS.map((s, i) => <ResearchSection key={s.id} n={i + 1} section={s} isMobile={isMobile} />)}
     </Page>

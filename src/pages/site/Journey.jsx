@@ -66,7 +66,7 @@ export default function Journey() {
         <Timeline entries={JOURNEY} />
       </Section>
 
-      <Section title="Also">
+      <Section title="Competitions and languages">
         <dl style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', columnGap: 24, rowGap: 12, fontSize: 14, lineHeight: 1.6, margin: 0 }}>
           {ASIDES.map(a => (
             <div key={a.label} style={{ display: 'contents' }}>

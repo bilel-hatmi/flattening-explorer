@@ -27,7 +27,7 @@ export default function Projects() {
   useDocumentTitle('Projects');
   return (
     <Page wide>
-      <PageHeader title="Projects" lede="Research, models and things being built. Each page has the short version first and the long version below it." />
+      <PageHeader title="Projects" lede="Current research, earlier work, one paused project. Each page has the short version first and the long version below it." />
       <SectionNav items={GROUPS} />
       {GROUPS.map((g, gi) => (
         <Section key={g.id} id={g.id} num={gi + 1} title={g.title} first={gi === 0}
