@@ -123,11 +123,14 @@ site perso ne doit jamais les réutiliser.
   est l'explorer, les deux PDF et le code),
   `journey.js` (frise + `NARRATIVES` + `ASIDES`), `documents.js` (source unique, aussi lue par
   `/flattening/about`).
-- **Sections numérotées en chiffres romains** : `Section num={n}` (rendu par `utils/roman.js`,
-  `Numeral`), `panel` pour le cadre blanc à filet teal (les trois sections de Research, toutes
-  pareilles : une seule mise en lumière isolée se lisait comme un oubli), `SectionNav` pour le
-  mini-sommaire « I · II · III » sous l'en-tête (Research, Projects avec comptes, Documents).
-  Journey numérote Giving back / Sport / Timeline ; « Also » reste sans numéro.
+- **Sections numérotées en chiffres romains** : `Section num={n}` rend un **sceau** (`Numeral` :
+  chiffre romain en Instrument Serif dans un disque teinté, double anneau teal, 42 px en titre,
+  26 px dans le sommaire, rotation légère au survol des liens `.seal-link`), `panel` pour le cadre
+  blanc à filet teal (les trois sections de Research, toutes pareilles), `SectionNav` pour le
+  mini-sommaire sous l'en-tête (Research, Projects avec comptes, Documents). Journey numérote
+  Giving back / Sport / Timeline ; « Competitions and languages » reste sans numéro.
+- **Research, ordre voulu par Bilel (21 sept.)** : I. The smoothest risks, II. Views on current
+  empirical research (son ancien « Vision »), III. Current work. Ne pas remettre la vision en tête.
 - Pages projet : fil d'Ariane, en-tête en cascade (`.rise`), boutons avec pictos, deck, prose, encart
   SRIE, puis **précédent / suivant** dans le même groupe (`current` / `earlier` / `paused`).
 - Accueil : hero, carte Flattening (compteurs), quatre lignes, **Milestones** (quatre entrées de

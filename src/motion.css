@@ -85,6 +85,13 @@
 :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
 ::selection { background: rgba(97, 158, 168, 0.28); color: var(--navy); }
 
+/* Section seals: the outer ring turns teal and the disc fills on hover of a contents link */
+.seal, .seal > span { transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.seal-link { text-decoration: none; transition: color 0.15s ease; }
+.seal-link:hover { color: var(--navy); text-decoration: none; }
+.seal-link:hover .seal { border-color: var(--teal); transform: rotate(-8deg); }
+.seal-link:hover .seal > span { background: var(--teal); color: #FFFFFF; border-color: var(--teal); }
+
 /* Sections anchored below the sticky bar */
 [id] { scroll-margin-top: calc(var(--nav-h) + 16px); }
 

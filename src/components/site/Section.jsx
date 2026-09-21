@@ -1,7 +1,7 @@
 import useIsMobile from '../../hooks/useIsMobile';
 import roman from '../../utils/roman';
 
-// Page section: an optional kicker, a serif title (with a roman numeral when
+// Page section: an optional kicker, a serif title (with a numbered seal when
 // `num` is given) and the content. `panel` frames the section in a white
 // card with a teal rule, the same on every page that uses it.
 
@@ -16,22 +16,24 @@ export default function Section({ id, title, kicker, num, aside, panel, children
   return (
     <section id={id} style={{ marginTop: first ? 0 : (panel ? 28 : 56), ...box, ...style }}>
       {(title || kicker) && (
-        <header style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16, marginBottom: 18, flexWrap: 'wrap' }}>
-          <div>
-            {kicker && (
-              <div style={{
-                fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 500, letterSpacing: '0.04em',
-                textTransform: 'uppercase', color: 'var(--teal)', marginBottom: 4,
-              }}>
-                {kicker}
-              </div>
-            )}
-            {title && (
-              <h2 style={{ display: 'flex', alignItems: 'baseline', gap: 14, fontFamily: 'var(--font-title)', fontSize: 26, color: 'var(--navy)', lineHeight: 1.15, margin: 0 }}>
-                {num != null && <Numeral n={num} />}
-                <span>{title}</span>
-              </h2>
-            )}
+        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 16, minWidth: 0 }}>
+            {num != null && <Numeral n={num} size={isMobile ? 36 : 42} />}
+            <div style={{ minWidth: 0 }}>
+              {kicker && (
+                <div style={{
+                  fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 500, letterSpacing: '0.04em',
+                  textTransform: 'uppercase', color: 'var(--teal)', marginBottom: 4,
+                }}>
+                  {kicker}
+                </div>
+              )}
+              {title && (
+                <h2 style={{ fontFamily: 'var(--font-title)', fontSize: 26, color: 'var(--navy)', lineHeight: 1.15, margin: 0 }}>
+                  {title}
+                </h2>
+              )}
+            </div>
           </div>
           {aside && <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{aside}</div>}
         </header>
@@ -41,11 +43,24 @@ export default function Section({ id, title, kicker, num, aside, panel, children
   );
 }
 
-// Roman numeral in the mono face, teal: the site's section marker.
-export function Numeral({ n, style }) {
+// The section seal: a roman numeral in the serif face, inside a tinted disc
+// with a thin outer ring. The gap between the two rings is transparent, so the
+// seal sits as well on the cream page as on a white panel.
+export function Numeral({ n, size = 42, style }) {
+  const inner = size - 8;
   return (
-    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--teal)', letterSpacing: '0.08em', ...style }}>
-      {roman(n)}
+    <span aria-hidden="true" className="seal" style={{
+      width: size, height: size, borderRadius: '50%', flexShrink: 0, padding: 3, boxSizing: 'border-box',
+      border: '1px solid var(--teal-line)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', ...style,
+    }}>
+      <span style={{
+        width: inner, height: inner, borderRadius: '50%', background: 'var(--teal-tint)', border: '0.5px solid var(--teal-line)',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: 'var(--font-title)', fontSize: Math.round(size * 0.46), lineHeight: 1, color: 'var(--teal)', letterSpacing: '0.04em',
+        paddingTop: 1,
+      }}>
+        {roman(n)}
+      </span>
     </span>
   );
 }
@@ -55,13 +70,13 @@ export function SectionNav({ items, style }) {
   const isMobile = useIsMobile();
   return (
     <nav aria-label="On this page" style={{
-      display: 'flex', flexWrap: 'wrap', gap: isMobile ? '8px 14px' : '8px 22px', marginTop: -18, marginBottom: 40,
-      fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.02em', ...style,
+      display: 'flex', flexWrap: 'wrap', gap: isMobile ? '10px 16px' : '10px 24px', marginTop: -18, marginBottom: 40,
+      fontSize: 13, ...style,
     }}>
       {items.map((s, i) => (
-        <a key={s.id} href={`#${s.id}`} style={{ color: 'var(--text-muted)' }}>
-          <span style={{ color: 'var(--teal)', letterSpacing: '0.08em' }}>{roman(i + 1)}</span>{'  '}{s.title}
-          {s.count != null && <span style={{ color: 'var(--text-faint)' }}>{' ('}{s.count}{')'}</span>}
+        <a key={s.id} href={`#${s.id}`} className="seal-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)' }}>
+          <Numeral n={i + 1} size={26} />
+          <span>{s.title}{s.count != null && <span style={{ color: 'var(--text-faint)' }}>{' ('}{s.count}{')'}</span>}</span>
         </a>
       ))}
     </nav>

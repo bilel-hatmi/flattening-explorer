@@ -7,7 +7,7 @@ One Vite + React app. The root is the personal site of Bilel Hatmi; the interact
 | Path | Page |
 |---|---|
 | `/` | Home: hero, The Flattening card with the poster schema, four lines of research, milestones, contact |
-| `/research` | Vision, the risks that deserve the effort, current work |
+| `/research` | The smoothest risks, views on current empirical research, current work |
 | `/projects`, `/projects/:slug` | Current / Earlier / Paused grids (numbered I–III) and one page per project with previous/next inside the group; `/projects/eleven-strategy` redirects to `/projects/eleven-rag` |
 | `/journey` | Bio, two narratives (giving back; sport), timeline, CV |
 | `/documents` | Essays, poster, the Part III essay, SRIE decks, reports, code |
