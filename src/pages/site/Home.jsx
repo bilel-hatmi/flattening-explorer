@@ -200,7 +200,7 @@ export default function Home() {
           {[
             { to: SITE.research, icon: 'research', kicker: 'Research', title: 'Risks, views, current work',
               desc: 'Why the smoothest risks are the most catastrophic, why constructs measured in a model must rest on properties valid for the model itself, and how the four lines of work hold together.' },
-            { to: SITE.journey, icon: 'journey', kicker: 'Journey', title: 'La Courneuve, the Cordées de la Réussite, OSER',
+            { to: SITE.journey, icon: 'journey', kicker: 'Journey', title: 'La Courneuve, the Cordées de la Réussite, OSER, CAP PREPA',
               desc: 'From La Courneuve to Cambridge: the people and programmes that opened the way, giving back, sport at a competitive level, and the timeline.' },
             { to: SITE.documents, icon: 'documents', kicker: 'Documents', title: 'Essays, decks, reports, code',
               desc: 'The Part III essay, the prize essay and poster, the 3 SRIE project decks, 3 CentraleSupélec reports and 5 repositories.' },

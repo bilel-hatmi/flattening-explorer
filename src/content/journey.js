@@ -145,7 +145,7 @@ export const NARRATIVES = [
   {
     id: 'giving-back',
     kicker: 'Giving back',
-    title: 'La Courneuve, the Cordées de la Réussite, OSER',
+    title: 'La Courneuve, the Cordées de la Réussite, OSER, CAP PREPA',
     image: { src: '/img/journey/carnets.jpg', alt: 'Bilel with the pupils of the Carnets de France trip, sitting on the steps of a columned building', caption: 'Carnets de France: the 3-day trip, with the pupils', ratio: '3 / 2' },
     body: [
       'My primary and secondary schooling took place in Seine-Saint-Denis, in **La Courneuve**, a deprived area. Having reached studies of high quality thanks to the **Cordées de la Réussite, the CentraleSupélec Foundation and CapPrépa**, I have always wanted to make **altruism and teaching a central value**, in gratitude for what I received along the way.',
