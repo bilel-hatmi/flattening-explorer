@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import useIsMobile from '../../hooks/useIsMobile';
 import Reveal from './Reveal';
 import { JOURNEY_KINDS } from '../../content/journey';
+import { renderInline } from '../../utils/inline';
 
 // Vertical timeline. Desktop: period in a left column, a rail with coloured
 // markers, the entry on the right. Mobile: the period sits above the entry.
@@ -47,7 +48,7 @@ export default function Timeline({ entries }) {
                 {e.org}{e.place ? <span style={{ color: 'var(--text-faint)', fontWeight: 400 }}>{' · '}{e.place}</span> : null}
               </div>
               {e.summary && (
-                <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-muted)', marginTop: 8 }}>{e.summary}</p>
+                <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-muted)', marginTop: 8 }}>{renderInline(e.summary)}</p>
               )}
             </div>
           </Reveal>

@@ -24,7 +24,7 @@ The regimes that emerge from these structures invite **a decentralised view of A
 
 ## Current work
 
-The four lines below are one attempt to recentre AI on benefits that belong to human capital. I hold them to a single requirement: **a property measured in a model counts as measured only once it has been shown to be stable, to separate what it claims to separate, and to survive a change of instrument.**
+The four lines below are one attempt to recentre AI on benefits that belong to human capital.
 
 <!-- lines -->
 

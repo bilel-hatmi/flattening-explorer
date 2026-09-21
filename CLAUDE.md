@@ -137,6 +137,16 @@ site perso ne doit jamais les réutiliser.
   `journey.js` : centralesupelec, part-iii, risk-prize, srie), trois cartes de navigation, contact.
 - `index.html` porte les meta OG en URL absolue, un `canonical` et un JSON-LD `Person`
   (nom, SRIE, Cambridge, CentraleSupélec, GitHub, LinkedIn) : à tenir à jour avec `SITE_META`.
+- **Chiffres en chiffres** (Bilel, 21 sept.) : 80, 20-year, 1,000, 7 students, 4 estimators… partout
+  dans la copie du site, y compris en tête de phrase ; seules exceptions, les noms de méthodes
+  (two-stage, one-exponential), les titres de sections et le post Risk Prize (texte verbatim).
+- **Gras de guidage** partout : résumés de cartes (`Card desc`, `DocCard desc`, résumé de page
+  projet, frise) passent par `renderInline`, donc `**…**` fonctionne dans `projects.js`,
+  `research.js`, `journey.js`, `documents.js` ; dans les Markdown, `**…**` en paragraphe courant,
+  `<strong>` dans les blocs HTML (`p.lead`, `dl`, `aside`) où le Markdown n'est pas interprété.
+- **Pages SRIE allégées** (Bilel, 21 sept.) : les trois pages projet ne gardent que résumé, deck et
+  « Where it stands » ; le contenu des decks n'est plus recopié. Le mémoire n'a plus de citation
+  en exergue. Research n'a plus la phrase « I hold them to a single requirement… ».
 - Les chaînes de `site.js` (bio) et `journey.js` (récits) peuvent porter des `**gras**` : rendus par
   `utils/inline.js` (`renderInline`, `stripInline` pour les endroits en texte brut).
 - `research.md` est découpé par `Research.jsx` sur ses `## ` : lede avant le premier titre, sections

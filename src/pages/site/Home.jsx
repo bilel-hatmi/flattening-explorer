@@ -8,6 +8,7 @@ import Reveal from '../../components/site/Reveal';
 import { TagRow } from '../../components/site/Tag';
 import Icon, { IconBadge } from '../../components/site/Icon';
 import { PERSON, FLATTENING, formatCounter } from '../../content/site';
+import { renderInline } from '../../utils/inline';
 import { CURRENT_PROJECTS } from '../../content/projects';
 import { JOURNEY } from '../../content/journey';
 import { SITE } from '../../routes';
@@ -148,7 +149,7 @@ export default function Home() {
                 </div>
               </Link>
               <div style={{ padding: isMobile ? '22px 20px' : '28px 30px', flex: 1, minWidth: 0, borderLeft: isMobile ? 'none' : '0.5px solid var(--rule)' }}>
-                <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--navy)', marginBottom: 18 }}>{FLATTENING.summary}</p>
+                <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--navy)', marginBottom: 18 }}>{renderInline(FLATTENING.summary)}</p>
                 <div style={{ display: 'flex', gap: 24, marginBottom: 20, flexWrap: 'wrap' }}>
                   {FLATTENING.counters.map(c => <Counter key={c.label} c={c} active={flIn} />)}
                 </div>
@@ -202,7 +203,7 @@ export default function Home() {
             { to: SITE.journey, icon: 'journey', kicker: 'Journey', title: 'La Courneuve, the Cordées de la Réussite, OSER',
               desc: 'From La Courneuve to Cambridge: the people and programmes that opened the way, giving back, sport at a competitive level, and the timeline.' },
             { to: SITE.documents, icon: 'documents', kicker: 'Documents', title: 'Essays, decks, reports, code',
-              desc: 'The Part III essay, the prize essay and poster, the three SRIE project decks, three CentraleSupélec reports and five repositories.' },
+              desc: 'The Part III essay, the prize essay and poster, the 3 SRIE project decks, 3 CentraleSupélec reports and 5 repositories.' },
           ].map((c, i) => (
             <Reveal key={c.to} delay={i * 80} style={{ display: 'flex' }}>
               <Card as="link" to={c.to} icon={c.icon} iconTone="navy" kicker={c.kicker} title={c.title} desc={c.desc} style={{ flex: 1 }} />

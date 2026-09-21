@@ -1,4 +1,5 @@
 import Icon, { IconBadge } from './Icon';
+import { renderInline } from '../../utils/inline';
 
 // Document card, shared by /documents and the explorer's /flattening/about.
 // One row: a badge for the document type on the left (or a logo), the title
@@ -48,7 +49,7 @@ export default function DocCard({ href, type = 'pdf', logo, title, desc, badge, 
       {glyph}
       <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', paddingRight: badge ? 64 : 0 }}>
         <div style={{ fontFamily: 'var(--font-title)', fontSize: 18, lineHeight: 1.25 }}>{title}</div>
-        <div style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--text-muted)', marginTop: 4 }}>{desc}</div>
+        <div style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--text-muted)', marginTop: 4 }}>{renderInline(desc)}</div>
         {!comingSoon && action && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, marginTop: 12 }}>
             <Action label={action} href={href} asSpan={!secondary} />

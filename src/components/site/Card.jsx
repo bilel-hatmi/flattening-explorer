@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { IconBadge } from './Icon';
+import { renderInline } from '../../utils/inline';
 
 // White flat card, the site's basic container. Generalises GraphCard (graphs)
 // and DocCard (documents): same border, radius and hover as those two.
@@ -44,7 +45,7 @@ export default function Card({
       )}
       {kicker && <div style={S.kicker}>{kicker}</div>}
       {title && <div style={S.title}>{title}</div>}
-      {desc && <div style={S.desc}>{desc}</div>}
+      {desc && <div style={S.desc}>{renderInline(desc)}</div>}
       {children}
       {badge && <div style={S.badge}>{badge}</div>}
     </>

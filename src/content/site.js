@@ -47,7 +47,7 @@ export const PERSON = {
       { text: '**the application of LLMs to learning**, on parametric structures built from knowledge spaces;', to: `${SITE.projects}/srie-tutor` },
       { text: '**the application of LLMs to the mediation of disputes** under confidentiality constraints.', to: `${SITE.projects}/srie-mediation` },
     ],
-    linesClose: 'Since July 2026 I supervise the last three at **SRIE**, with seven Cambridge mathematics undergraduates.',
+    linesClose: 'Since July 2026 I supervise the last three at **SRIE**, with **7 Cambridge mathematics undergraduates**.',
     closing: 'I am attentive to any offer or collaboration within this perimeter.',
   },
   links: [
@@ -74,7 +74,7 @@ export const FLATTENING = {
   title: 'The Flattening',
   kicker: 'Finalist, Cambridge–McKinsey Risk Prize 2026',
   summary:
-    'What does AI adoption do to firms of different sizes and domains, on cognitive diversity, productivity and losses? An essay, a Monte Carlo model and an interactive explorer: four acts of analysis and a parameter laboratory, with the simulation engine running in the browser.',
+    'What does AI adoption do to firms of different sizes and domains, on cognitive diversity, productivity and losses? An essay, a Monte Carlo model and an interactive explorer: **4 acts of analysis and a parameter laboratory**, with the simulation engine running in the browser.',
   schemaCaption: 'The mechanism, as drawn on the poster',
   to: FLATTENING_BASE,
   cta: 'Open the explorer',

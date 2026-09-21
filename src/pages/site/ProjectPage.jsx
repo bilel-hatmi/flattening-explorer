@@ -9,6 +9,7 @@ import Icon, { IconBadge } from '../../components/site/Icon';
 import NotFound from './NotFound';
 import { getProject, childrenOf, CURRENT_PROJECTS, EARLIER_PROJECTS, PAUSED_PROJECTS } from '../../content/projects';
 import { SITE } from '../../routes';
+import { renderInline } from '../../utils/inline';
 
 const isExternal = href => href && /^https?:\/\//.test(href);
 const GROUPS = { current: CURRENT_PROJECTS, earlier: EARLIER_PROJECTS, paused: PAUSED_PROJECTS };
@@ -107,7 +108,7 @@ export default function ProjectPage() {
         </div>
       </div>
 
-      <p className="rise rise-2" style={{ fontSize: 17, lineHeight: 1.55, color: 'var(--navy)', marginBottom: 24 }}>{p.summary}</p>
+      <p className="rise rise-2" style={{ fontSize: 17, lineHeight: 1.55, color: 'var(--navy)', marginBottom: 24 }}>{renderInline(p.summary)}</p>
 
       {p.links.length > 0 && (
         <div className="rise rise-3" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>

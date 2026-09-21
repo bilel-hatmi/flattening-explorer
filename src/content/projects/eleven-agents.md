@@ -2,7 +2,7 @@
 # /projects/eleven-agents — Eleven Strategy, 2025. From Bilel's CV bullets.
 ---
 
-<p class="lead">These agents were built as proofs of concept for the firm's clients, to automate the flow of work between analysts and investors.</p>
+<p class="lead">These agents were built as proofs of concept for the firm's clients, <strong>to automate the flow of work between analysts and investors</strong>.</p>
 
 <dl class="work">
 <dt>Deep research for an investment fund</dt>
